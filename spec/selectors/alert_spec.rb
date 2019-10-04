@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "alert", type: :feature do
+describe "alert selector" do
   before do
     visit "/alert.html"
   end

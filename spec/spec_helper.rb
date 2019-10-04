@@ -4,13 +4,13 @@ ENV["APP_ENV"] = "test"
 
 require "byebug"
 require "capybara/rspec"
-require "capybara/apparition"
+require "selenium-webdriver"
 require "capybara_accessible_selectors"
 require "sinatra"
 
 set :public_folder, "./spec/fixtures"
 
-Capybara.default_driver = :apparition
+Capybara.default_driver = :selenium_chrome_headless
 Capybara.app = Sinatra::Application
 Capybara.server = :puma, { Silent: true }
 

@@ -1,0 +1,38 @@
+<!doctype html>
+<body>
+  <h1>Tabs</h1>
+
+  <div role="tablist">
+    <button type="button" role="tab" id="one" aria-controls="one-panel" aria-selected="true">
+      One
+    </button>
+    <button type="button" role="tab" id="two" aria-controls="two-panel" aria-selected="false">
+      Two
+    </button>
+    <span role="tab" id="three" tabindex="0" aria-controls="three-panel" aria-selected="false">
+      Three
+    </button>
+  </div>
+  <div role="tabpanel" id="one-panel" aria-labelledby="one">
+    <p>Panel one</p>
+  </div>
+  <div role="tabpanel" id="two-panel" aria-labelledby="two" hidden>
+    <p>Panel two</p>
+  </div>
+  <div role="tabpanel" id="three-panel" aria-labelledby="three" hidden>
+    <p>Panel three</p>
+  </div>
+
+  <script>
+    document.querySelectorAll('[role=tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const tablist = tab.closest('[role=tablist]');
+        tablist.querySelectorAll('[role=tab]').forEach((t) => {
+          const tabpanel = document.getElementById(t.getAttribute('aria-controls'));
+          t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+          tabpanel.hidden = t !== tab;
+        });
+      });
+    });
+  </script>
+</body>

@@ -1,0 +1,54 @@
+<!doctype html>
+<body>
+  <h1>Disclosure</h1>
+
+  <section>
+    <h2>Details/Summary</h2>
+
+    <p>Native implementation</p>
+
+    <details>
+      <summary>Summary button</summary>
+      Details content
+    </details>
+  </section>
+
+  <section>
+    <h2>ARIA button implementation</h2>
+
+    <p>
+      <button aria-expanded="false" type="button" aria-controls="disclosure-button-content">
+        Disclosure button
+      </button>
+    </p>
+
+    <div id="disclosure-button-content" hidden>
+      Disclosure content
+    </div>
+  </section>
+
+  <section>
+    <h2>ARIA fake button implementation</h2>
+
+    <p>
+      <span aria-expanded="false" role="button" tabindex="0" aria-controls="disclosure-span-content">
+        Disclosure span button
+      </span>
+    </p>
+
+    <div id="disclosure-span-content" hidden>
+      Disclosure span content
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[aria-expanded]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const content = document.getElementById(button.getAttribute('aria-controls'));
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        content.hidden = expanded;
+        button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
+    });
+  </script>
+</body>

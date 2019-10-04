@@ -86,6 +86,13 @@ describe "focused" do
     expect(page).to have_selector :css, "div", text: "Focusable", focused: true
   end
 
+  it "selects a focused combo box" do
+    expect(page).to have_no_selector :combo_box, "Combo box", focused: true
+    expect(page).to have_selector :combo_box, "Combo box", focused: false
+    focus find(:combo_box, "Combo box")
+    expect(page).to have_selector :combo_box, "Combo box", focused: true
+  end
+
   def focus(node)
     page.execute_script("arguments[0].focus()", node)
   end

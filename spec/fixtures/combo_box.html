@@ -1,0 +1,47 @@
+<!doctype html>
+<body>
+  <h1>Combo-box</h1>
+
+  <h2>ARIA 1.0</h2>
+
+  <div>
+    <label for="aria10">aria 1.0</label>
+    <input type="text" role="combobox" aria-owns="listbox-aria10" id="aria10" />
+    <div role="listbox" id="listbox-aria10">
+      <div role="option">Apple</div>
+      <div role="option">Banana</div>
+      <div role="option" aria-disabled="true">Disabled</div>
+    </div>
+  </div>
+
+  <h2>ARIA 1.1</h2>
+
+  <div>
+    <label for="aria11">aria 1.1</label>
+    <div role="combobox">
+      <input id="aria11" aria-controls="listbox-aria11" />
+      <div role="listbox" id="listbox-aria11">
+        <div role="option">Apple</div>
+        <div role="option">Banana</div>
+        <div role="option" aria-disabled="true">Disabled</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[role=listbox]').forEach((listbox) => {
+      listbox.addEventListener('click', ({ target }) => {
+        if (target.getAttribute('aria-disabled') === 'true') {
+          return;
+        }
+        listbox.querySelectorAll('[role=option]').forEach((option) => {
+          if (option === target) {
+            option.setAttribute('aria-selected', 'true');
+          } else {
+            option.removeAttribute('aria-selected');
+          }
+        });
+      });
+    });
+  </script>
+</body>

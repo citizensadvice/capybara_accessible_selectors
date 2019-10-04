@@ -31,6 +31,6 @@ bundle install
 bundle exec rubocop
 
 # test
-# A local install of Chrome is required for the apperation driver
+# A local install of Chrome is required for the selenium web driver
 bundle exec rspec
 ```

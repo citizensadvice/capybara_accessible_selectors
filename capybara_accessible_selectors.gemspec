@@ -13,11 +13,11 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "capybara", "~> 3"
 
-  s.add_development_dependency "apparition"
   s.add_development_dependency "byebug"
   s.add_development_dependency "puma"
   s.add_development_dependency "rack-test"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rubocop"
+  s.add_development_dependency "selenium-webdriver"
   s.add_development_dependency "sinatra"
 end
