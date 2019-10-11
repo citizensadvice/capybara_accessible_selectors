@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Dir[File.join(__dir__, "matchers", "*.rb")].each { |f| require f }
+
 # rubocop:disable Name/PredicateName
 module Capybara
   module RSpecMatchers
@@ -9,6 +11,10 @@ module Capybara
 
     def have_no_combo_box(*args, &optional_filter_block)
       Matchers::NegatedMatcher.new(have_combo_box(*args, &optional_filter_block))
+    end
+
+    def have_validation_errors
+      Matchers::HaveValidationErrors.new
     end
   end
 end
