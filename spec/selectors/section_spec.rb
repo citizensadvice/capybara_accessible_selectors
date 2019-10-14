@@ -40,7 +40,7 @@ describe "section selector" do
     expect(page).to have_no_selector :section, "Block quote"
   end
 
-  %i[main section article header footer aside].each do |element|
+  %i[main section article header footer aside form].each do |element|
     context "<#{element}>" do
       it "finds by #{element}" do
         expect(page).to have_selector :section, element.to_s.capitalize, section_element: element, count: 1

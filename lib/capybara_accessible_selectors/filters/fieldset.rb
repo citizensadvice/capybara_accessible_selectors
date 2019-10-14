@@ -2,14 +2,7 @@
 
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
   expression_filter(:fieldset, skip_if: nil) do |xpath, locator|
-    fieldset = XPath.descendant(:fieldset)[XPath.child(:legend)[XPath.string.n.is(locator.to_s)]]
-    if xpath.is_a? XPath::Union
-      xpath.expressions.map do |x|
-        fieldset.descendant(x)
-      end.reduce(:+)
-    else
-      fieldset.descendant(xpath)
-    end
+    CapybaraAccessibleSelectors::Helpers.within_fieldset(xpath, locator)
   end
 
   describe(:expression_filters) do |fieldset: nil, **|

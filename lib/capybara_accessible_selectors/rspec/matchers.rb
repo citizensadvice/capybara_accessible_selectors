@@ -16,6 +16,10 @@ module Capybara
     def have_validation_errors
       Matchers::HaveValidationErrors.new
     end
+
+    def have_no_validation_errors
+      Matchers::HaveNoValidationErrors.new
+    end
   end
 end
 # rubocop:enable Name/PredicateName
