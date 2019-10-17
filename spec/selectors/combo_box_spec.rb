@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "alert selector" do
+describe "combo_box selector" do
   before do
     visit "/combo_box.html"
   end
@@ -12,6 +12,11 @@ describe "alert selector" do
       it "finds a combo box" do
         combo_box = find(:field, label)
         expect(find(:combo_box, label)).to eq combo_box
+      end
+
+      it "matches a combo_box" do
+        combo_box = find(:field, label)
+        expect(combo_box).to match_selector :combo_box
       end
 
       context "select_combo_box_option" do
@@ -53,15 +58,52 @@ describe "alert selector" do
           expect(page).to have_no_selector :combo_box, label, with: "Banana"
         end
       end
+    end
+  end
 
-      context "rspec" do
-        it "matches using a custom matcher" do
-          expect(page).to have_combo_box label
+  context "twitter" do
+    it "finds a combo box" do
+      combo_box = find(:field, "twitter")
+      expect(find(:combo_box, "twitter")).to eq combo_box
+    end
+
+    context "select_combo_box_option" do
+      it "fills in a combo box" do
+        expect(page).to have_selector :combo_box, "twitter", with: ""
+        select_combo_box_option "Banana", from: "twitter"
+        within "#listbox-twitter" do
+          expect(page).to have_selector :css, ".tt-selectable[aria-selected=true]", text: "Banana"
+        end
+      end
+
+      context "currently_with" do
+        it "finds a combo box with an existing value" do
+          select_combo_box_option "Banana", from: "twitter"
+          expect(page).to have_selector :combo_box, "twitter", with: "Banana"
+          expect(page).to have_no_selector :combo_box, "twitter", with: "Apple"
         end
 
-        it "matches using a negated custom matcher" do
-          expect(page).to have_no_combo_box "foo"
+        it "fills in a combo box with an existing value" do
+          select_combo_box_option "Banana", from: "twitter"
+          select_combo_box_option "Apple", from: "twitter", currently_with: "Banana"
+          expect do
+            select_combo_box_option "Banana", from: "twitter", currently_with: "Foo", wait: false
+          end.to raise_error Capybara::ElementNotFound
         end
+      end
+
+      context "called on the node" do
+        it "fills in a combo box" do
+          find(:combo_box, "twitter").select_combo_box_option "Banana"
+        end
+      end
+    end
+
+    context "with filter" do
+      it "selects based on the input value" do
+        select_combo_box_option "Apple", from: "twitter"
+        expect(page).to have_selector :combo_box, "twitter", with: "Apple"
+        expect(page).to have_no_selector :combo_box, "twitter", with: "Banana"
       end
     end
   end

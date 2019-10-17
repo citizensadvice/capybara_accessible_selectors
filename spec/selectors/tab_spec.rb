@@ -29,6 +29,16 @@ describe "tab selector" do
       expect(page).to have_no_selector :tab_panel, "One", open: false
       expect(page).to have_selector :tab_panel, "Two", open: false, visible: false
     end
+
+    it "matches by tabpanel" do
+      tabpanel = find(:element, :div, text: "Panel one")
+      expect(tabpanel).to match_selector :tab_panel
+    end
+
+    it "matches by tabpanel and name" do
+      tabpanel = find(:element, :div, text: "Panel one")
+      expect(tabpanel).to match_selector :tab_panel, "One"
+    end
   end
 
   describe "tab_button selector" do
@@ -45,6 +55,16 @@ describe "tab selector" do
     it "finds a closed tab" do
       expect(page).to have_selector :tab_button, "Two", open: false
       expect(page).to have_no_selector :tab_button, "One", open: false
+    end
+
+    it "matches by tab button" do
+      tab = find(:button, "One")
+      expect(tab).to match_selector :tab_button
+    end
+
+    it "matches by tab button and name" do
+      tab = find(:button, "One")
+      expect(tab).to match_selector :tab_button, "One"
     end
   end
 

@@ -49,6 +49,18 @@ describe "validation error filter" do
     end
   end
 
+  context "datalist_input" do
+    it "selects a field with an aria-describedby error message" do
+      expect(page).to have_selector :datalist_input, "Text", validation_error: "Text error"
+      expect(page).to have_no_selector :datalist_input, "Text", validation_error: "different error"
+    end
+
+    it "selects a field with a label error message" do
+      expect(page).to have_selector :datalist_input, "Text", validation_error: "Text label error"
+      expect(page).to have_no_selector :datalist_input, "Text", validation_error: "different error"
+    end
+  end
+
   context "radio_button" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :radio_button, "Radio", validation_error: "Radio error"

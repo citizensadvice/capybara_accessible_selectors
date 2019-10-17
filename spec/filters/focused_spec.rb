@@ -24,6 +24,13 @@ describe "focused" do
     expect(page).to have_selector :fillable_field, "Textarea", focused: true
   end
 
+  it "selects an focused datalist_input" do
+    expect(page).to have_no_selector :datalist_input, "Input", focused: true
+    expect(page).to have_selector :datalist_input, "Input", focused: false
+    focus find(:datalist_input, "Input")
+    expect(page).to have_selector :datalist_input, "Input", focused: true
+  end
+
   it "selects a focused button" do
     expect(page).to have_no_selector :button, "Button", focused: true
     expect(page).to have_selector :button, "Button", focused: false

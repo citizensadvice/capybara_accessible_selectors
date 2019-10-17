@@ -6,7 +6,7 @@ Capybara.add_selector(:disclosure) do
   end
 
   xpath do |name, **|
-    button = aria_or_real_button & XPath.string.n.is(name)
+    button = aria_or_real_button & XPath.string.n.is(name.to_s)
     aria = XPath.descendant[XPath.attr(:id) == XPath.anywhere[button][XPath.attr(:"aria-expanded")].attr(:"aria-controls")]
     details = XPath.descendant(:details)[XPath.child(:summary)[XPath.string.n.is(name.to_s)]]
     aria + details
@@ -33,8 +33,8 @@ Capybara.add_selector(:disclosure_button) do
     XPath.descendant[[
       (XPath.self(:button) | (XPath.attr(:role) == "button")),
       XPath.attr(:"aria-expanded"),
-      XPath.string.n.is(name)
-    ].reduce(:&)] + XPath.descendant(:summary)[XPath.string.n.is(name)]
+      XPath.string.n.is(name.to_s)
+    ].reduce(:&)] + XPath.descendant(:summary)[XPath.string.n.is(name.to_s)]
   end
 
   expression_filter(:expanded, :boolean) do |xpath, expanded|

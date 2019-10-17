@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
-  node_filter(:validation_error) do |node, value|
+  node_filter(:validation_error, valid_types: String) do |node, value|
     state = true
     if Capybara.evaluate_script("arguments[0].validity.valid", node)
       add_error " expected element validity.valid to be false."

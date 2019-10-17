@@ -101,13 +101,11 @@ require "capybara"
 # * Locator: Matches the text of the tab button
 #   * :open (Boolean) - If supplied, select on the tab being open or closed
 module CapybaraAccessibleSelectors
-  class << self
-    attr_accessor :locate_fields_on_labels
-  end
 end
 
 require "capybara_accessible_selectors/helpers"
 require "capybara_accessible_selectors/actions"
+require "capybara_accessible_selectors/locate_field"
 require "capybara_accessible_selectors/filter_set"
 Dir[File.join(__dir__, "capybara_accessible_selectors", "selectors", "*.rb")].each { |f| require f }
 require "capybara_accessible_selectors/rspec/matchers"

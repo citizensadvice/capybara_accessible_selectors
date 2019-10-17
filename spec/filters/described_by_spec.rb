@@ -13,6 +13,11 @@ describe "described by filter" do
     expect(page).to have_no_selector :fillable_field, "Text", described_by: "foo"
   end
 
+  it "filters a datalist_input" do
+    expect(page).to have_selector :datalist_input, "Text", described_by: "Text description 1"
+    expect(page).to have_no_selector :datalist_input, "Text", described_by: "foo"
+  end
+
   it "filters a radio button" do
     expect(page).to have_selector :radio_button, "Radio", described_by: "Radio description 1"
     expect(page).to have_no_selector :radio_button, "Radio", described_by: "Foo"

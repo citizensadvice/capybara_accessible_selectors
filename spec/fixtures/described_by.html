@@ -1,61 +1,64 @@
 <!doctype html>
-<body>
-  <h1>Described by filter</h1>
+<meta charset="UTF-8" />
+<h1>Described by filter</h1>
 
-  <p>
-    <label>
-      Text
-      <input type="text" aria-describedby="text1 text2" />
-    </label>
-    <span id="text1">Text description 1</span>
-    <span id="text2">Text description 2</span>
-  </p>
+<p>
+  <label>
+    Text
+    <input type="text" aria-describedby="text1 text2" list="list-id" />
+  </label>
+  <span id="text1">Text description 1</span>
+  <span id="text2">Text description 2</span>
+  <datalist id="list-id">
+    <option value="Option one">
+    <option value="Option two">
+  </datalist>
+</p>
 
-  <p>
-    <label>
-      Select
-      <select aria-describedby="select1 select2">
-        <option></option>
-        <option>Option</option>
-      </select>
-    </label>
-    <span id="select1">Select description 1</span>
-    <span id="select2">Select description 2</span>
-  </p>
+<p>
+  <label>
+    Select
+    <select aria-describedby="select1 select2">
+      <option></option>
+      <option>Option</option>
+    </select>
+  </label>
+  <span id="select1">Select description 1</span>
+  <span id="select2">Select description 2</span>
+</p>
 
-  <p>
-    <label>
-      <input type="checkbox" aria-describedby="check1 check2" />
-      Checkbox
-    </label>
-    <span id="check1">Check description 1</span>
-    <span id="check2">Check description 2</span>
-  </p>
+<p>
+  <label>
+    <input type="checkbox" aria-describedby="check1 check2" />
+    Checkbox
+  </label>
+  <span id="check1">Check description 1</span>
+  <span id="check2">Check description 2</span>
+</p>
 
-  <p>
-    <label>
-      <input type="radio" aria-describedby="radio1 radio2" />
-      Radio
-    </label>
-    <span id="radio1">Radio description 1</span>
-    <span id="radio2">Radio description 2</span>
-  </p>
+<p>
+  <label>
+    <input type="radio" aria-describedby="radio1 radio2" />
+    Radio
+  </label>
+  <span id="radio1">Radio description 1</span>
+  <span id="radio2">Radio description 2</span>
+</p>
 
-  <p>
-    <label>
-      File
-      <input type="file" aria-describedby="file1 file2" />
-    </label>
-    <span id="file1">File description 1</span>
-    <span id="file2">File description 2</span>
-  </p>
+<p>
+  <label>
+    File
+    <input type="file" aria-describedby="file1 file2" />
+  </label>
+  <span id="file1">File description 1</span>
+  <span id="file2">File description 2</span>
+</p>
 
-  <p>
-    <label>
-      Combo box
-      <input role="combobox" aria-describedby="combo1 combo2" />
-    </label>
-    <span id="combo1">Combo description 1</span>
-    <span id="combo2">Combo description 2</span>
-  </p>
-</body>
+<p>
+  <label>
+    Combo box
+    <input role="combobox" aria-describedby="combo1 combo2" />
+  </label>
+  <span id="combo1">Combo description 1</span>
+  <span id="combo2">Combo description 2</span>
+</p>

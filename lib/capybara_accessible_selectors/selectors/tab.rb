@@ -5,7 +5,7 @@ Capybara.add_selector(:tab_button) do
     XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name)
+      XPath.string.n.is(name.to_s)
     ].reduce(:&)]
   end
 
@@ -25,7 +25,7 @@ Capybara.add_selector(:tab_panel) do
     tab = XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name)
+      XPath.string.n.is(name.to_s)
     ].reduce(:&)]
     XPath.descendant[XPath.attr(:role) == "tabpanel"][XPath.attr(:id) == tab.attr(:"aria-controls")]
   end

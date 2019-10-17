@@ -1,67 +1,70 @@
 <!doctype html>
-<body>
-  <h1>Validation error</h1>
+<meta charset="UTF-8">
+<h1>Validation error</h1>
 
-  <p>
-    <label>
-      Text label error
-      <input type="text" required aria-describedby="text-error foo" />
-    </label>
-    <span id="text-error">
-      Text error
-    </span>
-  </p>
+<p>
+  <label>
+    Text label error
+    <input type="text" required aria-describedby="text-error foo" list="list-id" />
+    <datalist id="list-id">
+      <option value="Option one">
+      <option value="Option two">
+    </datalist>
+  </label>
+  <span id="text-error">
+    Text error
+  </span>
+</p>
 
-  <p>
-    <label>
-      Select label error
-      <select required aria-describedby="select-error">
-        <option></option>
-        <option>Option</option>
-      </select>
-    </label>
-    <span id="select-error">
-      Select error
-    </span>
-  </p>
+<p>
+  <label>
+    Select label error
+    <select required aria-describedby="select-error">
+      <option></option>
+      <option>Option</option>
+    </select>
+  </label>
+  <span id="select-error">
+    Select error
+  </span>
+</p>
 
-  <p>
-    <label>
-      <input type="checkbox" required aria-describedby="checkbox-error" />
-      Checkbox label error
-    </label>
-    <span id="checkbox-error">
-      Checkbox error
-    </span>
-  </p>
+<p>
+  <label>
+    <input type="checkbox" required aria-describedby="checkbox-error" />
+    Checkbox label error
+  </label>
+  <span id="checkbox-error">
+    Checkbox error
+  </span>
+</p>
 
-  <p>
-    <label>
-      <input type="radio" name="radio" required aria-describedby="radio-error" />
-      Radio label error
-    </label>
-    <span id="radio-error">
-      Radio error
-    </span>
-  </p>
+<p>
+  <label>
+    <input type="radio" name="radio" required aria-describedby="radio-error" />
+    Radio label error
+  </label>
+  <span id="radio-error">
+    Radio error
+  </span>
+</p>
 
-  <p>
-    <label>
-      File label error
-      <input type="file" required aria-describedby="file-error" />
-    </label>
-    <span id="file-error">
-      File error
-    </span>
-  </p>
+<p>
+  <label>
+    File label error
+    <input type="file" required aria-describedby="file-error" />
+  </label>
+  <span id="file-error">
+    File error
+  </span>
+</p>
 
-  <p>
-    <label>
-      Combo box label error
-      <input role="combobox" required aria-describedby="combo-box-error" />
-    </label>
-    <span id="combo-box-error">
-      Combo box error
-    </span>
-  </p>
-</body>
+<p>
+  <label>
+    Combo box label error
+    <input role="combobox" required aria-describedby="combo-box-error" />
+  </label>
+  <span id="combo-box-error">
+    Combo box error
+  </span>
+</p>

@@ -5,12 +5,14 @@ Dir[File.join(__dir__, "matchers", "*.rb")].each { |f| require f }
 # rubocop:disable Name/PredicateName
 module Capybara
   module RSpecMatchers
-    def have_combo_box(locator = nil, **options, &optional_filter_block)
-      Matchers::HaveSelector.new(:combo_box, locator, options, &optional_filter_block)
-    end
+    %i[alert combo_box modal tab_panel tab_button disclosure disclosure_button section item].each do |selector|
+      define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
+        Matchers::HaveSelector.new(selector, locator, options, &optional_filter_block)
+      end
 
-    def have_no_combo_box(*args, &optional_filter_block)
-      Matchers::NegatedMatcher.new(have_combo_box(*args, &optional_filter_block))
+      define_method "have_no_#{selector}" do |*args, &optional_filter_block|
+        Matchers::NegatedMatcher.new(send("have_#{selector}", *args, &optional_filter_block))
+      end
     end
 
     def have_validation_errors

@@ -11,11 +11,21 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Summary button", expanded: true
     end
 
+    it "matches a details" do
+      details = page.find(:element, :details, text: "Summary button")
+      expect(details).to match_selector :disclosure
+    end
+
     it "selects a summary button" do
       summary = page.find(:element, :summary, text: "Summary button")
       expect(page.find(:disclosure_button, "Summary button")).to eq summary
       expect(page).to have_selector :disclosure_button, "Summary button", expanded: false
       expect(page).to have_no_selector :disclosure_button, "Summary button", expanded: true
+    end
+
+    it "matches a summary button" do
+      summary = page.find(:element, :summary, text: "Summary button")
+      expect(summary).to match_selector :disclosure_button
     end
 
     it "toggles a details open and closed" do
