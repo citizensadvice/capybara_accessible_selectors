@@ -4,14 +4,10 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
   node_filter(:described_by, valid_values: String) do |node, value|
     next false unless node[:"aria-describedby"]
 
-    descriptions = node[:"aria-describedby"]
-                   .split(/\s+/)
-                   .compact
-                   .map { |id| node.first(:xpath, XPath.anywhere[XPath.attr(:id) == id]) }
+    description = CapybaraAccessibleSelectors::Helpers.element_describedby(node)
+    next true if description.include? value
 
-    next true if descriptions.any? { |d| d.has_text? value }
-
-    add_error "Expected to be described by \"#{value}\" but it was described by \"#{descriptions.map(&:text).join(' ')}\"."
+    add_error " expected to be described by \"#{value}\" but it was described by \"#{description}\"."
     false
   end
 end

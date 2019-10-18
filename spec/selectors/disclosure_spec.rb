@@ -14,6 +14,7 @@ describe "Disclosure" do
     it "matches a details" do
       details = page.find(:element, :details, text: "Summary button")
       expect(details).to match_selector :disclosure
+      expect(details).to match_selector :disclosure, expanded: false
     end
 
     it "selects a summary button" do
@@ -28,22 +29,41 @@ describe "Disclosure" do
       expect(summary).to match_selector :disclosure_button
     end
 
-    it "toggles a details open and closed" do
-      expect(page).to have_selector :disclosure, "Summary button", expanded: false
-      # Open
-      toggle_disclosure("Summary button")
-      expect(page).to have_selector :disclosure, "Summary button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Summary button", expanded: true
-      # Force open
-      toggle_disclosure("Summary button", expand: true)
-      expect(page).to have_selector :disclosure, "Summary button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Summary button", expanded: true
-      # Close
-      toggle_disclosure("Summary button")
-      expect(page).to have_selector :disclosure, "Summary button", expanded: false
-      # Force close
-      toggle_disclosure("Summary button", expand: false)
-      expect(page).to have_selector :disclosure, "Summary button", expanded: false
+    context "#toggle_disclosure" do
+      it "toggles a details open and closed" do
+        expect(page).to have_selector :disclosure, "Summary button", expanded: false
+        # Open
+        toggle_disclosure("Summary button")
+        expect(page).to have_selector :disclosure, "Summary button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Summary button", expanded: true
+        # Force open
+        toggle_disclosure("Summary button", expand: true)
+        expect(page).to have_selector :disclosure, "Summary button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Summary button", expanded: true
+        # Close
+        toggle_disclosure("Summary button")
+        expect(page).to have_selector :disclosure, "Summary button", expanded: false
+        # Force close
+        toggle_disclosure("Summary button", expand: false)
+        expect(page).to have_selector :disclosure, "Summary button", expanded: false
+      end
+
+      it "can be called on a details node" do
+        details = page.find(:element, :details, text: "Summary button")
+        details.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Summary button", expanded: true
+      end
+
+      it "can be called on a summary node" do
+        summary = page.find(:element, :summary, text: "Summary button")
+        summary.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Summary button", expanded: true
+      end
+    end
+
+    context "#within_disclosure" do
+      it "finds a disclosure"
+      it "can be chained"
     end
   end
 
@@ -57,8 +77,8 @@ describe "Disclosure" do
 
     it "selects the disclosure" do
       # The disclosure isn't visible
-      button = page.find(:element, :div, text: "Disclosure content", visible: false)
-      expect(page.find(:disclosure, "Disclosure button", visible: false)).to eq button
+      disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
+      expect(page.find(:disclosure, "Disclosure button", visible: false)).to eq disclosure
       expect(page).to have_no_selector :disclosure, "Disclosure button"
     end
 
@@ -78,6 +98,18 @@ describe "Disclosure" do
       # Force close
       toggle_disclosure("Disclosure button", expand: false)
       expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
+    end
+
+    it "can be called on a disclosure" do
+      disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
+      disclosure.toggle_disclosure
+      expect(page).to have_selector :disclosure, "Summary button", expanded: true
+    end
+
+    it "can be called on a summary node" do
+      summary = page.find(:element, :summary, text: "Summary button")
+      summary.toggle_disclosure
+      expect(page).to have_selector :disclosure, "Summary button", expanded: true
     end
   end
 

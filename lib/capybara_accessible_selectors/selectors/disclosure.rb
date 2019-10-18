@@ -57,8 +57,15 @@ module CapybaraAccessibleSelectors
     # @option options [Boolean] expand Set true to open, false to close, or nil to toggle
     #
     # @return [Capybara::Node::Element] The element clicked
-    def toggle_disclosure(name, expand: nil)
-      button = find(:disclosure_button, name)
+    def toggle_disclosure(name = nil, expand: nil)
+      byebug
+      button = if respond_to?(:matches_selector?) && matches_selector?(:disclosure_button, wait: false)
+                 self
+               elsif respond_to?(:matches_selector) && matches_selector?(:disclosure, wait: false, visible: :any) && tag_name != "summary"
+                 # find associated button
+               else
+                 find(:disclosure_button, name)
+               end
       if expand.nil?
         button.click
       elsif button.tag_name == "summary"
@@ -66,6 +73,10 @@ module CapybaraAccessibleSelectors
       elsif button[:"aria-expanded"] != (expand ? "true" : "false")
         button.click
       end
+    end
+
+    def within_disclosure(name)
+      within(:disclosure, name) { yield }
     end
   end
 end

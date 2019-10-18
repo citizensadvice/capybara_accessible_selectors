@@ -100,6 +100,20 @@ describe "focused" do
     expect(page).to have_selector :combo_box, "Combo box", focused: true
   end
 
+  it "provides a friendly error for focused" do
+    expect do
+      expect(page).to have_selector :field, "Text", focused: true, wait: false
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError, /that is focused/
+  end
+
+  it "provides a friendly error for not focused" do
+    expect do
+      focus find(:field, "Text")
+      find :field, "Text", focused: true
+      expect(page).to have_selector :field, "Text", focused: false, wait: false
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError, /that is not focused/
+  end
+
   def focus(node)
     page.execute_script("arguments[0].focus()", node)
   end

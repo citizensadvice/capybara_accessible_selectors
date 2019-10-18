@@ -4,24 +4,31 @@ module CapybaraAccessibleSelectors
   module Helpers
     module_function
 
-    def element_description(node) # rubocop:disable Metrics/AbcSize
+    def element_description(node)
       ids = node[:"aria-describedby"]&.split(/\s+/)&.compact
       [
         *node.all(:xpath, XPath.ancestor(:label)[1], wait: false),
         *(node[:id] && node.all(:xpath, XPath.anywhere(:label)[XPath.attr(:for) == node[:id]], wait: false)),
-        *(node.all(:xpath, XPath.anywhere[ids.map { |id| XPath.attr(:id) == id }.reduce(:|)], wait: false) if ids)
+        *elements_by_ids_in_order(node, ids)
       ].compact.map { |n| n.text(normalize_ws: true) }.join(" ")
     end
 
     def element_labelledby(node)
       ids = node[:"aria-labelledby"]&.split(/\s+/)&.compact
-      elements_in_id_order(node, ids).map { |n| n.text(normalize_ws: true) }.join(" ")
+      elements_by_ids_in_order(node, ids).map { |n| n.text(normalize_ws: true) }.join(" ")
     end
 
-    def elements_in_id_order(node, ids)
+    def element_describedby(node)
+      ids = node[:"aria-describedby"]&.split(/\s+/)&.compact
+      elements_by_ids_in_order(node, ids).map { |n| n.text(normalize_ws: true) }.join(" ")
+    end
+
+    def elements_by_ids_in_order(node, ids)
+      return [] if ids.nil? || ids.empty?
+
       node.all(:xpath, XPath.anywhere[ids.map { |id| XPath.attr(:id) == id }.reduce(:|)], wait: false)
           .each_with_index.map { |n, i| [i, n[:id], n] }
-          .sort { |(ai, aid), (bi, bid)| (ai - ids.find_index(aid)) - (bi - ids.find_index(bid)) }
+          .sort { |(ai, aid), (bi, bid)| (bi - ids.find_index(bid)) - (ai - ids.find_index(aid)) }
           .map { |(_, _, n)| n }
     end
 
