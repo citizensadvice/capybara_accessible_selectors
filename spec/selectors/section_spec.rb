@@ -57,4 +57,15 @@ describe "section selector" do
       end
     end
   end
+
+  describe "within_section" do
+    it "limited to within a section" do
+      within_section "Header" do
+        expect(page).to have_text <<~TEXT.strip, exact: true
+          Header
+          This is the header
+        TEXT
+      end
+    end
+  end
 end

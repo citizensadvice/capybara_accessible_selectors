@@ -62,8 +62,14 @@ describe "Disclosure" do
     end
 
     context "#within_disclosure" do
-      it "finds a disclosure"
-      it "can be chained"
+      it "finds a disclosure" do
+        within_disclosure "Summary button" do
+          expect(page).to have_text <<~TEXT.strip, exact: true
+            Summary button
+            Details content
+          TEXT
+        end
+      end
     end
   end
 
@@ -82,34 +88,45 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure button"
     end
 
-    it "toggles a disclosure open and closed" do
-      expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
-      # Open
-      toggle_disclosure("Disclosure button")
-      expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: true
-      # Force open
-      toggle_disclosure("Disclosure button", expand: true)
-      expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: true
-      # Close
-      toggle_disclosure("Disclosure button")
-      expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
-      # Force close
-      toggle_disclosure("Disclosure button", expand: false)
-      expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
+    context "#toggle_disclosure" do
+      it "toggles a disclosure open and closed" do
+        expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
+        # Open
+        toggle_disclosure("Disclosure button")
+        expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: true
+        # Force open
+        toggle_disclosure("Disclosure button", expand: true)
+        expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: true
+        # Close
+        toggle_disclosure("Disclosure button")
+        expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
+        # Force close
+        toggle_disclosure("Disclosure button", expand: false)
+        expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
+      end
+
+      it "can be called on a disclosure" do
+        disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
+        disclosure.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
+      end
+
+      it "can be called on a disclosure button" do
+        button = page.find(:button, "Disclosure button")
+        button.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
+      end
     end
 
-    it "can be called on a disclosure" do
-      disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
-      disclosure.toggle_disclosure
-      expect(page).to have_selector :disclosure, "Summary button", expanded: true
-    end
-
-    it "can be called on a summary node" do
-      summary = page.find(:element, :summary, text: "Summary button")
-      summary.toggle_disclosure
-      expect(page).to have_selector :disclosure, "Summary button", expanded: true
+    context "#within_disclosure" do
+      it "finds within a disclosure" do
+        toggle_disclosure("Disclosure button")
+        within_disclosure "Disclosure button" do
+          expect(page).to have_text "Disclosure content", exact: true
+        end
+      end
     end
   end
 
@@ -128,22 +145,45 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure span button"
     end
 
-    it "toggles a disclosure open and closed" do
-      expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
-      # Open
-      toggle_disclosure("Disclosure span button")
-      expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: true
-      # Force open
-      toggle_disclosure("Disclosure span button", expand: true)
-      expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
-      expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: true
-      # Close
-      toggle_disclosure("Disclosure span button")
-      expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
-      # Force close
-      toggle_disclosure("Disclosure span button", expand: false)
-      expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
+    context "#toggle_disclosure" do
+      it "toggles a disclosure open and closed" do
+        expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
+        # Open
+        toggle_disclosure("Disclosure span button")
+        expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: true
+        # Force open
+        toggle_disclosure("Disclosure span button", expand: true)
+        expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
+        expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: true
+        # Close
+        toggle_disclosure("Disclosure span button")
+        expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
+        # Force close
+        toggle_disclosure("Disclosure span button", expand: false)
+        expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
+      end
+
+      it "can be called on a disclosure" do
+        disclosure = page.find(:element, :div, text: "Disclosure span content", visible: false)
+        disclosure.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
+      end
+
+      it "can be called on a disclosure button" do
+        button = page.find(:element, :span, text: "Disclosure span button")
+        button.toggle_disclosure
+        expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
+      end
+    end
+
+    context "#within_disclosure" do
+      it "finds within a disclosure" do
+        toggle_disclosure("Disclosure span button")
+        within_disclosure "Disclosure span button" do
+          expect(page).to have_text "Disclosure span content", exact: true
+        end
+      end
     end
   end
 end

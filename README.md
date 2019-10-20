@@ -179,7 +179,7 @@ expect(page).to have_selector :alert, text: "Successfully saved"
 expect(page).to have_alert, text: "Successfully saved"
 ```
 
-Also see [↓ `expectation shortcuts`](expectation_shortcuts)
+Also see [↓ Expectation shortcuts](expectation_shortcuts)
 
 #### `combo_box`
 
@@ -193,7 +193,7 @@ Locator and options are the same as the [field selector](https://www.rubydoc.inf
 Also see:
 
 - [↓ `select_combo_box_option` action](#select_combo_box_option)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](expectation_shortcuts)
 
 #### `disclosure`
 
@@ -208,7 +208,8 @@ Note that an ARIA disclosure is typically hidden when closed.  Using `expanded: 
 Also see:
 
 - [↓ `toggle_disclosure` action](#toggle_disclosure)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `within_disclosure`](#within_disclosure)
 
 #### `disclosure_button`
 
@@ -221,7 +222,7 @@ Finds the open and close button associated with a [disclosure](https://www.w3.or
 Also see:
 
 - [↓ `toggle_disclosure` action](#toggle_disclosure)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](expectation_shortcuts)
 
 #### `item`
 
@@ -248,7 +249,7 @@ Example:
 expect(page).to have_selector :item, "first-name", type: "application:person", text: "Bob"
 ```
 
-Also see [↓ `expectation shortcuts`](expectation_shortcuts)
+Also see [↓ Expectation shortcuts](expectation_shortcuts)
 
 #### `modal`
 
@@ -258,7 +259,10 @@ This checks for a modal with the correct aria role, `aria-modal="true"` attribut
 
 - `locator` [String, Symbol] The title of the modal
 
-Also see [↓ `expectation shortcuts`](expectation_shortcuts)
+Also see:
+
+- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `within_modal`](#within_modal)
 
 #### `rich_text`
 
@@ -268,7 +272,7 @@ This should be compatible with most browser based rich text editors.  It searche
 
 - `locator` [String, Symbol] The label for the editor.  This can be an `aria-label` or `aria-labelledby`.  For iframe editors this is the `title` attribute.
 
-For testing the content of an iframe based editor you need to use `within_frame`.
+For testing the content of an iframe based editor you need to use `within_frame`, or you can use `within_rich_text`.
 
 ```ruby
 # non-iframe based editors
@@ -283,7 +287,8 @@ end
 Also see:
 
 - [↓ `fill_in_rich_text` action](#fill_in_rich_text)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ `within_rich_text`](#within_rich_text)
 
 #### `section`
 
@@ -311,7 +316,10 @@ within :section, "My section" do
 end
 ```
 
-Also see [↓ `expectation shortcuts`](expectation_shortcuts)
+Also see
+
+- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `within_section`](#within_section)
 
 #### `tab_panel`
 
@@ -326,7 +334,8 @@ Note that a closed tab panel is not visible.  Using `open: false` will only find
 Also see
 
 - [↓ `open_tab` action](#open_tab)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `within_tab_panel`](within_tab_panel)
 
 #### `tab_button`
 
@@ -339,7 +348,7 @@ Finds the button that opens a tab.
 Also see:
 
 - [↓ `open_tab` action](#open_tab)
-- [↓ `expectation shortcuts`](expectation_shortcuts)
+- [↓ Expectation shortcuts](expectation_shortcuts)
 
 ### Actions
 
@@ -397,6 +406,68 @@ toggle_disclosure("Client details")
 ```
 
 Also see [↑ `disclosure` selector](#disclosure)
+
+### Limiting
+
+#### `within_disclosure(name, **find_options, &block)` 
+
+Executing the block within a disclosure.
+
+```ruby
+within_disclosure "Client details" do
+  expect(page).to have_text "Name: Frank"
+end
+```
+
+Also see [↑ `disclosure` selector](#disclosure)
+
+#### `within_modal(name, **find_options, &block)`
+
+Execute the block within a modal.
+
+```ruby
+within_modal "Are you sure?" do
+  click_button "Confirm"
+end
+```
+
+Also see [↑ `modal` selector](#modal)
+
+#### `within_rich_text(name, **find_options, &block)`
+
+Execute within the rich text.  If the rich text is iframe based this will execute "`within_frame`".
+
+```ruby
+within_rich_text "Journal entry" do
+  expect(page).to have_text "Today I went to the zoo"
+end
+```
+
+Also see [↑ `rich_text` selector](#rich_text)
+
+#### `within_section(name, **find_options, &block)` 
+
+Execute the block within a section.
+
+```ruby
+within_section "Heading" do
+  expect(page).to have_text "Section content"
+end
+```
+
+Also see [↑ `section` selector](#section)
+
+#### `within_tab_panel(name, **find_options, &block)` 
+
+Executing the block within a tab panel.
+
+```ruby
+within_tab_panel "Client details" do
+  expect(page).to have_text "Name: Fred"
+end
+```
+
+Also see [↑ `tab_panel` selector](#tab_panel)
 
 ### Expectations
 

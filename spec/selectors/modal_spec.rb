@@ -37,4 +37,15 @@ describe "modal selector" do
   it "does not select a modal missing aria-modal=true" do
     expect(page).to have_no_selector :modal, "Missing aria modal"
   end
+
+  describe "within_modal" do
+    it "limits to within the modal" do
+      within_modal "Dialog title" do
+        expect(page).to have_text <<~TEXT.strip, exact: true
+          Dialog title
+          Dialog content
+        TEXT
+      end
+    end
+  end
 end

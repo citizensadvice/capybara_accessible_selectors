@@ -7,3 +7,11 @@ Capybara.add_selector(:section) do
     XPath.descendant(*Array(section_element).map(&:to_sym))[heading]
   end
 end
+
+module CapybaraAccessibleSelectors
+  module Actions
+    def within_section(name, **options)
+      within(:section, name, options) { yield }
+    end
+  end
+end

@@ -15,4 +15,8 @@ module Capybara
       include CapybaraAccessibleSelectors::Actions
     end
   end
+
+  class Session
+    include CapybaraAccessibleSelectors::Actions
+  end
 end

@@ -18,3 +18,11 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
     end
   end
 end
+
+module CapybaraAccessibleSelectors
+  module Actions
+    def within_modal(name, **options)
+      within(:modal, name, options) { yield }
+    end
+  end
+end

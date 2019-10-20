@@ -82,5 +82,19 @@ describe "tab selector" do
       expect(page).to have_selector :tab_button, "Three", open: true
       expect(page).to have_selector :tab_panel, "Three"
     end
+
+    it "can be called on a tab_button" do
+      button = find(:button, "Two")
+      button.select_tab
+      expect(page).to have_selector :tab_panel, "Two", open: true
+    end
+  end
+
+  describe "within_tab_panel" do
+    it "selects within a tab panel" do
+      within_tab_panel "One" do
+        expect(page).to have_text "Panel one", exact: true
+      end
+    end
   end
 end

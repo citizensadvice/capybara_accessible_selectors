@@ -23,6 +23,14 @@ end
 
 module CapybaraAccessibleSelectors
   module Actions
+    SELECT_NODE_JS = <<~JS
+      var selection = window.getSelection();
+      var range = document.createRange();
+      range.selectNodeContents(arguments[0]);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    JS
+
     def fill_in_rich_text(locator, with:, **find_options)
       input = find(:rich_text, locator, find_options)
       with = nil if with == ""
@@ -35,6 +43,29 @@ module CapybaraAccessibleSelectors
         page.execute_script("document.execCommand('selectAll',false,null)")
         input.send_keys with || :backspace
       end
+    end
+
+    def within_rich_text(locator = nil, **find_options)
+      if is_a? Capybara::Node::Element
+        return Capybara.page.within self do
+          return Capybara.page.within_frame(self) { yield } if tag_name == "iframe"
+          return yield if matches_selector?(:rich_text, wait: false)
+
+          Capybara.page.within_rich_text(locator, find_options) { yield }
+        end
+      end
+
+      within(:rich_text, locator, find_options) do
+        return within_frame(current_scope) { yield } if current_scope.tag_name == "iframe"
+
+        yield
+      end
+    end
+
+    def select_text(locator = nil, **find_options)
+      node = is_a?(Capybara::Node::Element) ? self : current_scope
+      node = node.find(:xpath, XPath.descendant_or_self[XPath.string.n.is(locator.to_s)], find_options) if locator
+      execute_script(SELECT_NODE_JS, node, locator)
     end
   end
 end

@@ -104,4 +104,52 @@ describe "rich text" do
       end
     end
   end
+
+  describe "within_rich_text" do
+    context "inline" do
+      it "works if called on page" do
+        fill_in_rich_text "with label", with: "foo"
+        within_rich_text("with label") do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+
+      it "works if called on a parent node" do
+        fill_in_rich_text "with label", with: "foo"
+        page.find(:css, "body").within_rich_text("with label") do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+
+      it "works if called on the rich text" do
+        fill_in_rich_text "with label", with: "foo"
+        page.find(:rich_text, "with label").within_rich_text do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+    end
+
+    context "iframe" do
+      it "works if called on page" do
+        fill_in_rich_text "editable iframe", with: "foo"
+        within_rich_text("editable iframe") do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+
+      it "works if called on a parent node" do
+        fill_in_rich_text "editable iframe", with: "foo"
+        page.find(:css, "body").within_rich_text("editable iframe") do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+
+      it "works if called on the rich text" do
+        fill_in_rich_text "editable iframe", with: "foo"
+        page.find(:rich_text, "editable iframe").within_rich_text do
+          expect(page).to have_text "foo", exact: true
+        end
+      end
+    end
+  end
 end

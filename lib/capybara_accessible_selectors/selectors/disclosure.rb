@@ -57,15 +57,8 @@ module CapybaraAccessibleSelectors
     # @option options [Boolean] expand Set true to open, false to close, or nil to toggle
     #
     # @return [Capybara::Node::Element] The element clicked
-    def toggle_disclosure(name = nil, expand: nil)
-      byebug
-      button = if respond_to?(:matches_selector?) && matches_selector?(:disclosure_button, wait: false)
-                 self
-               elsif respond_to?(:matches_selector) && matches_selector?(:disclosure, wait: false, visible: :any) && tag_name != "summary"
-                 # find associated button
-               else
-                 find(:disclosure_button, name)
-               end
+    def toggle_disclosure(name = nil, expand: nil, **find_options)
+      button = _locate_disclosure_button(name, find_options)
       if expand.nil?
         button.click
       elsif button.tag_name == "summary"
@@ -75,8 +68,21 @@ module CapybaraAccessibleSelectors
       end
     end
 
-    def within_disclosure(name)
-      within(:disclosure, name) { yield }
+    def within_disclosure(name, **options)
+      within(:disclosure, name, options) { yield }
+    end
+
+    private
+
+    def _locate_disclosure_button(name, find_options)
+      if is_a?(Capybara::Node::Element) && name.nil?
+        return self if matches_selector?(:disclosure_button, wait: false)
+        return find(:element, :summary, find_options) if tag_name == "details"
+        if matches_selector?(:disclosure, wait: false)
+          return find(:xpath, XPath.anywhere[XPath.attr(:"aria-controls") == self[:id]], find_options)
+        end
+      end
+      find(:disclosure_button, name, find_options)
     end
   end
 end
