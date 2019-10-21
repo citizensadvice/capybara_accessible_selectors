@@ -105,7 +105,7 @@ end
 
 require "capybara_accessible_selectors/helpers"
 require "capybara_accessible_selectors/actions"
-require "capybara_accessible_selectors/locate_field"
 require "capybara_accessible_selectors/filter_set"
 Dir[File.join(__dir__, "capybara_accessible_selectors", "selectors", "*.rb")].each { |f| require f }
 require "capybara_accessible_selectors/rspec/matchers"
+require "capybara_accessible_selectors/locate_by_fieldset"

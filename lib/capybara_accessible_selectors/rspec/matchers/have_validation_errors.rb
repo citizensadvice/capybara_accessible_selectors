@@ -19,7 +19,7 @@ module Capybara
           @errors.join("\n")
         end
 
-        %i[field radio_button checkbox select file_field combo_box].each do |selector|
+        %i[field radio_button checkbox select file_field combo_box rich_text].each do |selector|
           define_method(selector) do |*args, **options|
             raise ArgumentError, "requires validation_error option" unless options[:validation_error]
 

@@ -100,6 +100,20 @@ describe "focused" do
     expect(page).to have_selector :combo_box, "Combo box", focused: true
   end
 
+  it "selects a focused rich text" do
+    expect(page).to have_no_selector :rich_text, "Rich text", focused: true
+    expect(page).to have_selector :rich_text, "Rich text", focused: false
+    focus find(:rich_text, "Rich text")
+    expect(page).to have_selector :rich_text, "Rich text", focused: true
+  end
+
+  it "selects a focused rich text iframe" do
+    expect(page).to have_no_selector :rich_text, "Editable iframe", focused: true
+    expect(page).to have_selector :rich_text, "Editable iframe", focused: false
+    focus find(:rich_text, "Editable iframe")
+    expect(page).to have_selector :rich_text, "Editable iframe", focused: true
+  end
+
   it "provides a friendly error for focused" do
     expect do
       expect(page).to have_selector :field, "Text", focused: true, wait: false

@@ -43,6 +43,11 @@ describe "described by filter" do
     expect(page).to have_no_selector :combo_box, "Combo box", described_by: "Foo"
   end
 
+  it "filters a rich text box" do
+    expect(page).to have_selector :rich_text, "Rich text", described_by: "Rich text description"
+    expect(page).to have_no_selector :rich_text, "Rich text", described_by: "Foo"
+  end
+
   it "provides a friendly error" do
     expect do
       expect(page).to have_selector :field, "Text", described_by: "foo", wait: false

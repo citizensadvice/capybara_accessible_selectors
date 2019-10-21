@@ -12,6 +12,7 @@ describe "has_validation_errors" do
         select "Select", validation_error: "is required"
         file_field "File field", validation_error: "is required"
         combo_box "Combo box", validation_error: "is required"
+        rich_text "Rich text", validation_error: "is required"
       end
     end
   end
@@ -25,6 +26,7 @@ describe "has_validation_errors" do
         select "Select", validation_error: "is required"
         file_field "File field", validation_error: "is required"
         combo_box "Combo box", validation_error: "is required"
+        rich_text "Rich text", validation_error: "is required"
       end
     end.to raise_error RSpec::Expectations::ExpectationNotMetError, <<~MESSAGE.strip
       expected <input required="" type="text"> to have no error

@@ -35,6 +35,12 @@ describe "validation error filter" do
         expect(page).to have_selector :field, "Text", validation_error: "Text error", wait: false
       end.to raise_error RSpec::Expectations::ExpectationNotMetError, /aria-invalid cannot be false/
     end
+
+    it "provides a friendly error for a field this not a candidate for constriant validation" do
+      expect do
+        expect(page).to have_selector :field, "Disabled", validation_error: "is required", disabled: true, wait: false
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected element validity\.willValidate to be true/
+    end
   end
 
   context "fillable_field" do
@@ -118,6 +124,21 @@ describe "validation error filter" do
     it "selects a field with a label error message" do
       expect(page).to have_selector :combo_box, "Combo box", validation_error: "Combo box label error"
       expect(page).to have_no_selector :combo_box, "Combo box", validation_error: "another error"
+    end
+  end
+
+  context "rich_text" do
+    it "selects a field with an aria-describedby error message" do
+      expect(page).to have_selector :rich_text, "Rich text", validation_error: "Rich text error"
+      expect(page).to have_no_selector :rich_text, "Rich text", validation_error: "Another error"
+    end
+
+    it "provides a friendly error if aria-invalid is missing" do
+      node = page.find :rich_text, "Rich text"
+      page.execute_script "arguments[0].setAttribute('aria-invalid', 'false')", node
+      expect do
+        expect(page).to have_selector :rich_text, "Rich text", validation_error: "Rich text error", wait: false
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected aria-invalid to be true/
     end
   end
 end
