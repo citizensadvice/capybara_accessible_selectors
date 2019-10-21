@@ -20,3 +20,5 @@ module Capybara
     include CapybaraAccessibleSelectors::Actions
   end
 end
+
+Dir[File.join(__dir__, "actions", "*.rb")].each { |f| require f }
