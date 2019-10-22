@@ -53,4 +53,12 @@ describe "has_validation_errors" do
       end
     end.to raise_error Capybara::ExpectationNotMet
   end
+
+  context "negated matcher" do
+    it "validates there are no validation errors" do
+      within(:section, "Form with no errors") do
+        expect(page).to_not have_validation_errors
+      end
+    end
+  end
 end

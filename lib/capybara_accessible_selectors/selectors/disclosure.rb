@@ -68,10 +68,6 @@ module CapybaraAccessibleSelectors
       end
     end
 
-    def within_disclosure(name, **options)
-      within(:disclosure, name, options) { yield }
-    end
-
     private
 
     def _locate_disclosure_button(name, find_options)
@@ -83,6 +79,16 @@ module CapybaraAccessibleSelectors
         end
       end
       find(:disclosure_button, name, find_options)
+    end
+  end
+
+  module Session
+    # Limit supplied block to within a disclosure
+    #
+    # @param [String] Name Fieldset label
+    # @param [Hash] options Finder options
+    def within_disclosure(name, **options)
+      within(:disclosure, name, options) { yield }
     end
   end
 end

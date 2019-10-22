@@ -1,17 +1,23 @@
 # Capybara accessible selectors
 
 A set of Capybara selectors that allow you to
-find common UI elements by labels and using aria compatible markup.
+find common UI elements by labels and using screen-reader compatible mark-up.
 
 ## Philosophy
 
-All feature tests should interact with the browser in the same a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
+All feature tests should interact with the browser in the same way a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
 
-This means all the selectors should be based on semantic markup, page outline structure and form labels only.
+To be accessible to a screen-reader, a page should be built from the correct native html elements with the semantics and behaviour required for each feature.  For example if the page contains a button it should use `<button>` element.
 
-For standard user interface elements that have no HTML native equivalent. For example tabs and modals. The selectors should be based on how a screen reader interacts with a page.  This is generally by aria roles and attributes.
+Where a feature does not exist in HTML, then the correct ARIA roles and states can be used to convey the meaning to a screen-reader.
 
-For example:
+For a better overview see [Using aria](https://www.w3.org/TR/using-aria/).
+
+The test engineer should follow this philosophy.  For example when pressing a button find a button `click_button` method and the visible label.  When filling in an input, use `fill_in` and the visible label of the input.
+
+This gem contains a set of selectors and filters for common UI elements and element states that are not already included in Capybara.  These selectors follow the guidelines in [ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/).  In all cases the test engineer should use these selectors with visible labels on the page, rather than `xpath` and `css` selectors.
+
+Examples:
 
 ```ruby
 # Bad selectors
@@ -44,11 +50,13 @@ end
 
 ## Documentation
 
+See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of built in selectors and actions.
+
 ### Filters
 
 #### `described_by` [String]
 
-Added to: `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
+Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
 Is the field described by some text using [`aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute).
 
@@ -69,7 +77,7 @@ expect(page).to have_field "My field", described_by: "My description"
 
 #### `fieldset` [String, Symbol, Array]
 
-Added to: `button`, `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
+Added to: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
 Filter for controls within a `<fieldset>`.  This can also take an array of fieldsets for multiple nested fieldsets.
 
@@ -112,7 +120,7 @@ expect(page).to have_field "My field", focused: true
 
 #### `validation_error` [String]
 
-Added to: `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
+Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
 Filters for an element being both invalid, and has a description or label with the error message.
 
@@ -141,9 +149,9 @@ Also see:
 
 #### Locating fields
 
-The following selectors have been extended so you can use an array as an locator to select within a fieldset.  eg `["Outer fieldset legend", "optionally a nested fieldset legend", "field label"]`.
+The following selectors have been extended so you can use an array as the locator to select within a fieldset.  eg `["Outer fieldset legend", "optionally a nested fieldset legend", "field label"]`.
 
-Extended selectors: `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
+Extended selectors: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
 
 ```html
 <fieldset>

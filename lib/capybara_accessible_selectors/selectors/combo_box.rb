@@ -55,6 +55,7 @@ module CapybaraAccessibleSelectors
     # @param [String] with The option to select
     # @option options [String] from Locator for the combo box
     # @option options [String] currently_with The current combo box selection
+    # @option options [Hash] fill_options Additional driver specific fill options
     #
     # @return [Capybara::Node::Element] The combo box
     def select_combo_box_option(with, from: nil, currently_with: nil, fill_options: {}, **find_options)

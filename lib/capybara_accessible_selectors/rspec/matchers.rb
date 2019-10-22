@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-Dir[File.join(__dir__, "matchers", "*.rb")].each { |f| require f }
+require "capybara_accessible_selectors/rspec/matchers/have_validation_errors"
+require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 
 # rubocop:disable Name/PredicateName
 module Capybara

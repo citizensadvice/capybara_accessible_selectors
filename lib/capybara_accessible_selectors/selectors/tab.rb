@@ -55,7 +55,13 @@ module CapybaraAccessibleSelectors
         find(:tab_button, name, find_options)
       end.click
     end
+  end
 
+  module Session
+    # Limit supplied block to within a tab panel
+    #
+    # @param [String] name The tab button label
+    # @param [Hash] options Finder options
     def within_tab_panel(name, **options)
       within(:tab_panel, name, options) { yield }
     end

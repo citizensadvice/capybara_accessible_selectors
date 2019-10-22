@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet.add(:capybara_accessible_selectors) {}
-Dir[File.join(__dir__, "filters", "*.rb")].each { |f| require f }
+require "capybara_accessible_selectors/filters/described_by"
+require "capybara_accessible_selectors/filters/fieldset"
+require "capybara_accessible_selectors/filters/focused"
+require "capybara_accessible_selectors/filters/validation_error"
 
 {
   button: %i[focused fieldset],

@@ -26,6 +26,11 @@ end
 
 module CapybaraAccessibleSelectors
   module Actions
+    # Fill in a rich text area with text
+    #
+    # @param [String] locator Rich text label
+    # @param [Hash] find_options Finder options
+    # @option options [String] :with The text to use
     def fill_in_rich_text(locator, with:, **find_options)
       input = find(:rich_text, locator, find_options)
       with = nil if with == ""
@@ -40,6 +45,10 @@ module CapybaraAccessibleSelectors
       end
     end
 
+    # Limit supplied block to within a rich text editable area
+    #
+    # @param [String] locator Rich text label
+    # @param [Hash] find_options Finder options
     def within_rich_text(locator = nil, **find_options)
       if is_a? Capybara::Node::Element
         return Capybara.page.within self do

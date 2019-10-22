@@ -9,9 +9,13 @@ Capybara.add_selector(:section) do
 end
 
 module CapybaraAccessibleSelectors
-  module Actions
-    def within_section(name, **options)
-      within(:section, name, options) { yield }
+  module Session
+    # Limit supplied block to within a section
+    #
+    # @param [String] locator The section heading
+    # @param [Hash] options Finder options
+    def within_section(locator, **options)
+      within(:section, locator, options) { yield }
     end
   end
 end

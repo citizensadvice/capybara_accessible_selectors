@@ -20,7 +20,11 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
 end
 
 module CapybaraAccessibleSelectors
-  module Actions
+  module Session
+    # Limit supplied block to within a modal
+    #
+    # @param [String] Name Modal label
+    # @param [Hash] options Finder options
     def within_modal(name, **options)
       within(:modal, name, options) { yield }
     end
