@@ -7,35 +7,48 @@ find common UI elements by labels and using screen-reader compatible mark-up.
 
 All feature tests should interact with the browser in the same way a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
 
-To be accessible to a screen-reader, a page should be built from the correct native html elements with the semantics and behaviour required for each feature.  For example if the page contains a button it should use `<button>` element.
+To be accessible to a screen-reader, a page should be built from the native html elements with the semantics and behaviour required for each feature.  For example if the page contains a button it should use `<button>` element rather than adding a `onClick` handler to a `<span>`.
 
-Where a feature does not exist in HTML, then the correct ARIA roles and states can be used to convey the meaning to a screen-reader.
+Where a feature does not exist in HTML, such as tabs, then ARIA roles and states can be used to convey the meaning to a screen-reader.
 
 For a better overview see [Using aria](https://www.w3.org/TR/using-aria/).
 
-The test engineer should follow this philosophy.  For example when pressing a button find a button `click_button` method and the visible label.  When filling in an input, use `fill_in` and the visible label of the input.
+As a result all tests should be built from the visible labels on the page, and the semantic meaning of elements, and ARIA roles and attribute.
 
-This gem contains a set of selectors and filters for common UI elements and element states that are not already included in Capybara.  These selectors follow the guidelines in [ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/).  In all cases the test engineer should use these selectors with visible labels on the page, rather than `xpath` and `css` selectors.
+CSS and XPATH selectors based on classes, ids and nesting elements with no semantic meaning, should not be used.
+
+This gem contains a set of selectors and filters for common UI elements and element states that are not already included in Capybara.  These selectors follow the guidelines in [ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/).
 
 Examples:
 
 ```ruby
 # Bad selectors
 # - fragile and does not check the control is correctly labelled
+
 page.find(:css, "#widget > div > .field").set("Bob")
+
 fill_in "field_name_1", with: "Bob"
+
 page.find(:css, "#tab_1").click
+
 within(:css, "#tabs > div > div.panel:first-child") do
   expect(page).to have_text "Client name Bob"
 end
 
 # Good selectors
 # - based on how a screen reader would hear and navigate a page
+
 within_fieldset "User details" do
   fill_in "First name", with: "Bob"
 end
+
 select_tab "Client details"
+
 expect(page).to have_tab_panel "Client details", text: "Client name Bob"
+
+within_modal "Are you sure?" do
+  click_button "OK"
+end
 ```
 
 ## Usage
@@ -50,7 +63,7 @@ end
 
 ## Documentation
 
-See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of built in selectors and actions.
+See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of built-in Capybara selectors and actions.
 
 ### Filters
 
@@ -79,7 +92,7 @@ expect(page).to have_field "My field", described_by: "My description"
 
 Added to: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
-Filter for controls within a `<fieldset>`.  This can also take an array of fieldsets for multiple nested fieldsets.
+Filter for controls within a `<fieldset>` by `<legend>` text.  This can also take an array of fieldsets for multiple nested fieldsets.
 
 For example:
 
@@ -122,7 +135,7 @@ expect(page).to have_field "My field", focused: true
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
-Filters for an element being both invalid, and has a description or label with the error message.
+Filters for an element being both invalid, and has a description or label containing the error message.
 
 To be invalid, the element must [`willValidate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/willValidate) and have a [`validity.valid`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) that is false.  Additionally the `aria-invalid` must not contradict the validity state.
 
@@ -142,14 +155,14 @@ expect(page).to have_field "My field", validation_error: "This is required"
 
 Also see:
 
-- [↓ `have_validation_errors` expectation](have_validation_errors)
-- [↓ `have_no_validation_errors` expecation](have_no_validation_errors)
+- [↓ `have_validation_errors` expectation](#have_validation_errorsblock)
+- [↓ `have_no_validation_errors` expecation](#have_no_validation_errors)
 
 ### Selectors
 
 #### Locating fields
 
-The following selectors have been extended so you can use an array as the locator to select within a fieldset.  eg `["Outer fieldset legend", "optionally a nested fieldset legend", "field label"]`.
+The following selectors have been extended so you can use an array as the locator to select within a fieldset.  The last element of the array is the field label, and the other elements are fieldsets.
 
 Extended selectors: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
 
@@ -172,7 +185,7 @@ find :radio_button, ["My question", "Answer 1"]
 choose ["My question", "Answer 1"]
 ```
 
-Also see [↑ `fieldset` filter](#fieldset)
+Also see [↑ `fieldset` filter](#fieldset-string-symbol-array)
 
 #### `alert`
 
@@ -187,21 +200,23 @@ expect(page).to have_selector :alert, text: "Successfully saved"
 expect(page).to have_alert, text: "Successfully saved"
 ```
 
-Also see [↓ Expectation shortcuts](expectation_shortcuts)
+Also see [↓ Expectation shortcuts](#expectation_shortcuts)
 
 #### `combo_box`
 
 Finds a [combo box](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox).
-This will find ARIA 1.0 and ARIA 1.1 combo boxes.
+This will find ARIA 1.0 and ARIA 1.1 combo boxes.  A combo box is an input with a popup list of options. 
 
 This also finds select based on [Twitter typeahead](https://twitter.github.io/typeahead.js/) classes, but this behaviour is deprecated and will be removed in a future release.
 
 Locator and options are the same as the [field selector](https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Selector).
 
+Note that the built-in Capybara selector `datalist_input` will find a [native html `list` attribute based combo-box](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist).
+
 Also see:
 
-- [↓ `select_combo_box_option` action](#select_combo_box_option)
-- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `select_combo_box_option` action](#select_combo_box_optionwith-options)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
 
 #### `disclosure`
 
@@ -215,9 +230,9 @@ Note that an ARIA disclosure is typically hidden when closed.  Using `expanded: 
 
 Also see:
 
-- [↓ `toggle_disclosure` action](#toggle_disclosure)
-- [↓ Expectation shortcuts](expectation_shortcuts)
-- [↓ `within_disclosure`](#within_disclosure)
+- [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ `within_disclosure`](#within_disclosurename-find_options-block)
 
 #### `disclosure_button`
 
@@ -229,8 +244,8 @@ Finds the open and close button associated with a [disclosure](https://www.w3.or
 
 Also see:
 
-- [↓ `toggle_disclosure` action](#toggle_disclosure)
-- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
 
 #### `item`
 
@@ -257,7 +272,7 @@ Example:
 expect(page).to have_selector :item, "first-name", type: "application:person", text: "Bob"
 ```
 
-Also see [↓ Expectation shortcuts](expectation_shortcuts)
+Also see [↓ Expectation shortcuts](#expectation_shortcuts)
 
 #### `modal`
 
@@ -269,8 +284,8 @@ This checks for a modal with the correct aria role, `aria-modal="true"` attribut
 
 Also see:
 
-- [↓ Expectation shortcuts](expectation_shortcuts)
-- [↓ `within_modal`](#within_modal)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ `within_modal`](#within_modalname-find_options-block)
 
 #### `rich_text`
 
@@ -294,9 +309,9 @@ end
 
 Also see:
 
-- [↓ `fill_in_rich_text` action](#fill_in_rich_text)
+- [↓ `fill_in_rich_text` action](#fill_in_rich_textlocator-options)
 - [↓ Expectation shortcuts](#expectation_shortcuts)
-- [↓ `within_rich_text`](#within_rich_text)
+- [↓ `within_rich_text`](#within_rich_textname-find_options-block)
 
 #### `section`
 
@@ -326,8 +341,8 @@ end
 
 Also see
 
-- [↓ Expectation shortcuts](expectation_shortcuts)
-- [↓ `within_section`](#within_section)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ `within_section`](#within_sectionname-find_options-block)
 
 #### `tab_panel`
 
@@ -341,9 +356,9 @@ Note that a closed tab panel is not visible.  Using `open: false` will only find
 
 Also see
 
-- [↓ `open_tab` action](#open_tab)
-- [↓ Expectation shortcuts](expectation_shortcuts)
-- [↓ `within_tab_panel`](within_tab_panel)
+- [↓ `open_tab` action](#open_tabname)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ `within_tab_panel`](#within_tab_panelname-find_options-block)
 
 #### `tab_button`
 
@@ -355,8 +370,8 @@ Finds the button that opens a tab.
 
 Also see:
 
-- [↓ `open_tab` action](#open_tab)
-- [↓ Expectation shortcuts](expectation_shortcuts)
+- [↓ `open_tab` action](#open_tabname)
+- [↓ Expectation shortcuts](#expectation_shortcuts)
 
 ### Actions
 
@@ -483,7 +498,7 @@ Also see [↑ `tab_panel` selector](#tab_panel)
 
 Checks if a page has a set of validation errors.  This will fail if the page does not have the exact set of errors.
 
-- `&block` - this takes a block.  In the block each validation error should be checked as in the example below.
+- `&block` - this takes a block.  In the block each validation error expection should be added using the following DSL:
 
 ```ruby
 expect(page).to have_validation_errors do
@@ -496,7 +511,7 @@ expect(page).to have_validation_errors do
 end
 ```
 
-Also see [↑ `validation_error` filter](#validation_error_string)
+Also see [↑ `validation_error` filter](#validation_error-string)
 
 #### `have_no_validation_errors`
 
@@ -506,7 +521,7 @@ Checks if a page has no invalid fields.
 expect(page).to have_no_validation_errors
 ``` 
   
-Also see [↑ `validation_error` filter](#validation_error_string)  
+Also see [↑ `validation_error` filter](#validation_error-string)  
   
 #### Expectation shortcuts
 
