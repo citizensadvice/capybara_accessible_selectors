@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/citizensadvice/citizens-advice-style-ruby
-  revision: 0453857f287f0398489828f740e42ac65747e13a
-  tag: v0.2.0
+  revision: f2567fed6440ebbf03cae2563d7e523303793fef
+  tag: v0.2.1
   specs:
-    citizens-advice-style (0.2.0)
+    citizens-advice-style (0.2.1)
       rubocop (~> 0.70)
 
 PATH

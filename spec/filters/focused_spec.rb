@@ -24,6 +24,13 @@ describe "focused" do
     expect(page).to have_selector :fillable_field, "Textarea", focused: true
   end
 
+  it "selects an focused datalist_input" do
+    expect(page).to have_no_selector :datalist_input, "Input", focused: true
+    expect(page).to have_selector :datalist_input, "Input", focused: false
+    focus find(:datalist_input, "Input")
+    expect(page).to have_selector :datalist_input, "Input", focused: true
+  end
+
   it "selects a focused button" do
     expect(page).to have_no_selector :button, "Button", focused: true
     expect(page).to have_selector :button, "Button", focused: false
@@ -91,6 +98,34 @@ describe "focused" do
     expect(page).to have_selector :combo_box, "Combo box", focused: false
     focus find(:combo_box, "Combo box")
     expect(page).to have_selector :combo_box, "Combo box", focused: true
+  end
+
+  it "selects a focused rich text" do
+    expect(page).to have_no_selector :rich_text, "Rich text", focused: true
+    expect(page).to have_selector :rich_text, "Rich text", focused: false
+    focus find(:rich_text, "Rich text")
+    expect(page).to have_selector :rich_text, "Rich text", focused: true
+  end
+
+  it "selects a focused rich text iframe" do
+    expect(page).to have_no_selector :rich_text, "Editable iframe", focused: true
+    expect(page).to have_selector :rich_text, "Editable iframe", focused: false
+    focus find(:rich_text, "Editable iframe")
+    expect(page).to have_selector :rich_text, "Editable iframe", focused: true
+  end
+
+  it "provides a friendly error for focused" do
+    expect do
+      expect(page).to have_selector :field, "Text", focused: true, wait: false
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError, /that is focused/
+  end
+
+  it "provides a friendly error for not focused" do
+    expect do
+      focus find(:field, "Text")
+      find :field, "Text", focused: true
+      expect(page).to have_selector :field, "Text", focused: false, wait: false
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError, /that is not focused/
   end
 
   def focus(node)

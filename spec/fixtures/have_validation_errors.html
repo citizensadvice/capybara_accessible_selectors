@@ -1,0 +1,71 @@
+<!doctype html>
+<meta charset="UTF-8">
+<h1>Validation errors</h1>
+<form>
+  <h2>Form with many errors</h2>
+  <label>
+    Text is required
+    <input required type="text" />
+  </label>
+
+  <label>
+    I'm OK
+    <input type="text" />
+  </label>
+
+  <label>
+    <input required name="radio" type="radio" />
+    Radio is required
+  </label>
+
+  <label>
+    <input required type="checkbox" />
+    Checkbox is required
+  </label>
+
+  <label>
+    Select is required
+    <select required>
+      <option></option>
+      <option>Option</option>
+    </select>
+  </label>
+
+  <label>
+    File field is required
+    <input required type="file" />
+  </label>
+
+  <label>
+    Combo box is required
+    <input required type="text" role="combobox" />
+  </label>
+
+  <p>
+    <div id="label-rich-text">Rich text</div>
+    <div id="described-by-rich-text">is required</div>
+    <div contenteditable="true" role="textbox" aria-labelledby="label-rich-text" aria-describedby="described-by-rich-text" aria-invalid="true">
+    </div>
+  </p>
+</form>
+
+<form>
+  <h2>Form with one error</h2>
+  <label>
+    Another is required
+    <input required type="text" />
+  </label>
+
+  <label>
+    I'm OK
+    <input type="text" />
+  </label>
+</form>
+
+<form>
+  <h2>Form with no errors</h2>
+  <label>
+    Control
+    <input type="text" />
+  </label>
+</form>

@@ -7,7 +7,8 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)
     xpath = xpath[[
       XPath.attr(:role) == "combobox", # ARIA 1.0
-      XPath.ancestor[XPath.attr(:role) == "combobox"] # ARIA 1.1
+      XPath.ancestor[XPath.attr(:role) == "combobox"], # ARIA 1.1
+      XPath.attr(:class).contains_word("tt-input") # DEPRECATED: Twitter typeahead
     ].reduce(:|)]
     locate_field(xpath, locator, options)
   end
@@ -29,6 +30,8 @@ end
 
 Capybara.add_selector(:combo_box_list_box, locator_type: Capybara::Node::Element) do
   xpath do |input|
+    next XPath.anywhere[XPath.attr(:class).contains_word("tt-menu")] if input.matches_selector? :css, ".tt-input", wait: false
+
     XPath.anywhere[[
       XPath.attr(:role) == "listbox",
       XPath.attr(:id) == (input[:"aria-owns"] || input[:"aria-controls"])
@@ -39,7 +42,7 @@ end
 Capybara.add_selector(:list_box_option, locator_type: String) do
   xpath do |value|
     XPath.descendant[[
-      XPath.attr(:role) == "option",
+      (XPath.attr(:role) == "option") | XPath.attr(:class).contains_word("tt-selectable"),
       XPath.string.n.is(value)
     ].reduce(:&)]
   end
@@ -52,6 +55,7 @@ module CapybaraAccessibleSelectors
     # @param [String] with The option to select
     # @option options [String] from Locator for the combo box
     # @option options [String] currently_with The current combo box selection
+    # @option options [Hash] fill_options Additional driver specific fill options
     #
     # @return [Capybara::Node::Element] The combo box
     def select_combo_box_option(with, from: nil, currently_with: nil, fill_options: {}, **find_options)
@@ -59,7 +63,7 @@ module CapybaraAccessibleSelectors
       find_options[:allow_self] = true if from.nil?
       input = find(:combo_box, from, find_options)
       input.set(with, fill_options)
-      unless input.matches_selector? :css, "[aria-controls],[aria-owns]"
+      unless input.matches_selector? :css, "[aria-controls],[aria-owns],.tt-input", wait: false
         raise Capybara::ExpectationNotMet, "input must use aria-controls or aria-owns"
       end
 

@@ -20,12 +20,12 @@ describe "fieldset filter" do
       context "single fieldset" do
         it "selects with an implicit label" do
           expect(page).to have_selector selector, "#{label} implicit", count: 2
-          expect(find(selector, "#{label} implicit", fieldset: "Inner circle")).to eq find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
+          expect(find(selector, ["Inner circle", "#{label} implicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
         end
 
         it "selects with an explicit label" do
           expect(page).to have_selector selector, "#{label} explicit", count: 2
-          expect(find(selector, "#{label} explicit", fieldset: "Inner circle")).to eq find(:fieldset, "Inner circle").find(:field, "#{label} explicit")
+          expect(find(selector, ["Inner circle", "#{label} explicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} explicit")
         end
       end
 
@@ -33,47 +33,47 @@ describe "fieldset filter" do
         it "selects with an implicit label" do
           expect(page).to have_selector selector, "#{label} implicit", count: 2
           expected = find(:fieldset, "Outer circle").find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
-          expect(find(selector, "#{label} implicit", fieldset: ["Outer circle", "Inner circle"])).to eq expected
+          expect(find(selector, ["Outer circle", "Inner circle", "#{label} implicit"])).to eq expected
         end
 
         it "selects with an explicit label" do
           expect(page).to have_selector selector, "#{label} explicit", count: 2
           expected = find(:fieldset, "Outer circle").find(:fieldset, "Inner circle").find(:field, "#{label} explicit")
-          expect(find(selector, "#{label} explicit", fieldset: ["Outer circle", "Inner circle"])).to eq expected
+          expect(find(selector, ["Outer circle", "Inner circle", "#{label} explicit"])).to eq expected
         end
       end
     end
   end
 
-  context "rich text" do
-    it "selects a rich text" do
+  context "rich_text" do
+    it "selects a rich_text" do
       expect(page).to have_selector :rich_text, "Rich text", count: 2
-      expect(page).to have_selector :rich_text, "Rich text", fieldset: "Inner circle", count: 1
-      expect(page).to have_selector :rich_text, "Rich text", fieldset: ["Outer circle", "Inner circle"], count: 1
+      expect(page).to have_selector :rich_text, ["Inner circle", "Rich text"], count: 1
+      expect(page).to have_selector :rich_text, ["Outer circle", "Inner circle", "Rich text"], count: 1
     end
   end
 
   context "button" do
     it "selects a button" do
       expect(page).to have_selector :button, "Button", count: 2
-      expect(page).to have_selector :button, "Button", fieldset: "Inner circle", count: 1
-      expect(page).to have_selector :button, "Button", fieldset: ["Outer circle", "Inner circle"], count: 1
+      expect(page).to have_selector :button, ["Inner circle", "Button"], count: 1
+      expect(page).to have_selector :button, ["Outer circle", "Inner circle", "Button"], count: 1
     end
   end
 
   context "link" do
     it "selects a link" do
       expect(page).to have_selector :link, "Link", count: 2
-      expect(page).to have_selector :link, "Link", fieldset: "Inner circle", count: 1
-      expect(page).to have_selector :link, "Link", fieldset: ["Outer circle", "Inner circle"], count: 1
+      expect(page).to have_selector :link, ["Inner circle", "Link"], count: 1
+      expect(page).to have_selector :link, ["Outer circle", "Inner circle", "Link"], count: 1
     end
   end
 
   context "link_or_button" do
     it "selects a link_or_button" do
       expect(page).to have_selector :link_or_button, "Link", count: 2
-      expect(page).to have_selector :link_or_button, "Link", fieldset: "Inner circle", count: 1
-      expect(page).to have_selector :link_or_button, "Link", fieldset: ["Outer circle", "Inner circle"], count: 1
+      expect(page).to have_selector :link_or_button, ["Inner circle", "Link"], count: 1
+      expect(page).to have_selector :link_or_button, ["Outer circle", "Inner circle", "Link"], count: 1
     end
   end
 end

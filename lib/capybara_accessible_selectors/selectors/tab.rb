@@ -5,7 +5,7 @@ Capybara.add_selector(:tab_button) do
     XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name)
+      XPath.string.n.is(name.to_s)
     ].reduce(:&)]
   end
 
@@ -25,7 +25,7 @@ Capybara.add_selector(:tab_panel) do
     tab = XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name)
+      XPath.string.n.is(name.to_s)
     ].reduce(:&)]
     XPath.descendant[XPath.attr(:role) == "tabpanel"][XPath.attr(:id) == tab.attr(:"aria-controls")]
   end
@@ -48,8 +48,22 @@ module CapybaraAccessibleSelectors
     # @param [String] locator The text of the button
     #
     # @return [Capybara::Node::Element] The element clicked
-    def select_tab(name)
-      find(:tab_button, name).click
+    def select_tab(name = nil, **find_options)
+      if name.nil? && is_a?(Capybara::Node::Element) && matches_selector?(:tab_button)
+        self
+      else
+        find(:tab_button, name, find_options)
+      end.click
+    end
+  end
+
+  module Session
+    # Limit supplied block to within a tab panel
+    #
+    # @param [String] name The tab button label
+    # @param [Hash] options Finder options
+    def within_tab_panel(name, **options)
+      within(:tab_panel, name, options) { yield }
     end
   end
 end

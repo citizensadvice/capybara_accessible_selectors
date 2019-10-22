@@ -1,110 +1,138 @@
 <!doctype html>
-<body>
-  <h1>Fieldset filter</h1>
+<meta charset="UTF-8">
+<h1>Fieldset filter</h1>
 
-  <p>
-    <label>
-      Text implicit
-      <input type="text" />
-    </label>
-  </p>
+<p>
+  <label>
+    Text implicit
+    <input type="text" list="list-id"/>
+    <datalist id="list-id">
+      <option value="Option one">
+      <option value="Option two">
+    </datalist>
+  </label>
+</p>
 
-  <p>
-    <label for="text1">Text explicit</label>
-    <input type="text" id="text1" />
-  </p>
+<p>
+  <label for="text1">Text explicit</label>
+  <input type="text" id="text1" list="list-id" />
+  <datalist id="list-id">
+    <option value="Option one">
+    <option value="Option two">
+  </datalist>
+</p>
 
-  <p>
-    <button type="button">
-      Button
-    </button>
-  </p>
+<p>
+  <button type="button">
+    Button
+  </button>
+</p>
 
-  <p>
-    <label>
-      Select implicit
-      <select>
-        <option></option>
-        <option>Option</option>
-      </select>
-    </label>
-  </p>
+<p>
+  <a href="#">
+    Link
+  </a>
+</p>
 
-  <p>
-    <label for="select1">Select explicit</label>
-    <select id="select1">
+<p>
+  <label>
+    Select implicit
+    <select>
       <option></option>
       <option>Option</option>
     </select>
-  </p>
+  </label>
+</p>
 
-  <p>
-    <label>
-      <input type="checkbox" />
-      Checkbox implicit
-    </label>
-  </p>
+<p>
+  <label for="select1">Select explicit</label>
+  <select id="select1">
+    <option></option>
+    <option>Option</option>
+  </select>
+</p>
 
-  <p>
-    <input type="checkbox" id="checkbox1" />
-    <label for="checkbox1">Checkbox explicit</label>
-  </p>
+<p>
+  <label>
+    <input type="checkbox" />
+    Checkbox implicit
+  </label>
+</p>
 
-  <p>
-    <label>
-      <input type="radio" />
-      Radio implicit
-    </label>
-  </p>
+<p>
+  <input type="checkbox" id="checkbox1" />
+  <label for="checkbox1">Checkbox explicit</label>
+</p>
 
-  <p>
-    <input type="radio" id="radio1" />
-    <label for="radio1">Radio explicit</label>
-  </p>
+<p>
+  <label>
+    <input type="radio" />
+    Radio implicit
+  </label>
+</p>
 
-  <p>
-    <label>
-      File implicit
-      <input type="file" />
-    </label>
-  </p>
+<p>
+  <input type="radio" id="radio1" />
+  <label for="radio1">Radio explicit</label>
+</p>
 
-  <p>
-    <label for="file1">File explicit</label>
-    <input type="file" id="file1" />
-  </p>
+<p>
+  <label>
+    File implicit
+    <input type="file" />
+  </label>
+</p>
 
-  <p>
-    <label>
-      Combo box implicit
-      <input role="combobox" />
-    </label>
-  </p>
+<p>
+  <label for="file1">File explicit</label>
+  <input type="file" id="file1" />
+</p>
 
-  <p>
-    <label for="combobox1">Combo box explicit</label>
-    <input role="combobox" id="combobox1" />
-  </p>
+<p>
+  <label>
+    Combo box implicit
+    <input role="combobox" />
+  </label>
+</p>
 
+<p>
+  <label for="combobox1">Combo box explicit</label>
+  <input role="combobox" id="combobox1" />
+</p>
+
+<p>
+  <div id="label-rich-text1">Rich text</div>
+  <div contenteditable="true" role="textbox" aria-labelledby="label-rich-text1">
+  </div>
+</p>
+
+<fieldset>
+  <legend>Outer circle</legend>
   <fieldset>
-    <legend>Grouped</legend>
+    <legend>Inner circle</legend>
 
     <p>
       <label>
         Text implicit
-        <input type="text" />
+        <input type="text" list="list-id"/>
       </label>
     </p>
 
     <p>
       <label for="text2">Text explicit</label>
-      <input type="text" id="text2" />
+      <input type="text" id="text2" list="list-id"/>
     </p>
 
     <p>
       <button type="button">
         Button
       </button>
+    </p>
+
+    <p>
+      <a href="#">
+        Link
+      </a>
     </p>
 
     <p>
@@ -172,5 +200,11 @@
       <label for="combobox2">Combo box explicit</label>
       <input role="combobox" id="combobox2" />
     </p>
+
+    <p>
+      <div id="label-rich-text2">Rich text</div>
+      <div contenteditable="true" role="textbox" aria-labelledby="label-rich-text2">
+      </div>
+    </p>
   </fieldset>
-</body>
+</fieldset>

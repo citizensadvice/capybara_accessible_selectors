@@ -40,10 +40,31 @@ describe "section selector" do
     expect(page).to have_no_selector :section, "Block quote"
   end
 
-  %i[main section article header footer aside].each do |element|
+  it "matches a section" do
+    main = find :element, :main
+    expect(main).to match_selector :section
+  end
+
+  it "matches a section by heading" do
+    main = find :element, :main
+    expect(main).to match_selector :section, "Main"
+  end
+
+  %i[main section article header footer aside form].each do |element|
     context "<#{element}>" do
       it "finds by #{element}" do
         expect(page).to have_selector :section, element.to_s.capitalize, section_element: element, count: 1
+      end
+    end
+  end
+
+  describe "within_section" do
+    it "limited to within a section" do
+      within_section "Header" do
+        expect(page).to have_text <<~TEXT.strip, exact: true
+          Header
+          This is the header
+        TEXT
       end
     end
   end

@@ -9,7 +9,8 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
     end
   end
 
-  describe(:node_filters) do |**options|
-    " that is focused" if options[:focused]
+  describe(:node_filters) do |focused: nil, **|
+    next " that is focused" if focused == true
+    next " that is not focused" if focused == false
   end
 end

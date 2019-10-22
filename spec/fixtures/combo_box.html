@@ -1,47 +1,60 @@
 <!doctype html>
-<body>
-  <h1>Combo-box</h1>
+<meta charset="UTF-8" />
+<h1>Combo-box</h1>
 
-  <h2>ARIA 1.0</h2>
+<h2>ARIA 1.0</h2>
 
-  <div>
-    <label for="aria10">aria 1.0</label>
-    <input type="text" role="combobox" aria-owns="listbox-aria10" id="aria10" />
-    <div role="listbox" id="listbox-aria10">
+<div>
+  <label for="aria10">aria 1.0</label>
+  <input type="text" role="combobox" aria-owns="listbox-aria10" id="aria10" />
+  <div role="listbox" id="listbox-aria10">
+    <div role="option">Apple</div>
+    <div role="option">Banana</div>
+    <div role="option" aria-disabled="true">Disabled</div>
+  </div>
+</div>
+
+<h2>ARIA 1.1</h2>
+
+<div>
+  <label for="aria11">aria 1.1</label>
+  <div role="combobox">
+    <input id="aria11" aria-controls="listbox-aria11" />
+    <div role="listbox" id="listbox-aria11">
       <div role="option">Apple</div>
       <div role="option">Banana</div>
       <div role="option" aria-disabled="true">Disabled</div>
     </div>
   </div>
+</div>
 
-  <h2>ARIA 1.1</h2>
+<h2>Twitter</h2>
 
-  <div>
-    <label for="aria11">aria 1.1</label>
-    <div role="combobox">
-      <input id="aria11" aria-controls="listbox-aria11" />
-      <div role="listbox" id="listbox-aria11">
-        <div role="option">Apple</div>
-        <div role="option">Banana</div>
-        <div role="option" aria-disabled="true">Disabled</div>
-      </div>
-    </div>
+<p>DEPRECATED: This is an old version of twitter typeahead</p>
+
+<div>
+  <label for="twitter">twitter</label>
+  <input id="twitter" class="tt-input" />
+  <div class="tt-menu" id="listbox-twitter">
+    <div class="tt-selectable">Apple</div>
+    <div class="tt-selectable">Banana</div>
+    <div>Disabled</div>
   </div>
+</div>
 
-  <script>
-    document.querySelectorAll('[role=listbox]').forEach((listbox) => {
-      listbox.addEventListener('click', ({ target }) => {
-        if (target.getAttribute('aria-disabled') === 'true') {
-          return;
+<script>
+  document.querySelectorAll('[role=listbox],.tt-menu').forEach((listbox) => {
+    listbox.addEventListener('click', ({ target }) => {
+      if (target.getAttribute('aria-disabled') === 'true') {
+        return;
+      }
+      listbox.querySelectorAll('[role=option],.tt-selectable').forEach((option) => {
+        if (option === target) {
+          option.setAttribute('aria-selected', 'true');
+        } else {
+          option.removeAttribute('aria-selected');
         }
-        listbox.querySelectorAll('[role=option]').forEach((option) => {
-          if (option === target) {
-            option.setAttribute('aria-selected', 'true');
-          } else {
-            option.removeAttribute('aria-selected');
-          }
-        });
       });
     });
-  </script>
-</body>
+  });
+</script>
