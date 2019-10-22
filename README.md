@@ -200,7 +200,7 @@ expect(page).to have_selector :alert, text: "Successfully saved"
 expect(page).to have_alert, text: "Successfully saved"
 ```
 
-Also see [↓ Expectation shortcuts](#expectation_shortcuts)
+Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `combo_box`
 
@@ -216,7 +216,7 @@ Note that the built-in Capybara selector `datalist_input` will find a [native ht
 Also see:
 
 - [↓ `select_combo_box_option` action](#select_combo_box_optionwith-options)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `disclosure`
 
@@ -231,7 +231,7 @@ Note that an ARIA disclosure is typically hidden when closed.  Using `expanded: 
 Also see:
 
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_disclosure`](#within_disclosurename-find_options-block)
 
 #### `disclosure_button`
@@ -245,7 +245,7 @@ Finds the open and close button associated with a [disclosure](https://www.w3.or
 Also see:
 
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `item`
 
@@ -272,7 +272,7 @@ Example:
 expect(page).to have_selector :item, "first-name", type: "application:person", text: "Bob"
 ```
 
-Also see [↓ Expectation shortcuts](#expectation_shortcuts)
+Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `modal`
 
@@ -284,7 +284,7 @@ This checks for a modal with the correct aria role, `aria-modal="true"` attribut
 
 Also see:
 
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
 
 #### `rich_text`
@@ -310,7 +310,7 @@ end
 Also see:
 
 - [↓ `fill_in_rich_text` action](#fill_in_rich_textlocator-options)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_rich_text`](#within_rich_textname-find_options-block)
 
 #### `section`
@@ -341,7 +341,7 @@ end
 
 Also see
 
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_section`](#within_sectionname-find_options-block)
 
 #### `tab_panel`
@@ -357,7 +357,7 @@ Note that a closed tab panel is not visible.  Using `open: false` will only find
 Also see
 
 - [↓ `open_tab` action](#open_tabname)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_tab_panel`](#within_tab_panelname-find_options-block)
 
 #### `tab_button`
@@ -371,7 +371,7 @@ Finds the button that opens a tab.
 Also see:
 
 - [↓ `open_tab` action](#open_tabname)
-- [↓ Expectation shortcuts](#expectation_shortcuts)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 ### Actions
 
