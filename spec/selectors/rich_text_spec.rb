@@ -32,6 +32,12 @@ describe "rich text" do
           fill_in_rich_text "with label", with: ""
           expect(page).to have_no_selector :rich_text, "with label", text: "foo"
         end
+
+        it "fills in a rich text area without clearing" do
+          fill_in_rich_text "with label", with: "foo"
+          fill_in_rich_text "with label", with: "bar", clear: false
+          expect(page).to have_selector :rich_text, "with label", exact_text: "foobar"
+        end
       end
     end
 
@@ -61,7 +67,13 @@ describe "rich text" do
         it "clears a rich text area" do
           fill_in_rich_text "with aria-labelledby", with: "foo"
           fill_in_rich_text "with aria-labelledby", with: ""
-          expect(page).to have_no_selector :rich_text, "with label", text: "foo"
+          expect(page).to have_no_selector :rich_text, "aria-labelledby", text: "foo"
+        end
+
+        it "fills in a rich text area without clearing" do
+          fill_in_rich_text "with aria-labelledby", with: "foo"
+          fill_in_rich_text "with aria-labelledby", with: "bar", clear: false
+          expect(page).to have_selector :rich_text, "with aria-labelledby", exact_text: "foobar"
         end
       end
     end
@@ -100,6 +112,15 @@ describe "rich text" do
 
         within_frame find(:rich_text, "editable iframe") do
           expect(page).to have_no_text "foo"
+        end
+      end
+
+      it "fills in a rich text area without clearing" do
+        fill_in_rich_text "editable iframe", with: "foo"
+        fill_in_rich_text "editable iframe", with: "bar", clear: false
+
+        within_frame find(:rich_text, "editable iframe") do
+          expect(page).to have_text "foobar"
         end
       end
     end

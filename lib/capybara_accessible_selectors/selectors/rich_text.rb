@@ -31,17 +31,14 @@ module CapybaraAccessibleSelectors
     # @param [String] locator Rich text label
     # @param [Hash] find_options Finder options
     # @option options [String] :with The text to use
-    def fill_in_rich_text(locator, with:, **find_options)
+    def fill_in_rich_text(locator, with:, clear: true, **find_options)
       input = find(:rich_text, locator, find_options)
       with = nil if with == ""
       if input.tag_name == "iframe"
-        within_frame input do
-          page.execute_script("document.execCommand('selectAll',false,null)")
-          page.find(:css, "[contenteditable=true]").send_keys with || :backspace
-        end
+        fill_in_iframe_rich_text(input, with, clear)
       else
-        page.execute_script("document.execCommand('selectAll',false,null)")
-        input.send_keys with || :backspace
+        input.send_keys :backspace while input.text != "" && clear
+        input.send_keys with
       end
     end
 
@@ -63,6 +60,18 @@ module CapybaraAccessibleSelectors
         return within_frame(current_scope) { yield } if current_scope.tag_name == "iframe"
 
         yield
+      end
+    end
+
+    private
+
+    def fill_in_iframe_rich_text(frame, text, clear)
+      within_frame frame do
+        editable = page.find(:css, "[contenteditable=true]")
+        return if text == editable.text
+
+        editable.send_keys :backspace while editable.text != "" && clear
+        editable.send_keys text
       end
     end
   end
