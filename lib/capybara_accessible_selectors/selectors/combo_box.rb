@@ -41,10 +41,9 @@ end
 
 Capybara.add_selector(:list_box_option, locator_type: String) do
   xpath do |value|
-    XPath.descendant[[
-      (XPath.attr(:role) == "option") | XPath.attr(:class).contains_word("tt-selectable"),
-      XPath.string.n.is(value)
-    ].reduce(:&)]
+    find = (XPath.attr(:role) == "option") | XPath.attr(:class).contains_word("tt-selectable")
+    find &= XPath.string.n.is(value) if value
+    XPath.descendant[find]
   end
 end
 
@@ -55,22 +54,34 @@ module CapybaraAccessibleSelectors
     # @param [String] with The option to select
     # @option options [String] from Locator for the combo box
     # @option options [String] currently_with The current combo box selection
+    # @option options [String] search Alternative search text to find the option
     # @option options [Hash] fill_options Additional driver specific fill options
     #
+    # Option names prefixed with option_ will be used to find the option element. eg option_text
+    #
     # @return [Capybara::Node::Element] The combo box
-    def select_combo_box_option(with, from: nil, currently_with: nil, fill_options: {}, **find_options)
+    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options) # rubocop:disable Metrics/ParameterLists
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
+      find_option_options = extract_find_option_options(find_options)
       input = find(:combo_box, from, find_options)
-      input.set(with, fill_options)
+      input.set(search, fill_options)
       unless input.matches_selector? :css, "[aria-controls],[aria-owns],.tt-input", wait: false
         raise Capybara::ExpectationNotMet, "input must use aria-controls or aria-owns"
       end
 
       listbox = find(:combo_box_list_box, input)
-      option = listbox.find(:list_box_option, with)
+      option = listbox.find(:list_box_option, with, **find_option_options)
       option.click
       input
+    end
+
+    def extract_find_option_options(options)
+      found = {}
+      options.each_key do |name|
+        found[:"#{name.to_s[7..-1]}"] = options.delete(name) if name.to_s.start_with?("option_")
+      end
+      found
     end
   end
 end

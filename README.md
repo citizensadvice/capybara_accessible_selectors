@@ -382,6 +382,7 @@ Fill in a rich text field with plain text.
 - `locator` [String] - Find the rich text area
 - `options`:
   - `with` [String] - The text to fill the field, or nil to empty
+  - `clear` [Boolean] - Clear the rich text area first, defaults to true
 
 ```ruby
 fill_in_rich_text "Diary entry", with: "Today I published a gem"
@@ -408,7 +409,9 @@ Fill in a combo box and select an option
 - `with` [String] - Option to select
 - `options`:
   - `from` [String, Symbol, Array] - Locator for the field
+  - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
+  - options prefixed with 'option_' will be used to find the option. eg `option_text`, `option_match`
 
 ```ruby
 select_combo_box_option "Apple", from: "Fruits"

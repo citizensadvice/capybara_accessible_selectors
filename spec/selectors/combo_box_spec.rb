@@ -28,6 +28,27 @@ describe "combo_box selector" do
           end
         end
 
+        it "fills in a combo box with exact option when non-exact also exists" do
+          select_combo_box_option "Orange", from: label
+          within "#listbox-aria1#{iteration}" do
+            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Orange"
+          end
+        end
+
+        it "fills in a combo box with alternative search string" do
+          select_combo_box_option "Blood", from: label, search: "or"
+          within "#listbox-aria1#{iteration}" do
+            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Blood orange"
+          end
+        end
+
+        it "allows finding an option with finder options" do
+          select_combo_box_option from: label, option_match: :first, option_text: /orange/i
+          within "#listbox-aria1#{iteration}" do
+            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Orange"
+          end
+        end
+
         context "currently_with" do
           it "finds a combo box with an existing value" do
             select_combo_box_option "Banana", from: label
