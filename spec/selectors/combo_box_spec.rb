@@ -23,30 +23,22 @@ describe "combo_box selector" do
         it "fills in a combo box" do
           expect(page).to have_selector :combo_box, label, with: ""
           select_combo_box_option "Banana", from: label
-          within "#listbox-aria1#{iteration}" do
-            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Banana"
-          end
+          expect(page).to have_selector :combo_box, label, with: "Banana"
         end
 
         it "fills in a combo box with exact option when non-exact also exists" do
           select_combo_box_option "Orange", from: label
-          within "#listbox-aria1#{iteration}" do
-            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Orange"
-          end
+          expect(page).to have_selector :combo_box, label, with: "Orange"
         end
 
         it "fills in a combo box with alternative search string" do
           select_combo_box_option "Blood", from: label, search: "or"
-          within "#listbox-aria1#{iteration}" do
-            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Blood orange"
-          end
+          expect(page).to have_selector :combo_box, label, with: "Blood orange"
         end
 
         it "allows finding an option with finder options" do
           select_combo_box_option from: label, option_match: :first, option_text: /orange/i
-          within "#listbox-aria1#{iteration}" do
-            expect(page).to have_selector :css, "[role=option][aria-selected=true]", text: "Orange"
-          end
+          expect(page).to have_selector :combo_box, label, with: "Orange"
         end
 
         context "currently_with" do
@@ -92,9 +84,7 @@ describe "combo_box selector" do
       it "fills in a combo box" do
         expect(page).to have_selector :combo_box, "twitter", with: ""
         select_combo_box_option "Banana", from: "twitter"
-        within "#listbox-twitter" do
-          expect(page).to have_selector :css, ".tt-selectable[aria-selected=true]", text: "Banana"
-        end
+        expect(page).to have_selector :combo_box, "twitter", with: "Banana"
       end
 
       context "currently_with" do

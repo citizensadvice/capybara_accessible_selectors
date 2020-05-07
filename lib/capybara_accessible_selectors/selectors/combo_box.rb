@@ -73,6 +73,8 @@ module CapybaraAccessibleSelectors
       listbox = find(:combo_box_list_box, input)
       option = listbox.find(:list_box_option, with, **find_option_options)
       option.click
+      # List box is an overlay which can block subsequent clicks, so wait for it to disappear
+      Capybara.page.assert_no_selector(:combo_box_list_box, input)
       input
     end
 
