@@ -1,5 +1,9 @@
 # Change log
 
+## v0.1.2
+
+- Fix stale reference error when waiting for combo box to be closed
+
 ## v0.1.1
 
 - Wait for the combo box to be closed when using `select_combo_box_option`

@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    capybara_accessible_selectors (0.1.0)
+    capybara_accessible_selectors (0.1.1)
       capybara (~> 3)
 
 GEM
