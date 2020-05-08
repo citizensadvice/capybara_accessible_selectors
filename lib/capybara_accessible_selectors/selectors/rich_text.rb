@@ -37,6 +37,7 @@ module CapybaraAccessibleSelectors
       if input.tag_name == "iframe"
         fill_in_iframe_rich_text(input, with, clear)
       else
+        # TODO: Bug in current Chromium, select all does not work https://bugs.chromium.org/p/chromedriver/issues/detail?id=3214&q=sendKeys&can=2
         input.send_keys :backspace while input.text != "" && clear
         input.send_keys with
       end

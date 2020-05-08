@@ -411,7 +411,15 @@ Fill in a combo box and select an option
   - `from` [String, Symbol, Array] - Locator for the field
   - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
+  - `expanded` [Boolean] - Is the combo box expanded
+  - `options` [Array\<String, Regexp\>] - Exact options in order
+  - `with_options` [Array\<String, Regexp\>] - Partial match options
+  - `enabled_options` [Array\<String, Regexp\>] - Exact enabled options in order
+  - `with_enabled_options` [Array\<String, Regexp\>] - Partial match enabled options
+  - `disabled_options` [Array\<String, Regexp\>] - Exact disabled options in order
+  - `with_disabled_options` [Array\<String, Regexp\>] - Partial match disabled options
   - options prefixed with 'option_' will be used to find the option. eg `option_text`, `option_match`
+  - other options will be used to find the combo box
 
 ```ruby
 select_combo_box_option "Apple", from: "Fruits"
