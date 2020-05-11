@@ -209,7 +209,16 @@ This will find ARIA 1.0 and ARIA 1.1 combo boxes.  A combo box is an input with 
 
 This also finds select based on [Twitter typeahead](https://twitter.github.io/typeahead.js/) classes, but this behaviour is deprecated and will be removed in a future release.
 
-Locator and options are the same as the [field selector](https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Selector).
+Locator and options are the same as the [field selector](https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Selector) with the following additional filters:
+
+- Filters:
+  - `expanded` [Boolean] - Is the combo box expanded
+  - `options` [Array\<String, Regexp\>] - Has exactly these options in order.  This, and other other filters, will match if the option includes the string
+  - `with_options` [Array\<String, Regexp\>] - Includes these options
+  - `enabled_options` [Array\<String, Regexp\>] - Has exactly these enabled options in order
+  - `with_enabled_options` [Array\<String, Regexp\>] - Includes these enabled options
+  - `disabled_options` [Array\<String, Regexp\>] - Has exactly these disabled options in order
+  - `with_disabled_options` [Array\<String, Regexp\>] - Includes these disabled options
 
 Note that the built-in Capybara selector `datalist_input` will find a [native html `list` attribute based combo-box](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist).
 
@@ -411,13 +420,6 @@ Fill in a combo box and select an option
   - `from` [String, Symbol, Array] - Locator for the field
   - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
-  - `expanded` [Boolean] - Is the combo box expanded
-  - `options` [Array\<String, Regexp\>] - Exact options in order
-  - `with_options` [Array\<String, Regexp\>] - Partial match options
-  - `enabled_options` [Array\<String, Regexp\>] - Exact enabled options in order
-  - `with_enabled_options` [Array\<String, Regexp\>] - Partial match enabled options
-  - `disabled_options` [Array\<String, Regexp\>] - Exact disabled options in order
-  - `with_disabled_options` [Array\<String, Regexp\>] - Partial match disabled options
   - options prefixed with 'option_' will be used to find the option. eg `option_text`, `option_match`
   - other options will be used to find the combo box
 

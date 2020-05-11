@@ -47,6 +47,11 @@ describe "combo_box selector" do
           expect(page).to have_selector :combo_box, label, options: ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]
         end
 
+        it "asserts with matching exact options with partial string match" do
+          find(:field, label).click
+          expect(page).to have_selector :combo_box, label, options: %w[Apple Banana Disabled Orange Blood]
+        end
+
         it "assets with matching a regular expression" do
           find(:field, label).click
           expect(page).to have_selector :combo_box, label, options: ["Apple", "Banana", "Disabled", /orange/i, "Blood orange"]
@@ -71,6 +76,11 @@ describe "combo_box selector" do
         it "asserts with matching partial options" do
           find(:field, label).click
           expect(page).to have_selector :combo_box, label, with_options: %w[Orange Banana]
+        end
+
+        it "asserts with matching partial options and a partial string match" do
+          find(:field, label).click
+          expect(page).to have_selector :combo_box, label, with_options: %w[Orange Blood]
         end
 
         it "asserts with matching regular expression" do

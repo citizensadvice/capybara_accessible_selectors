@@ -118,7 +118,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:d
     actual.each_with_index.reject do |option, i|
       next expected[i].match?(option) if expected[i].is_a?(Regexp)
 
-      expected[i] == option
+      expected[i] && option.include?(expected[i])
     end.empty?
   end
 
@@ -128,7 +128,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:d
       index = actual.find_index do |o|
         next option.match?(o) if option.is_a?(Regexp)
 
-        option == o
+        o.include? option
       end
       next false unless index
 
@@ -201,9 +201,6 @@ module CapybaraAccessibleSelectors
       listbox = find(:combo_box_list_box, input, { wait: find_options[:wait] }.compact)
       option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)
       option.click
-      # List box is an overlay which can block subsequent clicks, so wait for it to disappear
-      input = find(:combo_box, from, find_options.merge(with: nil, wait: false).compact)
-      Capybara.page.assert_no_selector(:combo_box_list_box, input, wait: false) if input
       input
     end
 
