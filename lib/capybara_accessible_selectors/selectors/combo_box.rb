@@ -162,7 +162,7 @@ Capybara.add_selector(:list_box_option, locator_type: String) do
 
   xpath do |value|
     find = (XPath.attr(:role) == "option") | XPath.attr(:class).contains_word("tt-selectable")
-    find &= XPath.string.n.is(value) if value
+    find &= XPath.string.n.is(value.to_s) if value
     XPath.descendant[find]
   end
 
