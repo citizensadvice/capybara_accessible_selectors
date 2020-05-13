@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
+Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:disable Metrics/BlockLength
   label "combo box"
 
   xpath do |locator, allow_self: nil, **options|
     xpath = XPath.axis(allow_self ? :"descendant-or-self" : :descendant, :input)
     xpath = xpath[[
-      XPath.attr(:role) == "combobox", # ARIA 1.0
+      XPath.attr(:role) == "combobox", # ARIA 1.0, ARIA 1.2
       XPath.ancestor[XPath.attr(:role) == "combobox"], # ARIA 1.1
       XPath.attr(:class).contains_word("tt-input") # DEPRECATED: Twitter typeahead
     ].reduce(:|)]
@@ -16,6 +16,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   filter_set(:_field, %i[disabled name placeholder valid])
   filter_set(:capybara_accessible_selectors, %i[focused fieldset described_by validation_error])
 
+  # with a value
   node_filter(:with) do |node, with|
     val = node.value
     (with.is_a?(Regexp) ? with.match?(val) : val == with.to_s).tap do |res|
@@ -23,27 +24,158 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
     end
   end
 
+  # expanded or not - does not support twitter typeahead
+  expression_filter(:expanded, :boolean) do |expr, value|
+    expanded = XPath.attr(:"aria-expanded") == "true"
+    conditions = [
+      expanded,
+      XPath.ancestor[XPath.attr(:role) == "combobox"][expanded]
+    ]
+    next expr[conditions.reduce(:|)] if value
+
+    expr[conditions.map(&:!).reduce(:&)]
+  end
+
+  # with exact options
+  node_filter(:options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil))
+    match_all_options?(actual, options).tap do |res|
+      add_error("Expected options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  # with parital options
+  node_filter(:with_options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil))
+    match_some_options?(actual, options).tap do |res|
+      add_error("Expected with at least options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  # with exact enabled options
+  node_filter(:enabled_options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] != "true" }
+    match_all_options?(actual, options).tap do |res|
+      add_error("Expected enabled options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  # with exact enabled options
+  node_filter(:with_enabled_options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] != "true" }
+    match_some_options?(actual, options).tap do |res|
+      add_error("Expected with at least enabled options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  # with exact disabled options
+  node_filter(:disabled_options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] == "true" }
+    match_all_options?(actual, options).tap do |res|
+      add_error("Expected disabled options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  # with exact enabled options
+  node_filter(:with_disabled_options) do |node, options|
+    options = Array(options)
+    actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] == "true" }
+    match_some_options?(actual, options).tap do |res|
+      add_error("Expected with at least disabled options #{options.inspect} found #{actual.inspect}") unless res
+    end
+  end
+
+  describe_expression_filters do |expanded: nil, **|
+    desc = ""
+    desc += " that is#{expanded ? '' : ' not'} expanded" unless expanded.nil?
+    desc
+  end
+
   describe_node_filters do |**options|
-    " with value #{options[:with].to_s.inspect}" if options.key?(:with)
+    desc = ""
+    desc += " with value #{options[:with].inspect}" if options.key?(:with)
+    desc += " with options #{Array(options[:options]).inspect}" if options.key?(:options)
+    desc += " with at least options #{Array(options[:with_options]).inspect}" if options.key?(:with_options)
+    desc += " with enabled options #{Array(options[:enabled_options]).inspect}" if options.key?(:enabled_options)
+    desc += " with at least enabled options #{Array(options[:with_enabled_options]).inspect}" if options.key?(:with_enabled_options)
+    desc += " with disabled options #{Array(options[:disabled_options]).inspect}" if options.key?(:disabled_options)
+    desc += " with at least disabled options #{Array(options[:with_disabled_options]).inspect}" if options.key?(:with_disabled_options)
+    desc
+  end
+
+  def options_text(node, xpath, **opts, &filter_block)
+    opts[:wait] = false
+    listbox = node.find(:combo_box_list_box, node, **opts)
+    listbox.all(:xpath, xpath, **opts, &filter_block).map(&:text)
+  end
+
+  def match_all_options?(actual, expected)
+    actual.each_with_index.reject do |option, i|
+      next expected[i].match?(option) if expected[i].is_a?(Regexp)
+
+      expected[i] && option.include?(expected[i])
+    end.empty?
+  end
+
+  def match_some_options?(actual, expected)
+    actual = actual.clone
+    expected.reject do |option|
+      index = actual.find_index do |o|
+        next option.match?(o) if option.is_a?(Regexp)
+
+        o.include? option
+      end
+      next false unless index
+
+      actual.delete_at(index)
+      true
+    end.empty?
   end
 end
 
 Capybara.add_selector(:combo_box_list_box, locator_type: Capybara::Node::Element) do
   xpath do |input|
-    next XPath.anywhere[XPath.attr(:class).contains_word("tt-menu")] if input.matches_selector? :css, ".tt-input", wait: false
+    if input.matches_selector? :css, ".tt-input", wait: false
+      ttmenu = XPath.attr(:class).contains_word("tt-menu")
+      next XPath.descendant_or_self[XPath.attr(:class).contains_word("twitter-typeahead")].descendant[ttmenu] +
+        XPath.ancestor[XPath.attr(:class).contains_word("twitter-typeahead")].descendant[ttmenu]
+    end
+
+    ids = (input[:"aria-owns"] || input[:"aria-controls"])&.split(/\s+/)&.compact
+
+    raise Capybara::ElementNotFound, "listbox cannot be found without attributes aria-owns or aria-controls" if !ids || ids.empty?
 
     XPath.anywhere[[
       XPath.attr(:role) == "listbox",
-      XPath.attr(:id) == (input[:"aria-owns"] || input[:"aria-controls"])
+      ids.map { |id| XPath.attr(:id) == id }.reduce(:|)
     ].reduce(:&)]
   end
 end
 
 Capybara.add_selector(:list_box_option, locator_type: String) do
+  label "option"
+
   xpath do |value|
     find = (XPath.attr(:role) == "option") | XPath.attr(:class).contains_word("tt-selectable")
-    find &= XPath.string.n.is(value) if value
+    find &= XPath.string.n.is(value.to_s) if value
     XPath.descendant[find]
+  end
+
+  expression_filter(:disabled, :boolean) do |expr, value|
+    next expr[XPath.attr(:"aria-disabled") == "true"] if value
+
+    expr[~(XPath.attr(:"aria-disabled") == "true")]
+  end
+
+  describe_expression_filters do |disabled: nil, **|
+    next if disabled.nil?
+
+    " that is #{disabled ? '' : 'not '}disabled"
   end
 end
 
@@ -66,25 +198,18 @@ module CapybaraAccessibleSelectors
       find_option_options = extract_find_option_options(find_options)
       input = find(:combo_box, from, find_options)
       input.set(search, fill_options)
-      unless input.matches_selector? :css, "[aria-controls],[aria-owns],.tt-input", wait: false
-        raise Capybara::ExpectationNotMet, "input must use aria-controls or aria-owns"
-      end
-
-      listbox = find(:combo_box_list_box, input)
-      option = listbox.find(:list_box_option, with, **find_option_options)
+      listbox = find(:combo_box_list_box, input, { wait: find_options[:wait] }.compact)
+      option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)
       option.click
-      # List box is an overlay which can block subsequent clicks, so wait for it to disappear
-      input = find(:combo_box, from, find_options.merge(with: nil, wait: false).compact)
-      Capybara.page.assert_no_selector(:combo_box_list_box, input, wait: false) if input
       input
     end
 
     def extract_find_option_options(options)
-      found = {}
+      found = { wait: options[:wait] }
       options.each_key do |name|
         found[:"#{name.to_s[7..-1]}"] = options.delete(name) if name.to_s.start_with?("option_")
       end
-      found
+      found.compact
     end
   end
 end

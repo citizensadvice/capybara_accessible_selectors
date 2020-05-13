@@ -3,6 +3,8 @@
 A set of Capybara selectors that allow you to
 find common UI elements by labels and using screen-reader compatible mark-up.
 
+[Cheat sheet](CHEAT_SHEET.md)
+
 ## Philosophy
 
 All feature tests should interact with the browser in the same way a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
@@ -209,7 +211,16 @@ This will find ARIA 1.0 and ARIA 1.1 combo boxes.  A combo box is an input with 
 
 This also finds select based on [Twitter typeahead](https://twitter.github.io/typeahead.js/) classes, but this behaviour is deprecated and will be removed in a future release.
 
-Locator and options are the same as the [field selector](https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Selector).
+Locator and options are the same as the [field selector](https://www.rubydoc.info/github/jnicklas/capybara/Capybara/Selector) with the following additional filters:
+
+- Filters:
+  - `expanded` [Boolean] - Is the combo box expanded
+  - `options` [Array\<String, Regexp\>] - Has exactly these options in order.  This, and other other filters, will match if the option includes the string
+  - `with_options` [Array\<String, Regexp\>] - Includes these options
+  - `enabled_options` [Array\<String, Regexp\>] - Has exactly these enabled options in order
+  - `with_enabled_options` [Array\<String, Regexp\>] - Includes these enabled options
+  - `disabled_options` [Array\<String, Regexp\>] - Has exactly these disabled options in order
+  - `with_disabled_options` [Array\<String, Regexp\>] - Includes these disabled options
 
 Note that the built-in Capybara selector `datalist_input` will find a [native html `list` attribute based combo-box](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist).
 
@@ -412,6 +423,7 @@ Fill in a combo box and select an option
   - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
   - options prefixed with 'option_' will be used to find the option. eg `option_text`, `option_match`
+  - other options will be used to find the combo box
 
 ```ruby
 select_combo_box_option "Apple", from: "Fruits"

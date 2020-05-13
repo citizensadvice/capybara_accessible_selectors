@@ -6,7 +6,7 @@
 
 <div>
   <label for="aria10">aria 1.0</label>
-  <input type="text" role="combobox" aria-owns="listbox-aria10" id="aria10" />
+  <input type="text" role="combobox" aria-owns="listbox-aria10" id="aria10" aria-expanded="false" />
   <div role="listbox" id="listbox-aria10" hidden>
     <div role="option">Apple</div>
     <div role="option">Banana</div>
@@ -20,7 +20,7 @@
 
 <div>
   <label for="aria11">aria 1.1</label>
-  <div role="combobox">
+  <div role="combobox" aria-expanded="false">
     <input id="aria11" aria-controls="listbox-aria11" />
     <div role="listbox" id="listbox-aria11" hidden>
       <div role="option">Apple</div>
@@ -36,7 +36,7 @@
 
 <p>DEPRECATED: This is an old version of twitter typeahead</p>
 
-<div>
+<div class="twitter-typeahead">
   <label for="twitter">twitter</label>
   <input id="twitter" class="tt-input" />
   <div class="tt-menu" id="listbox-twitter" hidden>
@@ -52,22 +52,29 @@
   document.querySelectorAll('input[role="combobox"],[role="combobox"] input,.tt-input').forEach((input) => {
     input.addEventListener('focus', ({ target }) => {
       target.nextElementSibling.hidden = false;
+      if (target.hasAttribute('aria-expanded')) {
+        target.setAttribute('aria-expanded', 'true');
+      } else if (target.parentNode.hasAttribute('aria-expanded')) {
+        target.parentNode.setAttribute('aria-expanded', 'true');
+      }
     });
   });
   document.querySelectorAll('[role=listbox],.tt-menu').forEach((listbox) => {
     listbox.addEventListener('click', ({ target }) => {
-      if (target.getAttribute('aria-disabled') === 'true') {
-        return;
-      }
-      listbox.querySelectorAll('[role=option],.tt-selectable').forEach((option) => {
-        if (option === target) {
-          option.setAttribute('aria-selected', 'true');
-          listbox.previousElementSibling.value = option.innerText;
-        } else {
-          option.removeAttribute('aria-selected');
+      setTimeout(() => {
+        if (target.getAttribute('aria-disabled') === 'true') {
+          return;
         }
+        listbox.querySelectorAll('[role=option],.tt-selectable').forEach((option) => {
+          if (option === target) {
+            option.setAttribute('aria-selected', 'true');
+            listbox.previousElementSibling.value = option.innerText;
+          } else {
+            option.removeAttribute('aria-selected');
+          }
+        });
         listbox.hidden = true;
-      });
+      }, 200);
     });
   });
 </script>
