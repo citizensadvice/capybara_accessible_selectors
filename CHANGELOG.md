@@ -4,6 +4,7 @@
 
 - Added additional selector options to combo box 
 - `select_combo_box_option` will not longer try to select a disabled option
+- Added cheat sheet
 
 ## v0.1.0
 

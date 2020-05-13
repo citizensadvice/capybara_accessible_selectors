@@ -3,6 +3,8 @@
 A set of Capybara selectors that allow you to
 find common UI elements by labels and using screen-reader compatible mark-up.
 
+[Cheat sheet](CHEAT_SHEET.md)
+
 ## Philosophy
 
 All feature tests should interact with the browser in the same way a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
