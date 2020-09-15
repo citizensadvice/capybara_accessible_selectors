@@ -10,7 +10,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:d
       XPath.ancestor[XPath.attr(:role) == "combobox"], # ARIA 1.1
       XPath.attr(:class).contains_word("tt-input") # DEPRECATED: Twitter typeahead
     ].reduce(:|)]
-    locate_field(xpath, locator, options)
+    locate_field(xpath, locator, **options)
   end
 
   filter_set(:_field, %i[disabled name placeholder valid])
@@ -196,7 +196,7 @@ module CapybaraAccessibleSelectors
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)
-      input = find(:combo_box, from, find_options)
+      input = find(:combo_box, from, **find_options)
       input.set(search, fill_options)
       listbox = find(:combo_box_list_box, input, { wait: find_options[:wait] }.compact)
       option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)

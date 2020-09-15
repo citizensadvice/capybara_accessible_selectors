@@ -32,7 +32,7 @@ module CapybaraAccessibleSelectors
     # @param [Hash] find_options Finder options
     # @option options [String] :with The text to use
     def fill_in_rich_text(locator, with:, clear: true, **find_options)
-      input = find(:rich_text, locator, find_options)
+      input = find(:rich_text, locator, **find_options)
       with = nil if with == ""
       if input.tag_name == "iframe"
         fill_in_iframe_rich_text(input, with, clear)
@@ -53,11 +53,11 @@ module CapybaraAccessibleSelectors
           return Capybara.page.within_frame(self) { yield } if tag_name == "iframe"
           return yield if matches_selector?(:rich_text, wait: false)
 
-          Capybara.page.within_rich_text(locator, find_options) { yield }
+          Capybara.page.within_rich_text(locator, **find_options) { yield }
         end
       end
 
-      within(:rich_text, locator, find_options) do
+      within(:rich_text, locator, **find_options) do
         return within_frame(current_scope) { yield } if current_scope.tag_name == "iframe"
 
         yield

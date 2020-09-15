@@ -52,7 +52,7 @@ module CapybaraAccessibleSelectors
       if name.nil? && is_a?(Capybara::Node::Element) && matches_selector?(:tab_button)
         self
       else
-        find(:tab_button, name, find_options)
+        find(:tab_button, name, **find_options)
       end.click
     end
   end
@@ -63,7 +63,7 @@ module CapybaraAccessibleSelectors
     # @param [String] name The tab button label
     # @param [Hash] options Finder options
     def within_tab_panel(name, **options)
-      within(:tab_panel, name, options) { yield }
+      within(:tab_panel, name, **options) { yield }
     end
   end
 end

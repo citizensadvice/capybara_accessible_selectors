@@ -15,7 +15,7 @@ module CapybaraAccessibleSelectors
     # @param [String] locator The section heading
     # @param [Hash] options Finder options
     def within_section(locator, **options)
-      within(:section, locator, options) { yield }
+      within(:section, locator, **options) { yield }
     end
   end
 end
