@@ -8,7 +8,7 @@ module Capybara
   module RSpecMatchers
     %i[alert combo_box modal tab_panel tab_button disclosure disclosure_button section item].each do |selector|
       define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
-        Matchers::HaveSelector.new(selector, locator, options, &optional_filter_block)
+        Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
       end
 
       define_method "have_no_#{selector}" do |*args, &optional_filter_block|

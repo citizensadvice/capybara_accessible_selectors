@@ -58,7 +58,7 @@ module CapybaraAccessibleSelectors
     #
     # @return [Capybara::Node::Element] The element clicked
     def toggle_disclosure(name = nil, expand: nil, **find_options)
-      button = _locate_disclosure_button(name, find_options)
+      button = _locate_disclosure_button(name, **find_options)
       if expand.nil?
         button.click
       elsif button.tag_name == "summary"
@@ -70,15 +70,15 @@ module CapybaraAccessibleSelectors
 
     private
 
-    def _locate_disclosure_button(name, find_options)
+    def _locate_disclosure_button(name, **find_options)
       if is_a?(Capybara::Node::Element) && name.nil?
         return self if matches_selector?(:disclosure_button, wait: false)
-        return find(:element, :summary, find_options) if tag_name == "details"
+        return find(:element, :summary, **find_options) if tag_name == "details"
         if matches_selector?(:disclosure, wait: false)
           return find(:xpath, XPath.anywhere[XPath.attr(:"aria-controls") == self[:id]], find_options)
         end
       end
-      find(:disclosure_button, name, find_options)
+      find(:disclosure_button, name, **find_options)
     end
   end
 
@@ -88,7 +88,7 @@ module CapybaraAccessibleSelectors
     # @param [String] Name Fieldset label
     # @param [Hash] options Finder options
     def within_disclosure(name, **options)
-      within(:disclosure, name, options) { yield }
+      within(:disclosure, name, **options) { yield }
     end
   end
 end
