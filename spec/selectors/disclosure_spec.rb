@@ -63,6 +63,7 @@ describe "Disclosure" do
 
     context "#within_disclosure" do
       it "finds a disclosure" do
+        toggle_disclosure("Summary button")
         within_disclosure "Summary button" do
           expect(page).to have_text <<~TEXT.strip, exact: true
             Summary button

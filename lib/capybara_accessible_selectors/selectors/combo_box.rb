@@ -197,7 +197,11 @@ module CapybaraAccessibleSelectors
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)
       input = find(:combo_box, from, find_options)
-      input.set(search, fill_options)
+      if search
+        input.set(search, fill_options)
+      else
+        input.click
+      end
       listbox = find(:combo_box_list_box, input, { wait: find_options[:wait] }.compact)
       option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)
       option.click
@@ -207,7 +211,7 @@ module CapybaraAccessibleSelectors
     def extract_find_option_options(options)
       found = { wait: options[:wait] }
       options.each_key do |name|
-        found[:"#{name.to_s[7..-1]}"] = options.delete(name) if name.to_s.start_with?("option_")
+        found[:"#{name.to_s[7..]}"] = options.delete(name) if name.to_s.start_with?("option_")
       end
       found.compact
     end

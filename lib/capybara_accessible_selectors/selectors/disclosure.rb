@@ -87,8 +87,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Fieldset label
     # @param [Hash] options Finder options
-    def within_disclosure(name, **options)
-      within(:disclosure, name, options) { yield }
+    def within_disclosure(name, **options, &block)
+      within(:disclosure, name, options, &block)
     end
   end
 end

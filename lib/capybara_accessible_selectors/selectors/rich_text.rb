@@ -47,18 +47,18 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] locator Rich text label
     # @param [Hash] find_options Finder options
-    def within_rich_text(locator = nil, **find_options)
+    def within_rich_text(locator = nil, **find_options, &block)
       if is_a? Capybara::Node::Element
         return Capybara.page.within self do
-          return Capybara.page.within_frame(self) { yield } if tag_name == "iframe"
+          return Capybara.page.within_frame(self, &block) if tag_name == "iframe"
           return yield if matches_selector?(:rich_text, wait: false)
 
-          Capybara.page.within_rich_text(locator, find_options) { yield }
+          Capybara.page.within_rich_text(locator, find_options, &block)
         end
       end
 
       within(:rich_text, locator, find_options) do
-        return within_frame(current_scope) { yield } if current_scope.tag_name == "iframe"
+        return within_frame(current_scope, &block) if current_scope.tag_name == "iframe"
 
         yield
       end
