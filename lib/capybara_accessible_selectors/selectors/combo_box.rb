@@ -204,6 +204,8 @@ module CapybaraAccessibleSelectors
       end
       listbox = find(:combo_box_list_box, input, { wait: find_options[:wait] }.compact)
       option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)
+      # Some drivers complain about clicking on a tr
+      option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
       option.click
       input
     end

@@ -382,4 +382,11 @@ describe "combo_box selector" do
       end
     end
   end
+
+  context "table list box" do
+    it "fills in a combo box" do
+      select_combo_box_option "Banana", from: "table"
+      expect(page).to have_selector :combo_box, "table", with: "Banana"
+    end
+  end
 end
