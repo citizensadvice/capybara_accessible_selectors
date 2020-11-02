@@ -1,5 +1,10 @@
 # Change log
 
+## v0.3.0
+
+- Fix `select_combo_box_option` should click on a td when the option is a tr
+- Add modal to cheat sheet
+
 ## v0.2.0
 
 - Added additional selector options to combo box 

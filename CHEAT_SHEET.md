@@ -33,3 +33,20 @@ select_combo_box_option "Apple", from: "Label", option_match: :first
 ```
 
 [Combo box documentation](README.md#combo_box)
+
+## Modal
+
+Find a [modal dialog](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal) by title.   
+
+```ruby
+# Find a modal
+page.find(:modal, "Are you sure?")
+
+# Perform action within a modal
+within_modal "Are you sure?" do
+  click_button "Confirm"
+end
+
+# Assert the page has a modal
+expect(page).to have_modal "Are you sure?"
+```

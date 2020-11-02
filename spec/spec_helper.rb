@@ -10,6 +10,8 @@ require "sinatra"
 
 set :public_folder, "./spec/fixtures"
 
+# Selenium::WebDriver::Firefox::Binary.path = "/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox-bin"
+Capybara.register_driver(:safari) { |app| Capybara::Selenium::Driver.new(app, browser: :safari) }
 Capybara.default_driver = :selenium_chrome_headless
 Capybara.app = Sinatra::Application
 Capybara.server = :puma, { Silent: true }

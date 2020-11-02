@@ -48,6 +48,34 @@
   </div>
 </div>
 
+<h2>Table</h2>
+
+<div>
+  <label for="table">table</label>
+  <input id="table" role="combobox" aria-controls="listbox-table" />
+  <div hidden>
+    <table role="listbox" id="listbox-table">
+      <tbody>
+        <tr role="option">
+          <td>Apple</td>
+        </tr>
+        <tr role="option">
+          <td>Banana</td>
+        </tr>
+        <tr role="option" aria-disabled="true">
+          <td>Disabled</td>
+        </tr>
+        <tr role="option">
+          <td>Orange</td>
+        </tr>
+        <tr role="option">
+          <td>Blood orange</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <script>
   document.querySelectorAll('input[role="combobox"],[role="combobox"] input,.tt-input').forEach((input) => {
     input.addEventListener('focus', ({ target }) => {
@@ -61,14 +89,20 @@
   });
   document.querySelectorAll('[role=listbox],.tt-menu').forEach((listbox) => {
     listbox.addEventListener('click', ({ target }) => {
+      target = target.closest('[role="option"],.tt-selectable');
       setTimeout(() => {
-        if (target.getAttribute('aria-disabled') === 'true') {
+        if (!target || target.getAttribute('aria-disabled') === 'true') {
           return;
         }
         listbox.querySelectorAll('[role=option],.tt-selectable').forEach((option) => {
+          option = option.closest('[role="option"],.tt-selectable');
           if (option === target) {
             option.setAttribute('aria-selected', 'true');
-            listbox.previousElementSibling.value = option.innerText;
+            let input = listbox;
+            while (!input.matches('input')) {
+              input = input.previousElementSibling || input.parentNode;
+            }
+            input.value = option.innerText;
           } else {
             option.removeAttribute('aria-selected');
           }
