@@ -1,9 +1,5 @@
 # Change log
 
-## v0.3.1
-
-- Fix required ruby version
-
 ## v0.3.0
 
 - Fix `select_combo_box_option` should click on a td when the option is a tr
