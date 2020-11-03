@@ -57,19 +57,19 @@
     <table role="listbox" id="listbox-table">
       <tbody>
         <tr role="option">
-          <td>Apple</td>
+          <td>Apple <div>Red</div></td>
         </tr>
         <tr role="option">
-          <td>Banana</td>
+          <td>Banana <div>Yellow</div></td>
         </tr>
         <tr role="option" aria-disabled="true">
-          <td>Disabled</td>
+          <td>Disabled <div>Grey</div></td>
         </tr>
         <tr role="option">
-          <td>Orange</td>
+          <td>Orange <div>Orange<div></td>
         </tr>
         <tr role="option">
-          <td>Blood orange</td>
+          <td>Blood orange <div>Red</div></td>
         </tr>
       </tbody>
     </table>
@@ -102,7 +102,7 @@
             while (!input.matches('input')) {
               input = input.previousElementSibling || input.parentNode;
             }
-            input.value = option.innerText;
+            input.value = option.innerText.replace(/\s+/g, ' ').trim();
           } else {
             option.removeAttribute('aria-selected');
           }

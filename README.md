@@ -222,6 +222,8 @@ Locator and options are the same as the [field selector](https://www.rubydoc.inf
   - `disabled_options` [Array\<String, Regexp\>] - Has exactly these disabled options in order
   - `with_disabled_options` [Array\<String, Regexp\>] - Includes these disabled options
 
+Option text is normalised to single white spaces.
+
 Note that the built-in Capybara selector `datalist_input` will find a [native html `list` attribute based combo-box](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist).
 
 Also see:

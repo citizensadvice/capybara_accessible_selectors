@@ -388,5 +388,10 @@ describe "combo_box selector" do
       select_combo_box_option "Banana", from: "table"
       expect(page).to have_selector :combo_box, "table", with: "Banana"
     end
+
+    it "matches options without normalised space" do
+      find(:field, "table").click
+      expect(page).to have_selector :combo_box, "table", with_options: ["Banana Yellow"]
+    end
   end
 end
