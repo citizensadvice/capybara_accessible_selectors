@@ -7,7 +7,7 @@
     block = @expressions[:xpath]
     @expressions[:xpath] = lambda do |locator, *args, **options|
       *fieldsets, locator = locator if locator.is_a? Array
-      xpath = instance_exec(locator, *args, options, &block)
+      xpath = instance_exec(locator, *args, **options, &block)
       xpath = CapybaraAccessibleSelectors::Helpers.within_fieldset(xpath, fieldsets) if fieldsets&.any?
       xpath
     end

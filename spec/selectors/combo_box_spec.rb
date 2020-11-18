@@ -386,7 +386,7 @@ describe "combo_box selector" do
   context "table list box" do
     it "fills in a combo box" do
       select_combo_box_option "Banana", from: "table"
-      expect(page).to have_selector :combo_box, "table", with: "Banana"
+      expect(page).to have_selector :combo_box, "table", with: "Banana Yellow"
     end
 
     it "matches options without normalised space" do

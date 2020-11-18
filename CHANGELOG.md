@@ -1,5 +1,9 @@
 # Change log
 
+## v0.4.1
+
+- Fixes Ruby 2.7 warnings when passing options
+
 ## v0.4.0
 
 - Combo box option matching now uses normalised white-space
