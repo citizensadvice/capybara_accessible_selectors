@@ -3,7 +3,7 @@
 require "capybara_accessible_selectors/rspec/matchers/have_validation_errors"
 require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 
-# rubocop:disable Name/PredicateName
+# rubocop:disable Naming/PredicateName
 module Capybara
   module RSpecMatchers
     %i[alert combo_box modal tab_panel tab_button disclosure disclosure_button section item].each do |selector|
@@ -25,4 +25,4 @@ module Capybara
     end
   end
 end
-# rubocop:enable Name/PredicateName
+# rubocop:enable Naming/PredicateName
