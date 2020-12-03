@@ -37,6 +37,8 @@ Capybara.add_selector(:disclosure_button) do
     ].reduce(:&)] + XPath.descendant(:summary)[XPath.string.n.is(name.to_s)]
   end
 
+  filter_set(:capybara_accessible_selectors, %i[focused])
+
   expression_filter(:expanded, :boolean) do |xpath, expanded|
     open = expanded ? XPath.parent.attr(:open) : !XPath.parent.attr(:open)
     xpath[(XPath.attr(:"aria-expanded") == expanded.to_s) | open]

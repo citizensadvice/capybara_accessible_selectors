@@ -1,5 +1,7 @@
 # Change log
 
+- `<summary>` elements are interactive elements that can receive focus, so add
+  support for `focused:` filtering
 - Filter `list_box_option` nodes based on whether or not `aria-selected="true"`
 
 ## v0.4.1
