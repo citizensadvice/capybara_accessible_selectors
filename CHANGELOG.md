@@ -1,5 +1,7 @@
 # Change log
 
+- Filter `list_box_option` nodes based on whether or not `aria-selected="true"`
+
 ## v0.4.1
 
 - Fixes Ruby 2.7 warnings when passing options

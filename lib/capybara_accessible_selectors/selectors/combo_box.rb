@@ -172,6 +172,12 @@ Capybara.add_selector(:list_box_option, locator_type: String) do
     expr[~(XPath.attr(:"aria-disabled") == "true")]
   end
 
+  expression_filter(:selected, :boolean) do |expr, value|
+    next expr[XPath.attr(:"aria-selected") == "true"] if value
+
+    expr[~(XPath.attr(:"aria-selected") == "true")]
+  end
+
   describe_expression_filters do |disabled: nil, **|
     next if disabled.nil?
 
