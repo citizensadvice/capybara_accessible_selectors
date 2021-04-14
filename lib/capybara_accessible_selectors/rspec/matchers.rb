@@ -11,8 +11,8 @@ module Capybara
         Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
       end
 
-      define_method "have_no_#{selector}" do |*args, &optional_filter_block|
-        Matchers::NegatedMatcher.new(send("have_#{selector}", *args, &optional_filter_block))
+      define_method "have_no_#{selector}" do |*args, **options, &optional_filter_block|
+        Matchers::NegatedMatcher.new(send("have_#{selector}", *args, **options, &optional_filter_block))
       end
     end
 

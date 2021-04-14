@@ -75,7 +75,7 @@ module CapybaraAccessibleSelectors
         return self if matches_selector?(:disclosure_button, wait: false)
         return find(:element, :summary, **find_options) if tag_name == "details"
         if matches_selector?(:disclosure, wait: false)
-          return find(:xpath, XPath.anywhere[XPath.attr(:"aria-controls") == self[:id]], find_options)
+          return find(:xpath, XPath.anywhere[XPath.attr(:"aria-controls") == self[:id]], **find_options)
         end
       end
       find(:disclosure_button, name, **find_options)

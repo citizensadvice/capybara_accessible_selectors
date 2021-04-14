@@ -57,7 +57,7 @@ module CapybaraAccessibleSelectors
         end
       end
 
-      within(:rich_text, locator, find_options) do
+      within(:rich_text, locator, **find_options) do
         return within_frame(current_scope, &block) if current_scope.tag_name == "iframe"
 
         yield

@@ -1,5 +1,8 @@
 # Change log
 
+## v0.4.2
+
+- Fix Ruby 3 errors
 - Filter `list_box_option` nodes based on whether or not `aria-selected="true"`
 
 ## v0.4.1
@@ -17,7 +20,7 @@
 
 ## v0.2.0
 
-- Added additional selector options to combo box 
+- Added additional selector options to combo box
 - `select_combo_box_option` will not longer try to select a disabled option
 - Added cheat sheet
 
