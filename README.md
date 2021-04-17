@@ -7,9 +7,9 @@ find common UI elements by labels and using screen-reader compatible mark-up.
 
 ## Philosophy
 
-All feature tests should interact with the browser in the same way a screen-reader user would.  This both tests the feature, and ensures the application is accessible.
+All feature tests should interact with the browser in the same way a screen-reader user would. This both tests the feature, and ensures the application is accessible.
 
-To be accessible to a screen-reader, a page should be built from the native html elements with the semantics and behaviour required for each feature.  For example if the page contains a button it should use `<button>` element rather than adding a `onClick` handler to a `<span>`.
+To be accessible to a screen-reader, a page should be built from the native html elements with the semantics and behaviour required for each feature. For example if the page contains a button it should use `<button>` element rather than adding a `onClick` handler to a `<span>`.
 
 Where a feature does not exist in HTML, such as tabs, then ARIA roles and states can be used to convey the meaning to a screen-reader.
 
@@ -19,7 +19,7 @@ As a result all tests should be built from the visible labels on the page, and t
 
 CSS and XPATH selectors based on classes, ids and nesting elements with no semantic meaning, should not be used.
 
-This gem contains a set of selectors and filters for common UI elements and element states that are not already included in Capybara.  These selectors follow the guidelines in [ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/).
+This gem contains a set of selectors and filters for common UI elements and element states that are not already included in Capybara. These selectors follow the guidelines in [ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/).
 
 Examples:
 
@@ -59,7 +59,7 @@ Include in your Gemfile:
 
 ```ruby
 group :test do
-  gem "capybara_accessible_selectors", git: "https://github.com/citizensadvice/capybara_accessible_selectors"
+  gem "capybara_accessible_selectors", git: "https://github.com/citizensadvice/capybara_accessible_selectors", branch: "main"
 end
 ```
 
@@ -79,8 +79,8 @@ For example:
 
 ```html
 <label>
-	My field
-	<input aria-describedby="id1 id2" />
+  My field
+  <input aria-describedby="id1 id2" />
 </label>
 <span id="id1">My</span>
 <span id="id2">description</span>
@@ -94,7 +94,7 @@ expect(page).to have_field "My field", described_by: "My description"
 
 Added to: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
-Filter for controls within a `<fieldset>` by `<legend>` text.  This can also take an array of fieldsets for multiple nested fieldsets.
+Filter for controls within a `<fieldset>` by `<legend>` text. This can also take an array of fieldsets for multiple nested fieldsets.
 
 For example:
 
@@ -139,14 +139,14 @@ Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox
 
 Filters for an element being both invalid, and has a description or label containing the error message.
 
-To be invalid, the element must [`willValidate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/willValidate) and have a [`validity.valid`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) that is false.  Additionally the `aria-invalid` must not contradict the validity state.
+To be invalid, the element must [`willValidate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/willValidate) and have a [`validity.valid`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) that is false. Additionally the `aria-invalid` must not contradict the validity state.
 
 For the error description, this can be contained in the ARIA description, or the label.
 
 ```html
 <label>
-	My field
-	<input required aria-describedby="error-id" />
+  My field
+  <input required aria-describedby="error-id" />
 </label>
 <span id="error-id">This is required</span>
 ```
@@ -164,7 +164,7 @@ Also see:
 
 #### Locating fields
 
-The following selectors have been extended so you can use an array as the locator to select within a fieldset.  The last element of the array is the field label, and the other elements are fieldsets.
+The following selectors have been extended so you can use an array as the locator to select within a fieldset. The last element of the array is the field label, and the other elements are fieldsets.
 
 Extended selectors: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box`, `rich_text`.
 
@@ -207,7 +207,7 @@ Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 #### `combo_box`
 
 Finds a [combo box](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox).
-This will find ARIA 1.0 and ARIA 1.1 combo boxes.  A combo box is an input with a popup list of options. 
+This will find ARIA 1.0 and ARIA 1.1 combo boxes. A combo box is an input with a popup list of options.
 
 This also finds select based on [Twitter typeahead](https://twitter.github.io/typeahead.js/) classes, but this behaviour is deprecated and will be removed in a future release.
 
@@ -215,7 +215,7 @@ Locator and options are the same as the [field selector](https://www.rubydoc.inf
 
 - Filters:
   - `expanded` [Boolean] - Is the combo box expanded
-  - `options` [Array\<String, Regexp\>] - Has exactly these options in order.  This, and other other filters, will match if the option includes the string
+  - `options` [Array\<String, Regexp\>] - Has exactly these options in order. This, and other other filters, will match if the option includes the string
   - `with_options` [Array\<String, Regexp\>] - Includes these options
   - `enabled_options` [Array\<String, Regexp\>] - Has exactly these enabled options in order
   - `with_enabled_options` [Array\<String, Regexp\>] - Includes these enabled options
@@ -233,13 +233,13 @@ Also see:
 
 #### `disclosure`
 
-Finds a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure).  This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
+Finds a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
 
 - `locator` [String, Symbol] The text label of the disclosure
 - Filters:
   - `expanded` [Boolean] Is the disclosure expanded
 
-Note that an ARIA disclosure is typically hidden when closed.  Using `expanded: false` will only find an element where `visible:` is set to `false` or `:all`.
+Note that an ARIA disclosure is typically hidden when closed. Using `expanded: false` will only find an element where `visible:` is set to `false` or `:all`.
 
 Also see:
 
@@ -249,7 +249,7 @@ Also see:
 
 #### `disclosure_button`
 
-Finds the open and close button associated with a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure).  This will be a `<summary>`, a `<button>` or an element with the role of button.
+Finds the open and close button associated with a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will be a `<summary>`, a `<button>` or an element with the role of button.
 
 - `locator` [String, Symbol] The text label of the disclosure
 - Filters:
@@ -264,11 +264,11 @@ Also see:
 
 Finds a [microdata](https://developer.mozilla.org/en-US/docs/Web/HTML/Microdata) item.
 
-Microdata isn't exposed to users, including screen-readers.  However this can still be a useful way to check a page has the expected information in the expected place.
+Microdata isn't exposed to users, including screen-readers. However this can still be a useful way to check a page has the expected information in the expected place.
 
 - `locator` [String, Symbol] The `itemprop` name of the item
 - Filters:
-  - `type` [String, Symbol, Array] The `itemtype`.  Also accepts and array of itemtypes.
+  - `type` [String, Symbol, Array] The `itemtype`. Also accepts and array of itemtypes.
 
 Example:
 
@@ -304,9 +304,9 @@ Also see:
 
 Finds a rich text editor.
 
-This should be compatible with most browser based rich text editors.  It searches for `contenteditable` section marked up with the correct role.  It is also compatible with `<iframe>` based editors such as CKEditor 4 and TinyMCE.
+This should be compatible with most browser based rich text editors. It searches for `contenteditable` section marked up with the correct role. It is also compatible with `<iframe>` based editors such as CKEditor 4 and TinyMCE.
 
-- `locator` [String, Symbol] The label for the editor.  This can be an `aria-label` or `aria-labelledby`.  For iframe editors this is the `title` attribute.
+- `locator` [String, Symbol] The label for the editor. This can be an `aria-label` or `aria-labelledby`. For iframe editors this is the `title` attribute.
 
 For testing the content of an iframe based editor you need to use `within_frame`, or you can use `within_rich_text`.
 
@@ -334,8 +334,8 @@ A section is html sectioning element: `<section>`, `<article>`, `<aside>`, `<foo
 
 - `locator` [String, Symbol] The text of the first heading
 - filters:
-  - `heading_level` [Integer, Enumerable] The heading level to find.  Defaults to `(1..6)`
-  - `section_element` [String, Symbol, Array] The section element to use.  Defaults to `%i[section article aside footer header main form]`
+  - `heading_level` [Integer, Enumerable] The heading level to find. Defaults to `(1..6)`
+  - `section_element` [String, Symbol, Array] The section element to use. Defaults to `%i[section article aside footer header main form]`
 
 ```html
 <section>
@@ -365,7 +365,7 @@ Finds a [tab panel](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel).
 - Filters:
   - `open` [Boolean] Is the tab panel open.
 
-Note that a closed tab panel is not visible.  Using `open: false` will only find an element where `visible:` is set to `false` or `:all`.
+Note that a closed tab panel is not visible. Using `open: false` will only find an element where `visible:` is set to `false` or `:all`.
 
 Also see
 
@@ -424,7 +424,7 @@ Fill in a combo box and select an option
   - `from` [String, Symbol, Array] - Locator for the field
   - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
-  - options prefixed with 'option_' will be used to find the option. eg `option_text`, `option_match`
+  - options prefixed with `option\_` will be used to find the option. eg `option_text`, `option_match`
   - other options will be used to find the combo box
 
 ```ruby
@@ -449,7 +449,7 @@ Also see [↑ `disclosure` selector](#disclosure)
 
 ### Limiting
 
-#### `within_disclosure(name, **find_options, &block)` 
+#### `within_disclosure(name, **find_options, &block)`
 
 Executing the block within a disclosure.
 
@@ -475,7 +475,7 @@ Also see [↑ `modal` selector](#modal)
 
 #### `within_rich_text(name, **find_options, &block)`
 
-Execute within the rich text.  If the rich text is iframe based this will execute "`within_frame`".
+Execute within the rich text. If the rich text is iframe based this will execute "`within_frame`".
 
 ```ruby
 within_rich_text "Journal entry" do
@@ -485,7 +485,7 @@ end
 
 Also see [↑ `rich_text` selector](#rich_text)
 
-#### `within_section(name, **find_options, &block)` 
+#### `within_section(name, **find_options, &block)`
 
 Execute the block within a section.
 
@@ -497,7 +497,7 @@ end
 
 Also see [↑ `section` selector](#section)
 
-#### `within_tab_panel(name, **find_options, &block)` 
+#### `within_tab_panel(name, **find_options, &block)`
 
 Executing the block within a tab panel.
 
@@ -513,16 +513,16 @@ Also see [↑ `tab_panel` selector](#tab_panel)
 
 #### `have_validation_errors(&block)`
 
-Checks if a page has a set of validation errors.  This will fail if the page does not have the exact set of errors.
+Checks if a page has a set of validation errors. This will fail if the page does not have the exact set of errors.
 
-- `&block` - this takes a block.  In the block each validation error expection should be added using the following DSL:
+- `&block` - this takes a block. In the block each validation error expection should be added using the following DSL:
 
 ```ruby
 expect(page).to have_validation_errors do
   field "Name", validation_error: "This is required"
   select "Gender", validation_error: "This is required"
   field "Age", validation_error: "Please choose a number less than 120"
-  
+
   # The block methods correspond to the following selectors:
   # field, radio_button, checkbox, select, file_field and combo_box
 end
@@ -536,13 +536,13 @@ Checks if a page has no invalid fields.
 
 ```ruby
 expect(page).to have_no_validation_errors
-``` 
-  
-Also see [↑ `validation_error` filter](#validation_error-string)  
-  
+```
+
+Also see [↑ `validation_error` filter](#validation_error-string)
+
 #### Expectation shortcuts
 
-The following expectation shortcuts are also added for both "have\__selector_" and "have\_no\__selector_":
+The following expectation shortcuts are also added for both "have\__selector_" and "have_no\__selector_":
 
 - `have_alert`
 - `have_combo_box`
@@ -561,7 +561,7 @@ expect(page).to have_selector :combo_box, "Foo"
 expect(page).to have_combo_box, "Foo"
 
 ```
-  
+
 ## Local development
 
 ```bash
