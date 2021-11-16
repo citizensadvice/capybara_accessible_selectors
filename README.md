@@ -424,7 +424,7 @@ Fill in a combo box and select an option
   - `from` [String, Symbol, Array] - Locator for the field
   - `search` [String] - Alternative text to search for in the input
   - `currently_with` [String] - Current value for the field
-  - options prefixed with `option\_` will be used to find the option. eg `option_text`, `option_match`
+  - options prefixed with `option_` will be used to find the option. eg `option_text`, `option_match`
   - other options will be used to find the combo box
 
 ```ruby
@@ -515,7 +515,7 @@ Also see [↑ `tab_panel` selector](#tab_panel)
 
 Checks if a page has a set of validation errors. This will fail if the page does not have the exact set of errors.
 
-- `&block` - this takes a block. In the block each validation error expection should be added using the following DSL:
+- `&block` - this takes a block. In the block each validation error exception should be added using the following DSL:
 
 ```ruby
 expect(page).to have_validation_errors do
@@ -542,7 +542,7 @@ Also see [↑ `validation_error` filter](#validation_error-string)
 
 #### Expectation shortcuts
 
-The following expectation shortcuts are also added for both "have\__selector_" and "have_no\__selector_":
+The following expectation shortcuts are also added for both `have_selector_` and `have_no_selector_`:
 
 - `have_alert`
 - `have_combo_box`
