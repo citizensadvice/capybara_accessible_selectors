@@ -4,6 +4,7 @@
 
 - Fix selecting a modal or rich text by aria-label was using the exact text
 - Support the `extact` option for selecting a modal or rich text
+- add `focused` filter to `disclosure_button` and `modal`
 
 ## v0.4.2
 

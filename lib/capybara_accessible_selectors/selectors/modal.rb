@@ -8,6 +8,8 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
     ].reduce(:&)]
   end
 
+  filter_set(:capybara_accessible_selectors, %i[focused])
+
   locator_filter do |node, locator, exact:, **|
     next true if locator.nil?
 
