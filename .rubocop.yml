@@ -1,3 +1,12 @@
 inherit_gem:
   citizens-advice-style:
     - default.yml
+
+AllCops:
+  SuggestExtensions: false
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 21

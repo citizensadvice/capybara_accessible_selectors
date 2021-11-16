@@ -17,7 +17,8 @@ describe "validation error filter" do
     it "provides a friendly error if the error message does not match" do
       expect do
         expect(page).to have_selector :field, "Text", validation_error: "different error", wait: false
-      end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected to be described by "different error" but it was described by "Text label error Text error"/
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                         /expected to be described by "different error" but it was described by "Text label error Text error"/
     end
 
     it "provides a friendly error if the validity state does not match" do

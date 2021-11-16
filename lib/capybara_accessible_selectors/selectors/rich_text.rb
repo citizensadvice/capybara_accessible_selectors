@@ -56,12 +56,7 @@ module CapybaraAccessibleSelectors
           Capybara.page.within_rich_text(locator, **find_options, &block)
         end
       end
-
-      within(:rich_text, locator, **find_options) do
-        return within_frame(current_scope, &block) if current_scope.tag_name == "iframe"
-
-        yield
-      end
+      within_iframe_rich_text(locator, **find_options, &block)
     end
 
     private
@@ -73,6 +68,14 @@ module CapybaraAccessibleSelectors
 
         editable.send_keys :backspace while editable.text != "" && clear
         editable.send_keys text
+      end
+    end
+
+    def within_iframe_rich_text(locator, **find_options, &block)
+      within(:rich_text, locator, **find_options) do
+        return within_frame(current_scope, &block) if current_scope.tag_name == "iframe"
+
+        yield
       end
     end
   end

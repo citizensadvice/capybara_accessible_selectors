@@ -61,14 +61,21 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, options: ["Banana", "Disabled", "Orange", "Blood orange"], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, /Expected options \["Banana", "Disabled", "Orange", "Blood orange"\] found \["Apple", "Banana", "Disabled", "Orange", "Blood orange"\]/
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected options ["Banana", "Disabled", "Orange", "Blood orange"]
+            found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]
+          EXPECTED
         end
 
         it "fails with matching all exact regular expression" do
           find(:field, label).click
           expect do
-            expect(page).to have_selector :combo_box, label, options: [/potato/i, "Banana", "Disabled", "Orange", "Blood orange"], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected options [/potato/i, "Banana", "Disabled", "Orange", "Blood orange"] found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]')
+            expect(page).to have_selector :combo_box, label, options: [/potato/i, "Banana", "Disabled", "Orange", "Blood orange"],
+                                                             wait: false
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected options [/potato/i, "Banana", "Disabled", "Orange", "Blood orange"]
+            found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]
+          EXPECTED
         end
       end
 
@@ -92,14 +99,20 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_options: %w[Orange Potato], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, /Expected with at least options \["Orange", "Potato"\] found \["Apple", "Banana", "Disabled", "Orange", "Blood orange"\]/
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected with at least options ["Orange", "Potato"]
+            found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]
+          EXPECTED
         end
 
         it "fails without matching regular expression" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_options: [/blood/i, /blood/i], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least options [/blood/i, /blood/i] found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected with at least options [/blood/i, /blood/i]
+            found ["Apple", "Banana", "Disabled", "Orange", "Blood orange"]
+          EXPECTED
         end
       end
 
@@ -118,14 +131,20 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, enabled_options: ["Banana", "Orange", "Blood orange"], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected enabled options ["Banana", "Orange", "Blood orange"] found ["Apple", "Banana", "Orange", "Blood orange"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected enabled options ["Banana", "Orange", "Blood orange"]
+            found ["Apple", "Banana", "Orange", "Blood orange"]
+          EXPECTED
         end
 
         it "fails with matching all exact regular expression" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, enabled_options: [/potato/i, "Banana", "Orange", "Blood orange"], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected enabled options [/potato/i, "Banana", "Orange", "Blood orange"] found ["Apple", "Banana", "Orange", "Blood orange"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected enabled options [/potato/i, "Banana", "Orange", "Blood orange"]
+            found ["Apple", "Banana", "Orange", "Blood orange"]
+          EXPECTED
         end
       end
 
@@ -144,14 +163,20 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_enabled_options: %w[Orange Disabled], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least enabled options ["Orange", "Disabled"] found ["Apple", "Banana", "Orange", "Blood orange"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected with at least enabled options ["Orange", "Disabled"]
+            found ["Apple", "Banana", "Orange", "Blood orange"]
+          EXPECTED
         end
 
         it "fails without matching regular expression" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_enabled_options: [/orange/i, /disabled/i], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least enabled options [/orange/i, /disabled/i] found ["Apple", "Banana", "Orange", "Blood orange"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+            Expected with at least enabled options [/orange/i, /disabled/i]
+            found ["Apple", "Banana", "Orange", "Blood orange"]
+          EXPECTED
         end
       end
 
@@ -177,7 +202,8 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, disabled_options: /banana/i, wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected disabled options [/banana/i] found ["Disabled"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                             include('Expected disabled options [/banana/i] found ["Disabled"]')
         end
       end
 
@@ -196,14 +222,16 @@ describe "combo_box selector" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_disabled_options: ["Banana"], wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least disabled options ["Banana"] found ["Disabled"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                             include('Expected with at least disabled options ["Banana"] found ["Disabled"]')
         end
 
         it "fails with matching all exact regular expression" do
           find(:field, label).click
           expect do
             expect(page).to have_selector :combo_box, label, with_disabled_options: /banana/i, wait: false
-          end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least disabled options [/banana/i] found ["Disabled"]')
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                             include('Expected with at least disabled options [/banana/i] found ["Disabled"]')
         end
       end
 
@@ -291,14 +319,20 @@ describe "combo_box selector" do
         find(:field, label).click
         expect do
           expect(page).to have_selector :combo_box, label, options: ["Banana", "Orange", "Blood orange"], wait: false
-        end.to raise_error RSpec::Expectations::ExpectationNotMetError, /Expected options \["Banana", "Orange", "Blood orange"\] found \["Apple", "Banana", "Orange", "Blood orange"\]/
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+          Expected options ["Banana", "Orange", "Blood orange"]
+          found ["Apple", "Banana", "Orange", "Blood orange"]
+        EXPECTED
       end
 
       it "fails with matching all exact regular expression" do
         find(:field, label).click
         expect do
           expect(page).to have_selector :combo_box, label, options: [/potato/i, "Banana", "Orange", "Blood orange"], wait: false
-        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected options [/potato/i, "Banana", "Orange", "Blood orange"] found ["Apple", "Banana", "Orange", "Blood orange"]')
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+          Expected options [/potato/i, "Banana", "Orange", "Blood orange"]
+          found ["Apple", "Banana", "Orange", "Blood orange"]
+        EXPECTED
       end
     end
 
@@ -317,14 +351,20 @@ describe "combo_box selector" do
         find(:field, label).click
         expect do
           expect(page).to have_selector :combo_box, label, with_options: %w[Orange Potato], wait: false
-        end.to raise_error RSpec::Expectations::ExpectationNotMetError, /Expected with at least options \["Orange", "Potato"\] found \["Apple", "Banana", "Orange", "Blood orange"\]/
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+          Expected with at least options ["Orange", "Potato"]
+          found ["Apple", "Banana", "Orange", "Blood orange"]
+        EXPECTED
       end
 
       it "fails without matching regular expression" do
         find(:field, label).click
         expect do
           expect(page).to have_selector :combo_box, label, with_options: [/blood/i, /blood/i], wait: false
-        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include('Expected with at least options [/blood/i, /blood/i] found ["Apple", "Banana", "Orange", "Blood orange"]')
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
+          Expected with at least options [/blood/i, /blood/i]
+          found ["Apple", "Banana", "Orange", "Blood orange"]
+        EXPECTED
       end
     end
 

@@ -63,7 +63,7 @@ module CapybaraAccessibleSelectors
         button.click
       elsif button.tag_name == "summary"
         button.click if button.find(:xpath, "..")[:open] == expand
-      elsif button[:"aria-expanded"] != (expand ? "true" : "false")
+      elsif button[:"aria-expanded"] != (expand ? "true" : "false") # rubocop:disable Lint/DuplicateBranch
         button.click
       end
     end

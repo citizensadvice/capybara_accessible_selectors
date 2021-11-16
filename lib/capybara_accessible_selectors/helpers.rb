@@ -23,7 +23,7 @@ module CapybaraAccessibleSelectors
       elements_by_ids_in_order(node, ids).map { |n| n.text(normalize_ws: true) }.join(" ")
     end
 
-    def elements_by_ids_in_order(node, ids) # rubocop:disable Metrics/AbcSize
+    def elements_by_ids_in_order(node, ids)
       return [] if ids.nil? || ids.empty?
 
       node.all(:xpath, XPath.anywhere[ids.map { |id| XPath.attr(:id) == id }.reduce(:|)], wait: false)

@@ -51,6 +51,7 @@ describe "described by filter" do
   it "provides a friendly error" do
     expect do
       expect(page).to have_selector :field, "Text", described_by: "foo", wait: false
-    end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected to be described by "foo" but it was described by "Text description"/
+    end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                       /expected to be described by "foo" but it was described by "Text description"/
   end
 end

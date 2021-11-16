@@ -20,12 +20,14 @@ describe "fieldset filter" do
       context "single fieldset" do
         it "selects with an implicit label" do
           expect(page).to have_selector selector, "#{label} implicit", count: 2
-          expect(find(selector, ["Inner circle", "#{label} implicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
+          expect(find(selector,
+                      ["Inner circle", "#{label} implicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
         end
 
         it "selects with an explicit label" do
           expect(page).to have_selector selector, "#{label} explicit", count: 2
-          expect(find(selector, ["Inner circle", "#{label} explicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} explicit")
+          expect(find(selector,
+                      ["Inner circle", "#{label} explicit"])).to eq find(:fieldset, "Inner circle").find(:field, "#{label} explicit")
         end
       end
 
