@@ -10,6 +10,22 @@ describe "rich text" do
         expect(page.find(:rich_text, "with label")).to eq rich_text
       end
 
+      it "finds a rich text area with a partial label" do
+        rich_text = page.find(:id, "rt-aria-label")
+        expect(page.find(:rich_text, "with la")).to eq rich_text
+      end
+
+      it "finds a rich text area with exact and the exact text" do
+        rich_text = page.find(:id, "rt-aria-label")
+        expect(page.find(:rich_text, "with label", exact: true)).to eq rich_text
+      end
+
+      it "does finds a rich text area with exact and not the exact text" do
+        expect do
+          page.find(:rich_text, "with labe", exact: true, wait: 0)
+        end.to raise_error Capybara::ElementNotFound
+      end
+
       it "matches a rich text area" do
         rich_text = page.find(:id, "rt-aria-label")
         expect(rich_text).to match_selector :rich_text
@@ -45,6 +61,22 @@ describe "rich text" do
       it "finds a rich text area" do
         rich_text = page.find(:id, "rt-aria-labelledby")
         expect(page.find(:rich_text, "with aria-labelledby")).to eq rich_text
+      end
+
+      it "finds a rich text area with a partial label" do
+        rich_text = page.find(:id, "rt-aria-labelledby")
+        expect(page.find(:rich_text, "with aria-")).to eq rich_text
+      end
+
+      it "finds a rich text area with exact and the exact text" do
+        rich_text = page.find(:id, "rt-aria-labelledby")
+        expect(page.find(:rich_text, "with aria-labelledby", exact: true)).to eq rich_text
+      end
+
+      it "does finds a rich text area with exact and not the exact text" do
+        expect do
+          page.find(:rich_text, "with aria-", exact: true, wait: 0)
+        end.to raise_error Capybara::ElementNotFound
       end
 
       it "matches a rich text area" do
@@ -83,6 +115,11 @@ describe "rich text" do
     it "finds a rich text area" do
       rich_text = page.find(:id, "rt-iframe")
       expect(page.find(:rich_text, "editable iframe")).to eq rich_text
+    end
+
+    it "finds a rich text area with a partial label" do
+      rich_text = page.find(:id, "rt-iframe")
+      expect(page.find(:rich_text, "editable i")).to eq rich_text
     end
 
     it "matches a rich text area" do

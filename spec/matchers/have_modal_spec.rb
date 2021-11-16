@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "have_disclosure" do
+describe "have_modal" do
   before do
     visit "/modal.html"
   end

@@ -10,14 +10,15 @@ Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
 
   filter_set(:capybara_accessible_selectors, %i[focused fieldset described_by validation_error])
 
-  locator_filter do |node, locator|
+  locator_filter do |node, locator, exact:, **|
     next true if locator.nil?
 
     *, locator = locator if locator.is_a? Array
+    method = exact ? :eql? : :include?
     if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).include?(locator)
+      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
     elsif node[:"aria-label"]
-      node[:"aria-label"] == locator.to_s
+      node[:"aria-label"].public_send(method, locator.to_s)
     else
       node.tag_name == "iframe"
     end

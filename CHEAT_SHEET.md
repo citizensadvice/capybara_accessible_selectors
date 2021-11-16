@@ -50,3 +50,26 @@ end
 # Assert the page has a modal
 expect(page).to have_modal "Are you sure?"
 ```
+
+## Rich text
+
+Find a rich text editing area.  This supports either `<div contenteditable="true" role="textbox" />` or
+the older style using an iframe with `document.designmode`.
+
+```ruby
+# Find a rich text
+page.find(:rich_text, "Description")
+
+# Add some content to the rich text. Currently only supports plain text
+fill_in_rich_text("Description", "my text")
+# Replace content in rich text
+fill_in_rich_text("Description", "my text", clear: true)
+
+# Assert the rich text has content
+expect(page).to have_selector :rich_text, "Description", text: "my text"
+
+# Assert within a rich text - mostly useful for the iframe version where you need to enter the frame first
+within_rich_text("Description") do
+  expect(page).to have_text "my text"
+end
+```

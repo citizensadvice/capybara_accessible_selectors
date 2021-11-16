@@ -25,9 +25,41 @@ describe "modal selector" do
     expect(find(:modal, "aria-label")).to eq modal
   end
 
+  it "selects by partial aria-label" do
+    modal = find(:element, :div, text: "Aria label content")
+    expect(find(:modal, "aria-lab")).to eq modal
+  end
+
+  it "selects by exact aria-label" do
+    modal = find(:element, :div, text: "Aria label content")
+    expect(find(:modal, "aria-label", exact: true)).to eq modal
+  end
+
+  it "does not select by exact aria-label with the wrong text" do
+    expect do
+      find(:modal, "aria-labe", exact: true)
+    end.to raise_error Capybara::ElementNotFound
+  end
+
   it "selects by multiple aria-labelledby" do
     modal = find(:element, :div, text: "Split label content")
     expect(find(:modal, "split label")).to eq modal
+  end
+
+  it "selects by partial aria-labelled" do
+    modal = find(:element, :div, text: "Split label content")
+    expect(find(:modal, "split la")).to eq modal
+  end
+
+  it "selects by exact aria-labelled" do
+    modal = find(:element, :div, text: "Split label content")
+    expect(find(:modal, "split label", exact: true)).to eq modal
+  end
+
+  it "does not select by exact aria-label with the wrong text" do
+    expect do
+      find(:modal, "split la", exact: true)
+    end.to raise_error Capybara::ElementNotFound
   end
 
   it "does not select a modal missing a role" do

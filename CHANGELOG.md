@@ -1,5 +1,10 @@
 # Change log
 
+## v0.5.0
+
+- Fix selecting a modal or rich text by aria-label was using the exact text
+- Support the `extact` option for selecting a modal or rich text
+
 ## v0.4.2
 
 - Fix Ruby 3 errors

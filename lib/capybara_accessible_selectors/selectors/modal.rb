@@ -8,13 +8,14 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
     ].reduce(:&)]
   end
 
-  locator_filter do |node, locator|
+  locator_filter do |node, locator, exact:, **|
     next true if locator.nil?
 
+    method = exact ? :eql? : :include?
     if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).include?(locator)
+      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
     elsif node[:"aria-label"]
-      node[:"aria-label"] == locator.to_s
+      node[:"aria-label"].public_send(method, locator.to_s)
     end
   end
 end
