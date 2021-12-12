@@ -59,6 +59,22 @@ describe "Disclosure" do
         summary.toggle_disclosure
         expect(page).to have_selector :disclosure, "Summary button", expanded: true
       end
+
+      it "invokes #within_disclosure when passed a block" do
+        summary = page.find(:element, :summary, text: "Summary button")
+
+        expect(page).to have_no_text <<~TEXT.strip, exact: true
+          Summary button
+          Details content
+        TEXT
+
+        summary.toggle_disclosure do
+          expect(page).to have_no_text <<~TEXT.strip, exact: true
+            Summary button
+            Details content
+          TEXT
+        end
+      end
     end
 
     context "#within_disclosure" do

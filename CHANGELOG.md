@@ -1,5 +1,8 @@
 # Change log
 
+- When passed a block, `toggle_disclosure` will forward the block to a
+  `within_disclosure` call with the same set of locator arguments and options
+
 ## v0.5.0
 
 - Fix selecting a modal or rich text by aria-label was using the exact text

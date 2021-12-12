@@ -59,7 +59,7 @@ module CapybaraAccessibleSelectors
     # @option options [Boolean] expand Set true to open, false to close, or nil to toggle
     #
     # @return [Capybara::Node::Element] The element clicked
-    def toggle_disclosure(name = nil, expand: nil, **find_options)
+    def toggle_disclosure(name = nil, expand: nil, **find_options, &block)
       button = _locate_disclosure_button(name, **find_options)
       if expand.nil?
         button.click
@@ -67,6 +67,10 @@ module CapybaraAccessibleSelectors
         button.click if button.find(:xpath, "..")[:open] == expand
       elsif button[:"aria-expanded"] != (expand ? "true" : "false") # rubocop:disable Lint/DuplicateBranch
         button.click
+      end
+
+      if block.present?
+        within_disclosure(name, expanded: expand, **find_options, &block)
       end
     end
 
