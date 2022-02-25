@@ -108,10 +108,10 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:d
     desc
   end
 
-  def options_text(node, xpath, **opts, &filter_block)
+  def options_text(node, xpath, **opts, &)
     opts[:wait] = false
     listbox = node.find(:combo_box_list_box, node, **opts)
-    listbox.all(:xpath, xpath, **opts, &filter_block).map(&:text).map { |t| t.gsub(/[[:space:]]+/, " ").strip }
+    listbox.all(:xpath, xpath, **opts, &).map(&:text).map { |t| t.gsub(/[[:space:]]+/, " ").strip }
   end
 
   def match_all_options?(actual, expected)

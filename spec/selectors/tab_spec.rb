@@ -22,12 +22,12 @@ describe "tab selector" do
 
     it "filters by open tabpanel" do
       expect(page).to have_selector :tab_panel, "One", open: true
-      expect(page).to have_no_selector :tab_panel, "Two", open: true, visible: false
+      expect(page).to have_no_selector :tab_panel, "Two", open: true, visible: :all
     end
 
     it "filters by closed tabpanel" do
       expect(page).to have_no_selector :tab_panel, "One", open: false
-      expect(page).to have_selector :tab_panel, "Two", open: false, visible: false
+      expect(page).to have_selector :tab_panel, "Two", open: false, visible: :all
     end
 
     it "matches by tabpanel" do

@@ -3,7 +3,7 @@
 describe "Disclosure" do
   before { visit "/disclosure.html" }
 
-  context "Details/Summary" do
+  context "with Details/Summary" do
     it "selects a details" do
       details = page.find(:element, :details, text: "Summary button")
       expect(page.find(:disclosure, "Summary button")).to eq details
@@ -29,7 +29,7 @@ describe "Disclosure" do
       expect(summary).to match_selector :disclosure_button
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a details open and closed" do
         expect(page).to have_selector :disclosure, "Summary button", expanded: false
         # Open
@@ -77,7 +77,7 @@ describe "Disclosure" do
       end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds a disclosure" do
         toggle_disclosure("Summary button")
         within_disclosure "Summary button" do
@@ -90,7 +90,7 @@ describe "Disclosure" do
     end
   end
 
-  context "disclosure pattern with button" do
+  context "with disclosure pattern with button" do
     it "selects the button" do
       button = page.find(:button, "Disclosure button")
       expect(page.find(:disclosure_button, "Disclosure button")).to eq button
@@ -105,7 +105,7 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure button"
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a disclosure open and closed" do
         expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
         # Open
@@ -137,7 +137,7 @@ describe "Disclosure" do
       end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds within a disclosure" do
         toggle_disclosure("Disclosure button")
         within_disclosure "Disclosure button" do
@@ -147,7 +147,7 @@ describe "Disclosure" do
     end
   end
 
-  context "disclosure pattern with simluated button" do
+  context "with disclosure pattern with simulated button" do
     it "selects the button" do
       button = page.find(:element, :span, text: "Disclosure span button")
       expect(page.find(:disclosure_button, "Disclosure span button")).to eq button
@@ -162,7 +162,7 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure span button"
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a disclosure open and closed" do
         expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
         # Open
@@ -194,7 +194,7 @@ describe "Disclosure" do
       end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds within a disclosure" do
         toggle_disclosure("Disclosure span button")
         within_disclosure "Disclosure span button" do

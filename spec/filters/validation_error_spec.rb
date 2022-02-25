@@ -3,7 +3,7 @@
 describe "validation error filter" do
   before { visit "/validation_error.html" }
 
-  context "field" do
+  context "with :field" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :field, "Text", validation_error: "Text error"
       expect(page).to have_no_selector :field, "Text", validation_error: "different error"
@@ -44,7 +44,7 @@ describe "validation error filter" do
     end
   end
 
-  context "fillable_field" do
+  context "with :fillable_field" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :fillable_field, "Text", validation_error: "Text error"
       expect(page).to have_no_selector :fillable_field, "Text", validation_error: "different error"
@@ -56,7 +56,7 @@ describe "validation error filter" do
     end
   end
 
-  context "datalist_input" do
+  context "with :datalist_input" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :datalist_input, "Text", validation_error: "Text error"
       expect(page).to have_no_selector :datalist_input, "Text", validation_error: "different error"
@@ -68,7 +68,7 @@ describe "validation error filter" do
     end
   end
 
-  context "radio_button" do
+  context "with :radio_button" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :radio_button, "Radio", validation_error: "Radio error"
       expect(page).to have_no_selector :radio_button, "Radio", validation_error: "another error"
@@ -80,7 +80,7 @@ describe "validation error filter" do
     end
   end
 
-  context "checkbox" do
+  context "with :checkbox" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :checkbox, "Checkbox", validation_error: "Checkbox error"
       expect(page).to have_no_selector :checkbox, "Checkbox", validation_error: "another error"
@@ -92,7 +92,7 @@ describe "validation error filter" do
     end
   end
 
-  context "select" do
+  context "with :select" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :select, "Select", validation_error: "Select error"
       expect(page).to have_no_selector :select, "Select", validation_error: "another error"
@@ -104,7 +104,7 @@ describe "validation error filter" do
     end
   end
 
-  context "file_field" do
+  context "with :file_field" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :file_field, "File", validation_error: "File error"
       expect(page).to have_no_selector :file_field, "File", validation_error: "another error"
@@ -116,7 +116,7 @@ describe "validation error filter" do
     end
   end
 
-  context "combo_box" do
+  context "with :combo_box" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :combo_box, "Combo box", validation_error: "Combo box error"
       expect(page).to have_no_selector :combo_box, "Combo box", validation_error: "another error"
@@ -128,7 +128,7 @@ describe "validation error filter" do
     end
   end
 
-  context "rich_text" do
+  context "with :rich_text" do
     it "selects a field with an aria-describedby error message" do
       expect(page).to have_selector :rich_text, "Rich text", validation_error: "Rich text error"
       expect(page).to have_no_selector :rich_text, "Rich text", validation_error: "Another error"

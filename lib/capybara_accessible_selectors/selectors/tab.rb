@@ -62,8 +62,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] name The tab button label
     # @param [Hash] options Finder options
-    def within_tab_panel(name, **options, &block)
-      within(:tab_panel, name, **options, &block)
+    def within_tab_panel(name, **options, &)
+      within(:tab_panel, name, **options, &)
     end
   end
 end

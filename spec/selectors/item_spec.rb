@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "microdata" do
+describe "item" do
   before { visit "/microdata.html" }
 
   it "selects microdata" do

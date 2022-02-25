@@ -2,7 +2,7 @@
 
 ENV["APP_ENV"] = "test"
 
-require "byebug"
+require "debug"
 require "capybara/rspec"
 require "selenium-webdriver"
 require "capybara_accessible_selectors"
