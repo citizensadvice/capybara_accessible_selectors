@@ -3,8 +3,8 @@
 describe "rich text" do
   before { visit "/rich_text.html" }
 
-  context "inline" do
-    context "aria-label" do
+  context "when inline" do
+    context "with aria-label" do
       it "finds a rich text area" do
         rich_text = page.find(:id, "rt-aria-label")
         expect(page.find(:rich_text, "with label")).to eq rich_text
@@ -57,7 +57,7 @@ describe "rich text" do
       end
     end
 
-    context "aria-labelledby" do
+    context "with aria-labelledby" do
       it "finds a rich text area" do
         rich_text = page.find(:id, "rt-aria-labelledby")
         expect(page.find(:rich_text, "with aria-labelledby")).to eq rich_text
@@ -111,7 +111,7 @@ describe "rich text" do
     end
   end
 
-  context "iframe" do
+  context "with an iframe" do
     it "finds a rich text area" do
       rich_text = page.find(:id, "rt-iframe")
       expect(page.find(:rich_text, "editable iframe")).to eq rich_text
@@ -164,7 +164,7 @@ describe "rich text" do
   end
 
   describe "within_rich_text" do
-    context "inline" do
+    context "when inline" do
       it "works if called on page" do
         fill_in_rich_text "with label", with: "foo"
         within_rich_text("with label") do
@@ -187,7 +187,7 @@ describe "rich text" do
       end
     end
 
-    context "iframe" do
+    context "with an iframe" do
       it "works if called on page" do
         fill_in_rich_text "editable iframe", with: "foo"
         within_rich_text("editable iframe") do

@@ -17,7 +17,7 @@ describe "fieldset filter" do
     context selector.to_s do
       let(:label) { selector.to_s.tr("_", " ").capitalize }
 
-      context "single fieldset" do
+      context "with a single fieldset" do
         it "selects with an implicit label" do
           expect(page).to have_selector selector, "#{label} implicit", count: 2
           expect(find(selector,
@@ -31,7 +31,7 @@ describe "fieldset filter" do
         end
       end
 
-      context "two fieldsets" do
+      context "with two fieldsets" do
         it "selects with an implicit label" do
           expect(page).to have_selector selector, "#{label} implicit", count: 2
           expected = find(:fieldset, "Outer circle").find(:fieldset, "Inner circle").find(:field, "#{label} implicit")
@@ -47,7 +47,7 @@ describe "fieldset filter" do
     end
   end
 
-  context "rich_text" do
+  context "with rich_text" do
     it "selects a rich_text" do
       expect(page).to have_selector :rich_text, "Rich text", count: 2
       expect(page).to have_selector :rich_text, ["Inner circle", "Rich text"], count: 1
@@ -55,7 +55,7 @@ describe "fieldset filter" do
     end
   end
 
-  context "button" do
+  context "with button" do
     it "selects a button" do
       expect(page).to have_selector :button, "Button", count: 2
       expect(page).to have_selector :button, ["Inner circle", "Button"], count: 1
@@ -63,7 +63,7 @@ describe "fieldset filter" do
     end
   end
 
-  context "link" do
+  context "with link" do
     it "selects a link" do
       expect(page).to have_selector :link, "Link", count: 2
       expect(page).to have_selector :link, ["Inner circle", "Link"], count: 1
@@ -71,7 +71,7 @@ describe "fieldset filter" do
     end
   end
 
-  context "link_or_button" do
+  context "with link_or_button" do
     it "selects a link_or_button" do
       expect(page).to have_selector :link_or_button, "Link", count: 2
       expect(page).to have_selector :link_or_button, ["Inner circle", "Link"], count: 1

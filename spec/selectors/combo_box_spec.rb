@@ -235,7 +235,7 @@ describe "combo_box selector" do
         end
       end
 
-      context "select_combo_box_option" do
+      describe "select_combo_box_option" do
         it "fills in a combo box" do
           select_combo_box_option "Banana", from: label
           expect(page).to have_selector :combo_box, label, with: "Banana"
@@ -256,7 +256,7 @@ describe "combo_box selector" do
           expect(page).to have_selector :combo_box, label, with: "Orange"
         end
 
-        context "currently_with" do
+        describe "currently_with" do
           it "fills in a combo box with an existing value" do
             select_combo_box_option "Banana", from: label
             select_combo_box_option "Apple", from: label, currently_with: "Banana"
@@ -266,7 +266,7 @@ describe "combo_box selector" do
           end
         end
 
-        context "disabled option" do
+        context "with a disabled option" do
           it "will not select a disabled option" do
             expect do
               select_combo_box_option "Disabled", from: label, wait: false
@@ -274,7 +274,7 @@ describe "combo_box selector" do
           end
         end
 
-        context "called on the node" do
+        context "when called on the node" do
           it "fills in a combo box" do
             find(:combo_box, label).select_combo_box_option "Banana"
           end
@@ -368,7 +368,7 @@ describe "combo_box selector" do
       end
     end
 
-    context "select_combo_box_option" do
+    describe "select_combo_box_option" do
       it "fills in a combo box" do
         select_combo_box_option "Banana", from: label
         expect(page).to have_selector :combo_box, label, with: "Banana"
@@ -389,7 +389,7 @@ describe "combo_box selector" do
         expect(page).to have_selector :combo_box, label, with: "Orange"
       end
 
-      context "currently_with" do
+      describe "currently_with" do
         it "fills in a combo box with an existing value" do
           select_combo_box_option "Banana", from: label
           select_combo_box_option "Apple", from: label, currently_with: "Banana"
@@ -399,7 +399,7 @@ describe "combo_box selector" do
         end
       end
 
-      context "disabled option" do
+      context "with a disabled option" do
         it "will not select a disabled option" do
           expect do
             select_combo_box_option "Disabled", from: label, wait: false
@@ -407,7 +407,7 @@ describe "combo_box selector" do
         end
       end
 
-      context "called on the node" do
+      context "when called on the node" do
         it "fills in a combo box" do
           find(:combo_box, label).select_combo_box_option "Banana"
         end
@@ -423,7 +423,7 @@ describe "combo_box selector" do
     end
   end
 
-  context "table list box" do
+  context "with a table list box" do
     it "fills in a combo box" do
       select_combo_box_option "Banana", from: "table"
       expect(page).to have_selector :combo_box, "table", with: "Banana Yellow"

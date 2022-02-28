@@ -4,10 +4,10 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class HaveValidationErrors
-        def matches?(element, &block)
+        def matches?(element, &)
           @page = element
           @elements = []
-          instance_eval(&block)
+          instance_eval(&)
           @errors = []
 
           all_invalid_elements.reject { |el| @elements.include? el }.each do |el|

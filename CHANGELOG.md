@@ -1,7 +1,11 @@
 # Change log
 
+## v0.6.0
+
 - When passed a block, `toggle_disclosure` will forward the block to a
   `within_disclosure` call with the same set of locator arguments and options
+- Add `item_type` selector
+- `type` selector now uses css and works on a space separated items
 
 ## v0.5.0
 

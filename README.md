@@ -260,7 +260,7 @@ Also see:
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
-#### `item`
+#### `item` and `item_type`
 
 Finds a [microdata](https://developer.mozilla.org/en-US/docs/Web/HTML/Microdata) item.
 
@@ -268,7 +268,7 @@ Microdata isn't exposed to users, including screen-readers. However this can sti
 
 - `locator` [String, Symbol] The `itemprop` name of the item
 - Filters:
-  - `type` [String, Symbol, Array] The `itemtype`. Also accepts and array of itemtypes.
+  - `type` [String, Symbol, Array] The `itemtype`. Also accepts and array of item types, for selecting nested item types
 
 Example:
 
@@ -283,6 +283,7 @@ Example:
 
 ```ruby
 expect(page).to have_selector :item, "first-name", type: "application:person", text: "Bob"
+expect(page).to have_selector :item_type, "application:person"
 ```
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)

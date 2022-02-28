@@ -3,7 +3,7 @@
 describe "Disclosure" do
   before { visit "/disclosure.html" }
 
-  context "Details/Summary" do
+  context "with Details/Summary" do
     it "selects a details" do
       details = page.find(:element, :details, text: "Summary button")
       expect(page.find(:disclosure, "Summary button")).to eq details
@@ -29,7 +29,7 @@ describe "Disclosure" do
       expect(summary).to match_selector :disclosure_button
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a details open and closed" do
         expect(page).to have_selector :disclosure, "Summary button", expanded: false
         # Open
@@ -59,25 +59,9 @@ describe "Disclosure" do
         summary.toggle_disclosure
         expect(page).to have_selector :disclosure, "Summary button", expanded: true
       end
-
-      it "invokes #within_disclosure when passed a block" do
-        summary = page.find(:element, :summary, text: "Summary button")
-
-        expect(page).to have_no_text <<~TEXT.strip, exact: true
-          Summary button
-          Details content
-        TEXT
-
-        summary.toggle_disclosure do
-          expect(page).to have_no_text <<~TEXT.strip, exact: true
-            Summary button
-            Details content
-          TEXT
-        end
-      end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds a disclosure" do
         toggle_disclosure("Summary button")
         within_disclosure "Summary button" do
@@ -87,10 +71,33 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Summary button") do
+            expect(page).to have_text <<~TEXT.strip, exact: true
+              Summary button
+              Details content
+            TEXT
+          end
+        end
+      end
+
+      context "with a block called on a node method" do
+        it "runs the block within in the disclosure" do
+          summary = page.find(:element, :summary, text: "Summary button")
+          summary.toggle_disclosure do
+            expect(page).to have_text <<~TEXT.strip, exact: true
+              Summary button
+              Details content
+            TEXT
+          end
+        end
+      end
     end
   end
 
-  context "disclosure pattern with button" do
+  context "with disclosure pattern with button" do
     it "selects the button" do
       button = page.find(:button, "Disclosure button")
       expect(page.find(:disclosure_button, "Disclosure button")).to eq button
@@ -105,7 +112,7 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure button"
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a disclosure open and closed" do
         expect(page).to have_selector :disclosure_button, "Disclosure button", expanded: false
         # Open
@@ -137,17 +144,25 @@ describe "Disclosure" do
       end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds within a disclosure" do
         toggle_disclosure("Disclosure button")
         within_disclosure "Disclosure button" do
           expect(page).to have_text "Disclosure content", exact: true
         end
       end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Disclosure button") do
+            expect(page).to have_text "Disclosure content", exact: true
+          end
+        end
+      end
     end
   end
 
-  context "disclosure pattern with simluated button" do
+  context "with disclosure pattern with simulated button" do
     it "selects the button" do
       button = page.find(:element, :span, text: "Disclosure span button")
       expect(page.find(:disclosure_button, "Disclosure span button")).to eq button
@@ -162,7 +177,7 @@ describe "Disclosure" do
       expect(page).to have_no_selector :disclosure, "Disclosure span button"
     end
 
-    context "#toggle_disclosure" do
+    describe "#toggle_disclosure" do
       it "toggles a disclosure open and closed" do
         expect(page).to have_selector :disclosure_button, "Disclosure span button", expanded: false
         # Open
@@ -194,11 +209,19 @@ describe "Disclosure" do
       end
     end
 
-    context "#within_disclosure" do
+    describe "#within_disclosure" do
       it "finds within a disclosure" do
         toggle_disclosure("Disclosure span button")
         within_disclosure "Disclosure span button" do
           expect(page).to have_text "Disclosure span content", exact: true
+        end
+      end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Disclosure span button") do
+            expect(page).to have_text "Disclosure span content", exact: true
+          end
         end
       end
     end

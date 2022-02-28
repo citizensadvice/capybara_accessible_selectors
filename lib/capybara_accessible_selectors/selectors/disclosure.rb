@@ -69,9 +69,7 @@ module CapybaraAccessibleSelectors
         button.click
       end
 
-      if block.present?
-        within_disclosure(name, expanded: expand, **find_options, &block)
-      end
+      Capybara.page.within_disclosure(name, **find_options, &block) if block_given?
     end
 
     private
@@ -93,8 +91,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Fieldset label
     # @param [Hash] options Finder options
-    def within_disclosure(name, **options, &block)
-      within(:disclosure, name, **options, &block)
+    def within_disclosure(name, **options, &)
+      within(:disclosure, name, **options, &)
     end
   end
 end
