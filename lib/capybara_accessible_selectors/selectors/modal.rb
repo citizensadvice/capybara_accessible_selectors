@@ -28,8 +28,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Modal label
     # @param [Hash] options Finder options
-    def within_modal(name, **options, &)
-      within(:modal, name, **options, &)
+    def within_modal(name, **options, &block)
+      within(:modal, name, **options, &block)
     end
   end
 end

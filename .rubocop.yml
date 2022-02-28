@@ -4,6 +4,7 @@ inherit_gem:
 
 AllCops:
   SuggestExtensions: false
+  TargetRubyVersion: 2.7.0
 
 Metrics/MethodLength:
   Max: 20

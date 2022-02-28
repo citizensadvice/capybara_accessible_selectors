@@ -10,8 +10,7 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*.rb"]
   s.authors = ["Daniel Lewis"]
   s.license = "ISC"
-  # Rubocop isn't recognising 3.1.1 at the moment
-  s.required_ruby_version = ">= 2.7.0" # rubocop:disable Gemspec/RequiredRubyVersion
+  s.required_ruby_version = ">= 2.7.0"
 
   s.add_runtime_dependency "capybara", "~> 3"
 

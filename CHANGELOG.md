@@ -1,5 +1,9 @@
 # Change log
 
+## v0.6.1
+
+- Fix incompatibility with Ruby < 3.1
+
 ## v0.6.0
 
 - When passed a block, `toggle_disclosure` will forward the block to a
