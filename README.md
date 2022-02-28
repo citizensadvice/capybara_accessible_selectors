@@ -440,9 +440,14 @@ Toggle a disclosure open or closed.
 - `name` [String] - Locator for the disclosure button
 - options:
   - `expand` [Boolean] - Force open or closed rather than toggling.
+- `block` - When present, the `block` argument is forwarded to a
+  [`within_disclosure`](#within_disclosurename-find_options-block) call
 
 ```ruby
 toggle_disclosure("Client details")
+toggle_disclosure "Client details", expand: true do
+  expect(page).to have_text "The Client details contents"
+end
 ```
 
 Also see [↑ `disclosure` selector](#disclosure)
