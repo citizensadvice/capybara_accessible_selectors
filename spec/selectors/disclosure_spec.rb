@@ -59,22 +59,6 @@ describe "Disclosure" do
         summary.toggle_disclosure
         expect(page).to have_selector :disclosure, "Summary button", expanded: true
       end
-
-      it "invokes #within_disclosure when passed a block" do
-        summary = page.find(:element, :summary, text: "Summary button")
-
-        expect(page).to have_no_text <<~TEXT.strip, exact: true
-          Summary button
-          Details content
-        TEXT
-
-        summary.toggle_disclosure do
-          expect(page).to have_no_text <<~TEXT.strip, exact: true
-            Summary button
-            Details content
-          TEXT
-        end
-      end
     end
 
     describe "#within_disclosure" do
@@ -85,6 +69,29 @@ describe "Disclosure" do
             Summary button
             Details content
           TEXT
+        end
+      end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Summary button") do
+            expect(page).to have_text <<~TEXT.strip, exact: true
+              Summary button
+              Details content
+            TEXT
+          end
+        end
+      end
+
+      context "with a block called on a node method" do
+        it "runs the block within in the disclosure" do
+          summary = page.find(:element, :summary, text: "Summary button")
+          summary.toggle_disclosure do
+            expect(page).to have_text <<~TEXT.strip, exact: true
+              Summary button
+              Details content
+            TEXT
+          end
         end
       end
     end
@@ -144,6 +151,14 @@ describe "Disclosure" do
           expect(page).to have_text "Disclosure content", exact: true
         end
       end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Disclosure button") do
+            expect(page).to have_text "Disclosure content", exact: true
+          end
+        end
+      end
     end
   end
 
@@ -199,6 +214,14 @@ describe "Disclosure" do
         toggle_disclosure("Disclosure span button")
         within_disclosure "Disclosure span button" do
           expect(page).to have_text "Disclosure span content", exact: true
+        end
+      end
+
+      context "with a block" do
+        it "runs the block within in the disclosure" do
+          toggle_disclosure("Disclosure span button") do
+            expect(page).to have_text "Disclosure span content", exact: true
+          end
         end
       end
     end

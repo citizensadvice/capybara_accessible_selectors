@@ -69,9 +69,7 @@ module CapybaraAccessibleSelectors
         button.click
       end
 
-      if block.present?
-        within_disclosure(name, expanded: expand, **find_options, &block)
-      end
+      Capybara.page.within_disclosure(name, **find_options, &block) if block_given?
     end
 
     private
