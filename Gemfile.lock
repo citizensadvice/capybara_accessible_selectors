@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    capybara_accessible_selectors (0.6.0)
+    capybara_accessible_selectors (0.6.1)
       capybara (~> 3)
 
 GEM
@@ -38,12 +38,10 @@ GEM
       reline (>= 0.3.0)
     matrix (0.4.2)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.8)
-    nokogiri (1.13.3)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.13.3-x86_64-darwin)
       racc (~> 1.4)
     parallel (1.21.0)
     parser (3.1.1.0)
