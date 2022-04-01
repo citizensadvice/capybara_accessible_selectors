@@ -370,7 +370,7 @@ Note that a closed tab panel is not visible. Using `open: false` will only find 
 
 Also see
 
-- [↓ `open_tab` action](#open_tabname)
+- [↓ `select_tab` action](#select_tabname-block)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_tab_panel`](#within_tab_panelname-find_options-block)
 
@@ -384,7 +384,7 @@ Finds the button that opens a tab.
 
 Also see:
 
-- [↓ `open_tab` action](#open_tabname)
+- [↓ `select_tab` action](#select_tabname-block)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
 ### Actions
@@ -404,14 +404,15 @@ fill_in_rich_text "Diary entry", with: "Today I published a gem"
 
 Also see [↑ `rich_text` selector](#rich_text)
 
-#### `open_tab(name)`
+#### `select_tab(name, &block)`
 
 Opens a tab by name.
 
 - `name` [String] - The tab label to open
+- `block` [Block] - Optional block to run within the tab
 
 ```ruby
-open_tab "Client details"
+select_tab "Client details"
 ```
 
 Also see [↑ `tab_panel` selector](#tab_panel)

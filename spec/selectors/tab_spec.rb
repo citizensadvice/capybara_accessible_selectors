@@ -88,6 +88,14 @@ describe "tab selector" do
       button.select_tab
       expect(page).to have_selector :tab_panel, "Two", open: true
     end
+
+    context "with a block" do
+      it "runs block within the tab panel" do
+        select_tab "Three" do
+          expect(page).to have_text "Panel three", exact: true
+        end
+      end
+    end
   end
 
   describe "within_tab_panel" do
