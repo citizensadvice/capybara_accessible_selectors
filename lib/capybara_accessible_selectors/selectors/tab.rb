@@ -48,12 +48,14 @@ module CapybaraAccessibleSelectors
     # @param [String] locator The text of the button
     #
     # @return [Capybara::Node::Element] The element clicked
-    def select_tab(name = nil, **find_options)
+    def select_tab(name = nil, **find_options, &block)
       if name.nil? && is_a?(Capybara::Node::Element) && matches_selector?(:tab_button)
         self
       else
         find(:tab_button, name, **find_options)
       end.click
+
+      within_tab_panel(name, **find_options, &block) if block_given?
     end
   end
 

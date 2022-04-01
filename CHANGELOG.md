@@ -1,5 +1,10 @@
 # Change log
 
+## v0.7.0
+
+- Add an optional block to `select_tab`
+- Fix documentation for `select_tab`
+
 ## v0.6.1
 
 - Fix incompatibility with Ruby < 3.1
