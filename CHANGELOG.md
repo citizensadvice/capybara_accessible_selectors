@@ -1,10 +1,6 @@
 # Change log
 
-## v0.8.1
-
-- Fix not waiting for the rich text to focus before filling in
-
-## v0.8.0
+## v0.8.2
 
 - Focus rich text when editing it
 - Remove old fix for [Chrome driver bug](https://bugs.chromium.org/p/chromedriver/issues/detail?id=3214&q=sendKeys&can=2)

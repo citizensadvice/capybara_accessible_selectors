@@ -39,7 +39,7 @@ module CapybaraAccessibleSelectors
         fill_in_iframe_rich_text(input, with, clear)
       else
         input.click
-        input.has_selector? :rich_text, focused: true
+        input.assert_matches_selector :rich_text, focused: true
         input.send_keys :backspace while input.text != "" && clear
         input.send_keys with
       end

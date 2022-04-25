@@ -15,12 +15,13 @@
 
   <h2>Content editable with aria-label</h2>
 
-  <div contenteditable="true" role="textbox" aria-label="with label" id="rt-aria-label">
+  <div contenteditable="true" role="textbox" aria-label="with label" id="rt-aria-label" tabindex="0">
+    <p>test</p>
   </div>
 
   <h3>Missing role</h3>
 
-  <div contenteditable="true" aria-label="with label">
+  <div contenteditable="true" aria-label="with label" tabindex="0">
   </div>
 
   <h3>Missing contenteditable</h3>
