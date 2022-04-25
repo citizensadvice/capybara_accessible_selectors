@@ -1,5 +1,9 @@
 # Change log
 
+## v0.8.1
+
+- Fix not waiting for the rich text to focus before filling in
+
 ## v0.8.0
 
 - Focus rich text when editing it
