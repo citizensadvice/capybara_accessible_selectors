@@ -1,5 +1,10 @@
 # Change log
 
+## v0.8.0
+
+- Focus rich text when editing it
+- Remove old fix for [Chrome driver bug](https://bugs.chromium.org/p/chromedriver/issues/detail?id=3214&q=sendKeys&can=2)
+
 ## v0.7.0
 
 - Add an optional block to `select_tab`
