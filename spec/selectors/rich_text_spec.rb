@@ -54,6 +54,11 @@ describe "rich text" do
           fill_in_rich_text "with label", with: "bar", clear: false
           expect(page).to have_selector :rich_text, "with label", exact_text: "foobar"
         end
+
+        it "focuses on the rich text" do
+          fill_in_rich_text "with label", with: "foo"
+          expect(page).to have_selector :rich_text, "with label", text: "foo", focused: true
+        end
       end
     end
 
@@ -106,6 +111,11 @@ describe "rich text" do
           fill_in_rich_text "with aria-labelledby", with: "foo"
           fill_in_rich_text "with aria-labelledby", with: "bar", clear: false
           expect(page).to have_selector :rich_text, "with aria-labelledby", exact_text: "foobar"
+        end
+
+        it "focuses on the rich text" do
+          fill_in_rich_text "with aria-labelledby", with: "foo"
+          expect(page).to have_selector :rich_text, "with aria-labelledby", text: "foo", focused: true
         end
       end
     end
