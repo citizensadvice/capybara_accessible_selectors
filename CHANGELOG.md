@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Add `:menu` and `:menuitem` selector
+
 ## v0.8.2
 
 - Focus rich text when editing it

@@ -288,6 +288,57 @@ expect(page).to have_selector :item_type, "application:person"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `menu`
+
+Finds a [menu](https://www.w3.org/WAI/ARIA/apg/patterns/menu/).
+
+- `locator` [String, Symbol] Either the menu's `[aria-label]` value, the
+  contents of the `[role="menuitem"]` or `<button>` referenced by its
+  `[aria-labelledby]`
+- Filters:
+  - `expanded` [Boolean] Is the menu expanded
+  - `orientation` [String] The menu's orientation, either `horizontal` or
+    `vertical` (defaults to `vertical` when omitted
+
+```html
+<div role="menu" aria-label="Actions">
+  <button type="button" role="menuitem">Share</li>
+  <button type="button" role="menuitem">Save</li>
+  <button type="button" role="menuitem">Delete</li>
+</div>
+```
+
+```ruby
+expect(page).to have_selector :menu, "Actions"
+expect(page).to have_selector :menu, "Actions", expanded: true
+```
+
+#### `menuitem`
+
+Finds a [menuitem](https://w3c.github.io/aria/#menuitem).
+
+- `locator` [String, Symbol] The menuitem content or the
+- `locator` [String, Symbol] Either the menuitem's contents, its `[aria-label]`
+  value, or the contents of the element referenced by its `[aria-labelledby]`
+- Filters:
+  - `disabled` [Boolean] Is the menuitem disabled
+
+```html
+<div role="menu" aria-label="Actions">
+  <button type="button" role="menuitem">Share</li>
+  <button type="button" role="menuitem" aria-disabled="true">Save</li>
+  <button type="button" role="menuitem">Delete</li>
+</div>
+```
+
+```ruby
+within :menu, "Actions", expanded: true do
+  expect(page).to have_selector :menuitem, "Share"
+  expect(page).to have_selector :menuitem, "Save", disabled: true
+  expect(page).to have_no_selector :menuitem, "Do something else"
+end
+```
+
 #### `modal`
 
 Finds a [modal dialog](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal).
