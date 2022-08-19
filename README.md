@@ -208,7 +208,7 @@ Selects an element with the role of [`alert`](https://www.w3.org/WAI/ARIA/apg/pa
 
 ```ruby
 expect(page).to have_selector :alert, text: "Successfully saved"
-expect(page).to have_alert, text: "Successfully saved"
+expect(page).to have_alert text: "Successfully saved"
 ```
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
@@ -474,6 +474,19 @@ Also see
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_section`](#within_sectionname-find_options-block)
 
+#### `status`
+
+Selects an element with the role of [`status`](https://www.w3.org/TR/wai-aria-practices-1.1/#status).
+
+```html
+<div role="status">Important message</div>
+```
+
+```ruby
+expect(page).to have_selector :status, text: "Successfully saved"
+expect(page).to have_status text: "Successfully saved"
+```
+
 #### `tab_panel`
 
 Finds a [tab panel](https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/).
@@ -679,6 +692,7 @@ The following expectation shortcuts are also added for both `have_selector_` and
 - `have_navigation`
 - `have_region`
 - `have_section`
+- `have_status`
 - `have_tab_panel`
 - `have_tab_button`
 
@@ -686,7 +700,7 @@ For example the following two are equivalent:
 
 ```ruby
 expect(page).to have_selector :combo_box, "Foo"
-expect(page).to have_combo_box, "Foo"
+expect(page).to have_combo_box "Foo"
 
 ```
 
