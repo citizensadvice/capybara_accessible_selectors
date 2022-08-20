@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `:grid`, `:gridcell`, `:columnheader`, and `:row`
 - Add `:menu` and `:menuitem` selector
 - Add `current:` filter for `:link` and `:link_or_button` selectors
 - Removed `focused:` in favour of the "native" capybara focus
