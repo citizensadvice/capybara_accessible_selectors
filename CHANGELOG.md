@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Add `current:` filter for `:link` and `:link_or_button` selectors
+
 ## v0.8.2
 
 - Focus rich text when editing it
