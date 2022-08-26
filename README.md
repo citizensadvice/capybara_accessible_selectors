@@ -301,6 +301,17 @@ Also see:
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
 
+#### `region`
+
+Finds a [region landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-7-region).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
 #### `rich_text`
 
 Finds a rich text editor.
@@ -557,6 +568,7 @@ The following expectation shortcuts are also added for both `have_selector_` and
 - `have_disclosure_button`
 - `have_item`
 - `have_modal`
+- `have_region`
 - `have_section`
 - `have_tab_panel`
 - `have_tab_button`
