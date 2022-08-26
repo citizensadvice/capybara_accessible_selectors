@@ -3,6 +3,7 @@
 require "capybara_accessible_selectors/selectors/alert"
 require "capybara_accessible_selectors/selectors/combo_box"
 require "capybara_accessible_selectors/selectors/disclosure"
+require "capybara_accessible_selectors/selectors/main"
 require "capybara_accessible_selectors/selectors/microdata"
 require "capybara_accessible_selectors/selectors/modal"
 require "capybara_accessible_selectors/selectors/rich_text"
