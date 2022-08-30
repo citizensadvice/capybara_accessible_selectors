@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "navigation selector" do
   describe "locator" do
     context "when <nav> element" do

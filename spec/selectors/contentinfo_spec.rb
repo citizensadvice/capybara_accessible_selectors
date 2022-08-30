@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "contentinfo selector" do
   describe "locator" do
     context "when <footer> element" do
