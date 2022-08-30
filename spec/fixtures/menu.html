@@ -1,0 +1,26 @@
+<meta charset="UTF-8" />
+<h1>Menu</h1>
+
+<button aria-controls="menu-expanded" aria-haspopup="menu" aria-expanded="true">Menu (already expanded)</button>
+
+<button role="menuitem">Menuitem (has no menu)</button>
+
+<div id="menu-expanded" role="menu" aria-label="Menu (expanded)">
+  <button role="menuitem">Menuitem (textContent)</button>
+  <button role="menuitem" aria-label="Menuitem ([aria-label])"</button>
+  <button role="menuitem" aria-labelledby="menu-expanded-menuitem"></button>
+  <button role="menuitem" aria-disabled="true">Menuitem (disabled)</button>
+</div>
+
+<p id="menu-expanded-menuitem">Menuitem ([aria-labelledby])</p>
+
+<button id="menubutton-collapsed" aria-controls="menu-collapsed" aria-haspopup="menu" aria-expanded="false">Menu (collapsed)</button>
+
+<div id="menu-collapsed" role="menu" aria-labelledby="menubutton-collapsed">
+</div>
+
+<div id="menu-vertical" role="menu" aria-label="Menu (vertical)" aria-orientation="vertical">
+</div>
+
+<div id="menu-horizontal" role="menu" aria-label="Menu (horizontal)" aria-orientation="horizontal">
+</div>
