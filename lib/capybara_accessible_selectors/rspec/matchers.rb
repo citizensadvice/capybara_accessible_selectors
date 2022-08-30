@@ -6,7 +6,8 @@ require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 # rubocop:disable Naming/PredicateName
 module Capybara
   module RSpecMatchers
-    %i[alert combo_box modal tab_panel tab_button disclosure disclosure_button section item].each do |selector|
+    %i[alert banner combo_box contentinfo main modal navigation region
+       tab_panel tab_button disclosure disclosure_button section item].each do |selector|
       define_method "have_#{selector}" do |locator = nil, **options, &optional_filter_block|
         Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
       end

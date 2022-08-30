@@ -10,6 +10,20 @@ require "sinatra"
 
 set :public_folder, "./spec/fixtures"
 
+module CapybaraAccessibleSelectors
+  class TestApplication < Sinatra::Application
+    get "/pages/new" do
+      erb <<~HTML
+        <!doctype html>
+        <html>
+          <head><meta charset="UTF-8" /></head>
+          <body><%= params[:body] %></body>
+        </html>
+      HTML
+    end
+  end
+end
+
 class String
   def squish
     strip.gsub(/[[:space:]]+/, " ")
@@ -27,7 +41,7 @@ Capybara.register_driver(:firefox_developer_edition) do |app|
   Capybara::Selenium::Driver.new(app, browser: :firefox, capabilities: options)
 end
 Capybara.default_driver = driver
-Capybara.app = Sinatra::Application
+Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }
 
 RSpec.configure do |config|
@@ -40,4 +54,10 @@ RSpec.configure do |config|
   config.define_derived_metadata do |metadata|
     metadata[:type] = :feature
   end
+
+  config.include(Module.new do
+    def render(html)
+      visit("/pages/new?body=#{CGI.escape(html.strip)}")
+    end
+  end)
 end
