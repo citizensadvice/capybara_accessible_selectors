@@ -27,5 +27,7 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
       - name: Run rubocop
         run: bundle exec rubocop
-      - name: Run tests
+      - name: Run Chromium tests
         run: bundle exec rspec
+      - name: Run Firefox tests
+        run: DRIVER=selenium_headless bundle exec rspec
