@@ -69,6 +69,29 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `current` [String, Symbol]
+
+Added to: `link`, `link_or_button`.
+
+Is the element the current item within a container or set of related elements using [`aria-current`](https://www.w3.org/TR/wai-aria/#aria-current).
+
+For example:
+
+```html
+<ul>
+  <li>
+    <a href="/">Home</a>
+  </li>
+  <li>
+    <a href="/about-us" aria-current="page">About us</a>
+  </li>
+</ul>
+```
+
+```ruby
+expect(page).to have_link "About us", current: "page"
+```
+
 #### `described_by` [String]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
@@ -204,6 +227,18 @@ expect(page).to have_alert, text: "Successfully saved"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `banner`
+
+Finds a [banner landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-1-banner).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+
 #### `combo_box`
 
 Finds a [combo box](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox).
@@ -229,6 +264,17 @@ Note that the built-in Capybara selector `datalist_input` will find a [native ht
 Also see:
 
 - [↓ `select_combo_box_option` action](#select_combo_box_optionwith-options)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `contentinfo`
+
+Finds a [contentinfo landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-3-contentinfo).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `disclosure`
@@ -287,6 +333,17 @@ expect(page).to have_selector :item_type, "application:person"
 ```
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `main`
+
+Finds a [main landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-5-main).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `menu`
 
@@ -351,6 +408,28 @@ Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
+
+#### `navigation`
+
+Finds a [navigation landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-6-navigation).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `region`
+
+Finds a [region landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-7-region).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `rich_text`
 
@@ -603,11 +682,16 @@ Also see [↑ `validation_error` filter](#validation_error-string)
 The following expectation shortcuts are also added for both `have_selector_` and `have_no_selector_`:
 
 - `have_alert`
+- `have_banner`
 - `have_combo_box`
+- `have_contentinfo`
 - `have_disclosure`
 - `have_disclosure_button`
 - `have_item`
+- `have_main`
 - `have_modal`
+- `have_navigation`
+- `have_region`
 - `have_section`
 - `have_tab_panel`
 - `have_tab_button`
