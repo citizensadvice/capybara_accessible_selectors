@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "main selector" do
   describe "locator" do
     context "when <main> element" do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "region selector" do
   describe "locator" do
     context "when <section> element" do

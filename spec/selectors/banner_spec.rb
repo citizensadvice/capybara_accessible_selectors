@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "banner selector" do
   describe "locator" do
     context "when <header> element" do
