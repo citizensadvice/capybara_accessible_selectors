@@ -231,6 +231,17 @@ Also see:
 - [↓ `select_combo_box_option` action](#select_combo_box_optionwith-options)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `contentinfo`
+
+Finds a [contentinfo landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-3-contentinfo).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
 #### `disclosure`
 
 Finds a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
@@ -586,6 +597,7 @@ The following expectation shortcuts are also added for both `have_selector_` and
 
 - `have_alert`
 - `have_combo_box`
+- `have_contentinfo`
 - `have_disclosure`
 - `have_disclosure_button`
 - `have_item`

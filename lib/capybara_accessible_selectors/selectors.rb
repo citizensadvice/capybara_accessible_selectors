@@ -2,6 +2,7 @@
 
 require "capybara_accessible_selectors/selectors/alert"
 require "capybara_accessible_selectors/selectors/combo_box"
+require "capybara_accessible_selectors/selectors/contentinfo"
 require "capybara_accessible_selectors/selectors/disclosure"
 require "capybara_accessible_selectors/selectors/main"
 require "capybara_accessible_selectors/selectors/microdata"
