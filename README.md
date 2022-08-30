@@ -69,6 +69,29 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `current` [String, Symbol]
+
+Added to: `link`, `link_or_button`.
+
+Is the element the current item within a container or set of related elements using [`aria-current`](https://www.w3.org/TR/wai-aria/#aria-current).
+
+For example:
+
+```html
+<ul>
+  <li>
+    <a href="/">Home</a>
+  </li>
+  <li>
+    <a href="/about-us" aria-current="page">About us</a>
+  </li>
+</ul>
+```
+
+```ruby
+expect(page).to have_link "About us", current: "page"
+```
+
 #### `described_by` [String]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
