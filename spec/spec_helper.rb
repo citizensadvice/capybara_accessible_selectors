@@ -57,7 +57,7 @@ RSpec.configure do |config|
 
   config.include(Module.new do
     def render(html)
-      visit("/pages/new?body=#{CGI.escape(html)}")
+      visit("/pages/new?body=#{CGI.escape(html.strip)}")
     end
   end)
 end

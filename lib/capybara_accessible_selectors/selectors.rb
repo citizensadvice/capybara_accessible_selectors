@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "capybara_accessible_selectors/selectors/alert"
+require "capybara_accessible_selectors/selectors/banner"
 require "capybara_accessible_selectors/selectors/combo_box"
 require "capybara_accessible_selectors/selectors/contentinfo"
 require "capybara_accessible_selectors/selectors/disclosure"

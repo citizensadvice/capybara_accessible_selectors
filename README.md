@@ -204,6 +204,18 @@ expect(page).to have_alert, text: "Successfully saved"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `banner`
+
+Finds a [banner landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-1-banner).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+
 #### `combo_box`
 
 Finds a [combo box](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox).
@@ -596,6 +608,7 @@ Also see [↑ `validation_error` filter](#validation_error-string)
 The following expectation shortcuts are also added for both `have_selector_` and `have_no_selector_`:
 
 - `have_alert`
+- `have_banner`
 - `have_combo_box`
 - `have_contentinfo`
 - `have_disclosure`
