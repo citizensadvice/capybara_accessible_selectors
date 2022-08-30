@@ -243,6 +243,17 @@ Also see:
 - [↓ `select_combo_box_option` action](#select_combo_box_optionwith-options)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `contentinfo`
+
+Finds a [contentinfo landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-3-contentinfo).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
 #### `disclosure`
 
 Finds a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
@@ -300,6 +311,17 @@ expect(page).to have_selector :item_type, "application:person"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `main`
+
+Finds a [main landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-5-main).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
 #### `modal`
 
 Finds a [modal dialog](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal).
@@ -312,6 +334,28 @@ Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
+
+#### `navigation`
+
+Finds a [navigation landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-6-navigation).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `region`
+
+Finds a [region landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-7-region).
+
+- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
 
 #### `rich_text`
 
@@ -566,10 +610,14 @@ The following expectation shortcuts are also added for both `have_selector_` and
 - `have_alert`
 - `have_banner`
 - `have_combo_box`
+- `have_contentinfo`
 - `have_disclosure`
 - `have_disclosure_button`
 - `have_item`
+- `have_main`
 - `have_modal`
+- `have_navigation`
+- `have_region`
 - `have_section`
 - `have_tab_panel`
 - `have_tab_button`
