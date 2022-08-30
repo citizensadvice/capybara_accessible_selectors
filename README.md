@@ -214,7 +214,7 @@ Also see [↑ `fieldset` filter](#fieldset-string-symbol-array)
 
 #### `alert`
 
-Selects an element with the role of [`alert`](https://www.w3.org/TR/wai-aria-practices-1.1/#alert).
+Selects an element with the role of [`alert`](https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
 
 ```html
 <div role="alert">Important message</div>
@@ -241,7 +241,7 @@ Also see:
 
 #### `combo_box`
 
-Finds a [combo box](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox).
+Finds a [combo box](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 This will find ARIA 1.0 and ARIA 1.1 combo boxes. A combo box is an input with a popup list of options.
 
 This also finds select based on [Twitter typeahead](https://twitter.github.io/typeahead.js/) classes, but this behaviour is deprecated and will be removed in a future release.
@@ -279,7 +279,7 @@ Also see:
 
 #### `disclosure`
 
-Finds a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
+Finds a [disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
 
 - `locator` [String, Symbol] The text label of the disclosure
 - Filters:
@@ -295,7 +295,7 @@ Also see:
 
 #### `disclosure_button`
 
-Finds the open and close button associated with a [disclosure](https://www.w3.org/TR/wai-aria-practices-1.1/#disclosure). This will be a `<summary>`, a `<button>` or an element with the role of button.
+Finds the open and close button associated with a [disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/). This will be a `<summary>`, a `<button>` or an element with the role of button.
 
 - `locator` [String, Symbol] The text label of the disclosure
 - Filters:
@@ -398,7 +398,7 @@ end
 
 #### `modal`
 
-Finds a [modal dialog](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal).
+Finds a [modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/).
 
 This checks for a modal with the correct aria role, `aria-modal="true"` attribute, and it has an associated title.
 
@@ -490,7 +490,7 @@ Also see
 
 #### `tab_panel`
 
-Finds a [tab panel](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel).
+Finds a [tab panel](https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/).
 
 - `locator` [String, Symbol] The text label of the tab button associated with the panel
 - Filters:
