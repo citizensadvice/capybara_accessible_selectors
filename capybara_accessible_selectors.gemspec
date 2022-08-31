@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary = "Additional selectors for capybara"
   s.version = CapybaraAccessibleSelectors::VERSION
   s.files = Dir["lib/**/*.rb"]
-  s.authors = ["Daniel Lewis"]
+  s.authors = ["Daniel Lewis", "Sean Doyle"]
   s.license = "ISC"
   s.required_ruby_version = ">= 2.7.0"
 
