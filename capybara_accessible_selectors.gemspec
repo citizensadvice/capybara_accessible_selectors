@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license = "ISC"
   s.required_ruby_version = ">= 2.7.0"
 
-  s.add_runtime_dependency "capybara", "~> 3"
+  s.add_runtime_dependency "capybara", ">= 3.36.0"
 
   s.add_development_dependency "debug"
   s.add_development_dependency "puma"

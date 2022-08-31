@@ -142,20 +142,6 @@ choose "Answer 1", fieldset: "My question"
 
 Also see [↓ Locating fields](#locating-fields)
 
-#### `focused` [Boolean]
-
-Added to all selectors.
-
-Filters for an element that currently has focus.
-
-```html
-<label>My field <input /></label>
-```
-
-```ruby
-expect(page).to have_field "My field", focused: true
-```
-
 #### `validation_error` [String]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.

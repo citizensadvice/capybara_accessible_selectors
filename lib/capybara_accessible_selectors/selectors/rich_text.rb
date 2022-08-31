@@ -8,7 +8,7 @@ Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
     ].reduce(:&)] + XPath.descendant(:iframe)[XPath.attr(:title).is(locator.to_s)]
   end
 
-  filter_set(:capybara_accessible_selectors, %i[focused fieldset described_by validation_error])
+  filter_set(:capybara_accessible_selectors, %i[fieldset described_by validation_error])
 
   locator_filter do |node, locator, exact:, **|
     next true if locator.nil?
