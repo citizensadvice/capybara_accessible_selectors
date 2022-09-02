@@ -213,6 +213,17 @@ expect(page).to have_alert, text: "Successfully saved"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `article`
+
+Finds an [article structural role](https://www.w3.org/WAI/ARIA/apg/practices/structural-roles/#all-structural-roles). The selector will match either an [`<article>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article) or an element with [role="article"](https://www.w3.org/TR/wai-aria/#article).
+
+- `locator` [String, Symbol] The article's `[aria-label]` attribute or contents
+  of the element referenced by its `[aria-labelledby]` attribute
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
 #### `banner`
 
 Finds a [banner landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-1-banner).
@@ -668,6 +679,7 @@ Also see [↑ `validation_error` filter](#validation_error-string)
 The following expectation shortcuts are also added for both `have_selector_` and `have_no_selector_`:
 
 - `have_alert`
+- `have_article`
 - `have_banner`
 - `have_combo_box`
 - `have_contentinfo`
