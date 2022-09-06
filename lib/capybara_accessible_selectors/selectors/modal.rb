@@ -2,10 +2,15 @@
 
 Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
   xpath do |*|
-    XPath.descendant[[
-      XPath.attr(:"aria-modal") == "true",
-      (XPath.attr(:role) == "dialog") | (XPath.attr(:role) == "alertdialog")
-    ].reduce(:&)]
+    XPath.descendant[
+      [
+        XPath.self(:dialog)[XPath.attr(:open)],
+        [
+          XPath.attr(:"aria-modal") == "true",
+          (XPath.attr(:role) == "dialog") | (XPath.attr(:role) == "alertdialog")
+        ].reduce(:&)
+      ].reduce(&:|)
+    ]
   end
 
   locator_filter do |node, locator, exact:, **|
