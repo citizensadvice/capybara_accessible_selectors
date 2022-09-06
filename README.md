@@ -275,6 +275,7 @@ Note that an ARIA disclosure is typically hidden when closed. Using `expanded: f
 
 Also see:
 
+- [↓ `select_disclosure` action](#select_disclosure)
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_disclosure`](#within_disclosurename-find_options-block)
@@ -289,6 +290,7 @@ Finds the open and close button associated with a [disclosure](https://www.w3.or
 
 Also see:
 
+- [↓ `select_disclosure` action](#select_disclosure)
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
@@ -556,9 +558,27 @@ select_combo_box_option "Apple", from: "Fruits"
 
 Also see [↑ `combo_box` selector](#combo_box)
 
+#### `select_disclosure(name)`
+
+Open disclosure if not already open, and return the disclosure.
+
+- `name` [String] - Locator for the disclosure button
+- options:
+- `block` - When present, the `block` argument is forwarded to a
+  [`within_disclosure`](#within_disclosurename-find_options-block) call
+
+```ruby
+select_disclosure("Client details")
+select__disclosure "Client details" do
+  expect(page).to have_text "The Client details contents"
+end
+```
+
+Also see [↑ `disclosure` selector](#disclosure)
+
 #### `toggle_disclosure(name, expand:)`
 
-Toggle a disclosure open or closed.
+Toggle a disclosure open or closed, and return the button
 
 - `name` [String] - Locator for the disclosure button
 - options:

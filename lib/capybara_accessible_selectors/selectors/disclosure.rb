@@ -53,21 +53,46 @@ module CapybaraAccessibleSelectors
   module Actions
     # Toggle a disclosure open or closed
     #
+    # An optional block will be run in the disclosure context
+    #
     # @param [String] locator The text of the button
     # @option options [Boolean] expand Set true to open, false to close, or nil to toggle
     #
     # @return [Capybara::Node::Element] The element clicked
     def toggle_disclosure(name = nil, expand: nil, **find_options, &block)
       button = _locate_disclosure_button(name, **find_options)
-      if expand.nil?
-        button.click
-      elsif button.tag_name == "summary"
-        button.click if button.find(:xpath, "..")[:open] == expand
-      elsif button[:"aria-expanded"] != (expand ? "true" : "false") # rubocop:disable Lint/DuplicateBranch
-        button.click
-      end
+      _toggle_disclosure_button(button, expand)
 
-      Capybara.page.within_disclosure(name, **find_options, &block) if block_given?
+      if block_given?
+        if is_a?(Capybara::Node::Element) && name.nil?
+          Capybara.page.within(_locate_disclosure(name, **find_options), &block)
+        else
+          Capybara.page.within_disclosure(name, **find_options, &block)
+        end
+      end
+      button
+    end
+
+    # Find and return a disclosure, opening it if not already open
+    #
+    # An optional block will be run in the disclosure context
+    #
+    # @param [String] locator The text of the button
+    #
+    # @return [Capybara::Node::Element] The disclosure
+    def select_disclosure(name = nil, **find_options, &block)
+      button = _locate_disclosure_button(name, **find_options)
+      _toggle_disclosure_button(button, true)
+
+      if block_given?
+        if is_a?(Capybara::Node::Element) && name.nil?
+          Capybara.page.within(_locate_disclosure(name, **find_options), &block)
+        else
+          Capybara.page.within_disclosure(name, **find_options, &block)
+        end
+      else
+        _locate_disclosure(name, **find_options)
+      end
     end
 
     private
@@ -81,6 +106,27 @@ module CapybaraAccessibleSelectors
         end
       end
       find(:disclosure_button, name, **find_options)
+    end
+
+    def _locate_disclosure(name, **find_options)
+      if is_a?(Capybara::Node::Element) && name.nil?
+        return self if matches_selector?(:disclosure, wait: false)
+        return find(:xpath, "..") if tag_name == "summary"
+        if matches_selector?(:disclosure_button, wait: false)
+          return find(:xpath, XPath.anywhere[XPath.attr(:id) == self[:"aria-controls"]], visible: :all, **find_options)
+        end
+      end
+      find(:disclosure, name, **find_options)
+    end
+
+    def _toggle_disclosure_button(button, expand)
+      if expand.nil?
+        button.click
+      elsif button.tag_name == "summary"
+        button.click if button.find(:xpath, "..")[:open] != expand.to_s
+      elsif button[:"aria-expanded"] != (expand ? "true" : "false") # rubocop:disable Lint/DuplicateBranch
+        button.click
+      end
     end
   end
 
