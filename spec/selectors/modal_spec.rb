@@ -70,6 +70,16 @@ describe "modal selector" do
     expect(page).to have_no_selector :modal, "Missing aria modal"
   end
 
+  it "selects a native modal" do
+    click_button "Open native"
+    modal = find(:element, :dialog)
+    expect(find(:modal, "Native modal heading")).to eq modal
+  end
+
+  it "does not selects an unopened native modal" do
+    expect(page).to have_no_selector :modal, "Native modal content", visible: :all
+  end
+
   describe "within_modal" do
     it "limits to within the modal" do
       within_modal "Dialog title" do

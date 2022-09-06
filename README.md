@@ -386,7 +386,12 @@ end
 
 Finds a [modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/).
 
-This checks for a modal with the correct aria role, `aria-modal="true"` attribute, and it has an associated title.
+This checks for either
+
+- a modal with the correct aria role, `aria-modal="true"` attribute, and it has an associated title.
+- or, an open `<dialog>` element.
+
+Note that it is not possible to distinguish between a `<dialog>` opened as a modal and as non-modal.
 
 - `locator` [String, Symbol] The title of the modal
 
