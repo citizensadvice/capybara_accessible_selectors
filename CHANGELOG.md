@@ -6,6 +6,7 @@
 - Add `current:` filter for `:link` and `:link_or_button` selectors
 - Removed `focused:` in favour of the "native" capybara focus
 - Allow the `:modal` selector to select open `<dialog>` elements
+- Added a `select_disclosure` method, that will open a disclosure and run a block within it.
 
 ## v0.8.2
 
