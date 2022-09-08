@@ -5,7 +5,17 @@ describe "alert selector" do
     visit "/alert.html"
   end
 
-  it "finds alerts" do
+  it "finds alerts without arguments" do
+    alert = page.find(:css, "[role=alert]")
+    expect(page.find(:alert)).to eq alert
+  end
+
+  it "finds alerts with a locator" do
+    alert = page.find(:css, "[role=alert]")
+    expect(page.find(:alert, "Alert message")).to eq alert
+  end
+
+  it "finds alerts with a text: filter" do
     alert = page.find(:css, "[role=alert]")
     expect(page.find(:alert, text: "Alert message")).to eq alert
   end
