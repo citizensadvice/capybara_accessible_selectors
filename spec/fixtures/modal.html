@@ -39,3 +39,14 @@
   </h2>
   Missing aria-modal content
 </div>
+
+<dialog id="native-dialog" aria-labelledby="native-modal-heading">
+  <h2 id="native-modal-heading">
+    Native modal heading
+  </h2>
+  Native modal content
+</dialog>
+
+<button type="button" onclick="document.getElementById('native-dialog').showModal()">
+  Open native
+</button>
