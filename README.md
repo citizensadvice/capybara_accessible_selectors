@@ -569,7 +569,7 @@ Open disclosure if not already open, and return the disclosure.
 
 ```ruby
 select_disclosure("Client details")
-select__disclosure "Client details" do
+select_disclosure "Client details" do
   expect(page).to have_text "The Client details contents"
 end
 ```
