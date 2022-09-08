@@ -1,0 +1,52 @@
+<meta charset="UTF-8" />
+<h1>Grid</h1>
+
+<h2 id="grid-table-label">Grid (table)</h2>
+
+<table id="grid-table" role="grid" aria-labelledby="grid-table-label">
+  <caption>Grid (table caption)</caption>
+
+  <tr>
+    <th>A (th)</th>
+    <th>B (th)</th>
+    <th>C (th)</th>
+  </tr>
+
+  <tr>
+    <td>A1</td>
+    <td>B2</td>
+    <td>C3</td>
+  </tr>
+
+  <tr>
+    <td>A4</td>
+    <td>B5</td>
+    <td>C6</td>
+  </tr>
+</table>
+
+<div id="grid-div" role="grid" aria-label="Grid (div)" aria-describedby="grid-div-description">
+  <div role="row" aria-rowindex="1">
+    <div role="columnheader" aria-colindex="1">D (columnheader)</div>
+    <div role="columnheader" aria-colindex="2">E (columnheader)</div>
+    <div role="columnheader" aria-colindex="3">F (columnheader)</div>
+  </div>
+
+  <div role="row" aria-rowindex="2">
+    <div role="gridcell" aria-colindex="1">D7</div>
+    <div role="gridcell" aria-colindex="2">E8</div>
+    <div role="gridcell" aria-colindex="3">F9</div>
+  </div>
+
+  <div role="row" aria-rowindex="3">
+    <div role="gridcell" aria-colindex="1">D10</div>
+    <div role="gridcell" aria-colindex="2">E11</div>
+    <div role="gridcell" aria-colindex="3">F12</div>
+  </div>
+</div>
+
+<div id="grid-div-description">Grid (div caption)</div>
+
+<div role="grid">
+  <caption>Grid (invalid caption)</caption>
+</div>

@@ -236,6 +236,38 @@ Also see:
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
 
+#### `columnheader`
+
+Finds a [columnheader](https://w3c.github.io/aria/#columnheader) cell that's either a `<th>` element descendant of a `<table>`, or a `[role="columnheader"]` element.
+
+- `locator` [String, Symbol] The text contents of the element
+- filters:
+  - `colindex` [Integer, String] Filters elements based on their position amongst their siblings, or elements with a matching [aria-colindex](https://w3c.github.io/aria/#aria-colindex)
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+Example:
+
+```html
+<table role="grid">
+  <tr>
+    <th>A columnheader</th>
+  </tr>
+</table>
+
+<div role="grid">
+  <div role="row">
+    <div role="columnheader">A columnheader</div>
+  </div>
+</div>
+```
+
+```ruby
+expect(page).to have_selector :columnheader, "A columnheader", count: 2
+```
+
 #### `combo_box`
 
 Finds a [combo box](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
@@ -304,6 +336,66 @@ Also see:
 - [↓ `select_disclosure` action](#select_disclosure)
 - [↓ `toggle_disclosure` action](#toggle_disclosurename-expand)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `grid`
+
+Finds a [grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) element that declares `[role="grid"]`.
+
+- `locator` [String, Symbol] Either the grid's `[aria-label]` value, or the
+  text contents of the elements referenced by its `[aria-labelledby]` attribute
+- filters:
+  - `described_by` [String, Symbol] The text contents of the elements referenced by
+    its `[aria-describedby]` attribute, or the text contents of a `<table>` element's
+    `<caption>` element
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+Example:
+
+```html
+<table role="grid" aria-label="A grid"></table>
+<div role="grid" aria-label="A grid"></div>
+```
+
+```ruby
+expect(page).to have_selector :grid, "A table grid", count: 2
+```
+
+#### `gridcell`
+
+Finds a [gridcell](https://w3c.github.io/aria/#gridcell) element that's either a `<td>` descendant of a `<table>` or declares `[role="gridcell"]`.
+
+- `locator` [String, Symbol]
+- filters:
+  - `columnheader` [String, Symbol] Filters elements based on their matching columnheader's text content
+  - `rowindex` [Integer, String] Filters elements based on their ancestor row's positing amongst its siblings
+  - `colindex` [Integer, String] Filters elements based on their position amongst their siblings
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+Example:
+
+```html
+<table role="grid">
+  <tr>
+    <td>A gridcell</td>
+  </tr>
+</table>
+
+<div role="grid">
+  <div role="row">
+    <div role="gridcell">A gridcell</div>
+  </div>
+</div>
+```
+
+```ruby
+expect(page).to have_selector :gridcell, "A gridcell", count: 2
+```
 
 #### `item` and `item_type`
 
@@ -423,6 +515,38 @@ Finds a [navigation landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark
 Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `row`
+
+Finds a [row](https://w3c.github.io/aria/#row) element that's either a `<tr>` descendant of a `<table>` or declares `[role="row"]`.
+
+- `locator` [String, Symbol] The text contents of the element
+- filters:
+  - `rowindex` [Integer, String] Filters elements based on their position amongst their siblings, or elements with a matching [aria-rowindex](https://w3c.github.io/aria/#aria-rowindex)
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+Example:
+
+```html
+<table role="grid">
+  <tr>
+    <td>Within a row</td>
+  </tr>
+</table>
+
+<div role="grid">
+  <div role="row">
+    <div role="gridcell">Within a row</div>
+  </div>
+</div>
+```
+
+```ruby
+expect(page).to have_selector :row, "Within a row", count: 2
+```
 
 #### `region`
 
@@ -706,15 +830,19 @@ The following expectation shortcuts are also added for both `have_selector_` and
 - `have_alert`
 - `have_article`
 - `have_banner`
+- `have_columnheader`
 - `have_combo_box`
 - `have_contentinfo`
 - `have_disclosure`
 - `have_disclosure_button`
+- `have_grid`
+- `have_gridcell`
 - `have_item`
 - `have_main`
 - `have_modal`
 - `have_navigation`
 - `have_region`
+- `have_row`
 - `have_section`
 - `have_tab_panel`
 - `have_tab_button`
