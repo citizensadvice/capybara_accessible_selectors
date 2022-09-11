@@ -142,6 +142,21 @@ choose "Answer 1", fieldset: "My question"
 
 Also see [↓ Locating fields](#locating-fields)
 
+#### `role` [String]
+
+Added to: `button`, `checkbox`, `css`, `element`, `field`, `file_field`, `fillable_field`, `link`, `link_or_button`, `radio_button`, `select`, and `xpath`
+
+Filters for an element that declares a matching [role](https://www.w3.org/TR/wai-aria/#usage_intro) attribute.
+
+```html
+<label for="switch-input">A switch input</label>
+<input id="switch-input" type="checkbox" role="switch">
+```
+
+```ruby
+expect(page).to have_field "A switch input", role: "switch"
+```
+
 #### `validation_error` [String]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
