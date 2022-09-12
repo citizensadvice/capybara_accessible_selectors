@@ -69,6 +69,20 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `aria` [Hash]
+
+Added to: `button`, `checkbox`, `css`, `element`, `field`, `file_field`, `fillable_field`, `link`, `link_or_button`, `radio_button`, `select`, and `xpath`
+
+Filters for an element that declares [ARIA attributes](https://www.w3.org/TR/wai-aria/#introstates)
+
+```html
+<button aria-controls="some-state" aria-pressed="true">A pressed button</button>
+```
+
+```ruby
+expect(page).to have_selector :button, "A pressed button", aria: { controls: "some-state", pressed: true }
+```
+
 #### `current` [String, Symbol]
 
 Added to: `link`, `link_or_button`.
