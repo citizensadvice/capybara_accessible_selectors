@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `role:` filter
 - Add `aria:` Hash filter
 - Add `:article` selector and `have_article` matcher
 - Add `:grid`, `:gridcell`, `:columnheader`, and `:row`
