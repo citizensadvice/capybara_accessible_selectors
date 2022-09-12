@@ -1,13 +1,14 @@
 # Change log
 
-## Unreleased
+## v0.9.0
 
-- Add `role:` filter
-- Add `aria:` Hash filter
-- Add `:article` selector and `have_article` matcher
-- Add `:grid`, `:gridcell`, `:columnheader`, and `:row`
-- Add `:menu` and `:menuitem` selector
-- Add `current:` filter for `:link` and `:link_or_button` selectors
+- Add `role:` filter [Sean Doyle]
+- Add `aria:` Hash filter [Sean Doyle]
+- Add `:article` selector and `have_article` matcher [Sean Doyle]
+- Add `:grid`, `:gridcell`, `:columnheader`, and `:row`[Sean Doyle]
+- Add `:menu` and `:menuitem` selector [Sean Doyle]
+- Add `current:` filter for `:link` and `:link_or_button` selectors [Sean Doyle]
+- Add `:banner`, `:contentinfo`, `:main`, `:navigation` and `:region` selectors [Sean Doyle]
 - Removed `focused:` in favour of the "native" capybara focus
 - Allow the `:modal` selector to select open `<dialog>` elements
 - Added a `select_disclosure` method, that will open a disclosure and run a block within it.
