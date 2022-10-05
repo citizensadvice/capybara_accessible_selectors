@@ -40,7 +40,9 @@ module CapybaraAccessibleSelectors
       else
         input.click
         input.assert_matches_selector :rich_text, focused: true
-        input.send_keys :backspace while input.text != "" && clear
+        # The cursor may or may not be at the start of the content
+        # So we can't just use backspace
+        input.send_keys [command_modifier, "a"], :backspace if input.text != "" && clear
         input.send_keys with
       end
     end
@@ -69,7 +71,7 @@ module CapybaraAccessibleSelectors
         return if text == editable.text
 
         editable.click
-        editable.send_keys :backspace while editable.text != "" && clear
+        editable.send_keys [command_modifier, "a"], :backspace if editable.text != "" && clear
         editable.send_keys text
       end
     end
@@ -80,6 +82,10 @@ module CapybaraAccessibleSelectors
 
         yield
       end
+    end
+
+    def command_modifier
+      ::Selenium::WebDriver::Platform.mac? ? :meta : :control
     end
   end
 end

@@ -12,6 +12,7 @@
 - Removed `focused:` in favour of the "native" capybara focus
 - Allow the `:modal` selector to select open `<dialog>` elements
 - Added a `select_disclosure` method, that will open a disclosure and run a block within it.
+- Fix `fill_in_rich_text` can enter an infinite loop when clearing
 
 ## v0.8.2
 
