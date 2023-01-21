@@ -1,5 +1,10 @@
 # Change log
 
+## Unreleased
+
+- Added a `required` filter to all form input selectors
+- The `described_by` filter is now available on all selectors
+
 ## v0.9.0
 
 - Add `role:` filter [Sean Doyle]

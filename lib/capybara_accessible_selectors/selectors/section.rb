@@ -6,6 +6,8 @@ Capybara.add_selector(:section) do
     heading = XPath.function(nil, XPath.descendant(*Array(heading_level).map { |i| :"h#{i}" }))[1][XPath.string.n.is(locator.to_s)]
     XPath.descendant(*Array(section_element).map(&:to_sym))[heading]
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 module CapybaraAccessibleSelectors

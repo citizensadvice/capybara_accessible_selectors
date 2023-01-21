@@ -5,25 +5,32 @@ require "capybara_accessible_selectors/filters/aria"
 require "capybara_accessible_selectors/filters/current"
 require "capybara_accessible_selectors/filters/described_by"
 require "capybara_accessible_selectors/filters/fieldset"
+require "capybara_accessible_selectors/filters/required"
 require "capybara_accessible_selectors/filters/role"
 require "capybara_accessible_selectors/filters/validation_error"
 
 {
-  button: %i[fieldset aria role],
-  checkbox: %i[fieldset described_by aria role validation_error],
-  css: %i[aria role],
-  datalist_input: %i[fieldset described_by validation_error],
-  element: %i[aria role],
-  field: %i[fieldset described_by aria role validation_error],
-  file_field: %i[fieldset described_by aria role validation_error],
-  fillable_field: %i[fieldset described_by aria role validation_error],
-  link: %i[current fieldset aria role],
-  link_or_button: %i[current fieldset aria role],
-  radio_button: %i[fieldset described_by aria role validation_error],
-  select: %i[fieldset described_by aria role validation_error],
-  xpath: %i[aria role]
+  button: %i[fieldset],
+  checkbox: %i[fieldset validation_error required],
+  css: [],
+  datalist_input: %i[fieldset validation_error required],
+  element: [],
+  field: %i[fieldset validation_error required],
+  fieldset: [],
+  file_field: %i[fieldset validation_error required],
+  fillable_field: %i[fieldset validation_error required],
+  frame: [],
+  id: [],
+  label: [],
+  link: %i[current fieldset],
+  link_or_button: %i[current fieldset],
+  radio_button: %i[fieldset validation_error required],
+  select: %i[fieldset validation_error required],
+  table: [],
+  table_row: [],
+  xpath: []
 }.each do |selector, filters|
   Capybara.modify_selector(selector) do
-    filter_set(:capybara_accessible_selectors, filters)
+    filter_set(:capybara_accessible_selectors, [*filters, :aria, :role, :described_by])
   end
 end

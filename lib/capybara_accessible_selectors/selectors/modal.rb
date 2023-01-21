@@ -23,6 +23,8 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
       node[:"aria-label"].public_send(method, locator.to_s)
     end
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 module CapybaraAccessibleSelectors

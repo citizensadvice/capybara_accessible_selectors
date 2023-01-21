@@ -18,6 +18,8 @@ Capybara.add_selector(:tab_button) do
 
     open ? " open" : " closed"
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 Capybara.add_selector(:tab_panel) do
@@ -39,6 +41,8 @@ Capybara.add_selector(:tab_panel) do
 
     " expected to be #{open ? :open : :closed}"
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 module CapybaraAccessibleSelectors
