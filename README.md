@@ -108,7 +108,7 @@ expect(page).to have_link "About us", current: "page"
 
 #### `described_by` [String]
 
-Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
+Added to all selectors.
 
 Is the field described by some text using [`aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute).
 
@@ -155,6 +155,25 @@ choose "Answer 1", fieldset: "My question"
 ```
 
 Also see [↓ Locating fields](#locating-fields)
+
+#### `required` [Boolean]
+
+Added to: `button`, `link`, `link_or_button`, `field`, `fillable_field`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
+
+Filter for controls with a `required` or `aria-required` attribute.
+
+For example:
+
+```html
+<label>
+<input requied />
+Text
+</label>
+```
+
+```ruby
+find :field, required: true
+```
 
 #### `role` [String]
 
