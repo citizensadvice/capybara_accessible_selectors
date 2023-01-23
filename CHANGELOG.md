@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## v0.10.0
 
 - Added a `required` filter to all form input selectors
 - The `described_by` filter is now available on all selectors
