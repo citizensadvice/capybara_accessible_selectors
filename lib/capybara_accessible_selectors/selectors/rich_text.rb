@@ -66,6 +66,9 @@ module CapybaraAccessibleSelectors
     private
 
     def fill_in_iframe_rich_text(frame, text, clear)
+      # Firefox will not click unless frame is scrolled into view
+      # https://github.com/mozilla/geckodriver/issues/1039
+      scroll_to frame
       within_frame frame do
         editable = page.find(:css, "[contenteditable=true]")
         return if text == editable.text
@@ -73,6 +76,7 @@ module CapybaraAccessibleSelectors
         editable.click
         editable.send_keys [command_modifier, "a"], :backspace if editable.text != "" && clear
         editable.send_keys text
+        puts editable.text
       end
     end
 

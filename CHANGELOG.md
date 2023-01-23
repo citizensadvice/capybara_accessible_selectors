@@ -4,6 +4,7 @@
 
 - Added a `required` filter to all form input selectors
 - The `described_by` filter is now available on all selectors
+- Fix an issue with filling in a iframe rich text and the Gecko driver
 
 ## v0.9.0
 
