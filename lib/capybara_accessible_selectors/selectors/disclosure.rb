@@ -23,6 +23,8 @@ Capybara.add_selector(:disclosure) do
 
     expanded ? " expanded" : " closed"
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 # Specifically selects the disclosure button
@@ -47,6 +49,8 @@ Capybara.add_selector(:disclosure_button) do
 
     expanded ? " expanded" : " closed"
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 module CapybaraAccessibleSelectors

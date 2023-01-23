@@ -14,7 +14,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:d
   end
 
   filter_set(:_field, %i[disabled name placeholder valid])
-  filter_set(:capybara_accessible_selectors, %i[fieldset described_by validation_error])
+  filter_set(:capybara_accessible_selectors, %i[fieldset described_by validation_error required])
 
   # with a value
   node_filter(:with) do |node, with|

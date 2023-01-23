@@ -48,6 +48,16 @@ describe "described by filter" do
     expect(page).to have_no_selector :rich_text, "Rich text", described_by: "Foo"
   end
 
+  it "filters a fieldset" do
+    expect(page).to have_selector :fieldset, described_by: "description"
+    expect(page).to have_no_selector :fieldset, described_by: "Foo"
+  end
+
+  it "filters an element" do
+    expect(page).to have_selector :element, "fieldset", described_by: "description"
+    expect(page).to have_no_selector :element, "fieldset", described_by: "Foo"
+  end
+
   it "provides a friendly error" do
     expect do
       expect(page).to have_selector :field, "Text", described_by: "foo", wait: false

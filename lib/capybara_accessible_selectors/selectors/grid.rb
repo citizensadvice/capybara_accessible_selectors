@@ -46,6 +46,8 @@ Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do
 
     xpath[colindex | position]
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 # rubocop:disable Metrics/BlockLength
@@ -90,6 +92,8 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
 
     grid.has_selector?(:columnheader, value, colindex: colindex)
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 # rubocop:enable Metrics/BlockLength
 
@@ -117,6 +121,8 @@ Capybara.add_selector(:row, locator_type: [String, Symbol]) do
       end
     end
   end
+
+  filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
 module CapybaraAccessibleSelectors
