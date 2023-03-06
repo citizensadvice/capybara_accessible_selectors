@@ -50,7 +50,7 @@ Capybara.add_selector(:disclosure_button) do
     expanded ? " expanded" : " closed"
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 module CapybaraAccessibleSelectors

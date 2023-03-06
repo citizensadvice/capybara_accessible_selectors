@@ -1,5 +1,7 @@
 # Change log
 
+- Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
+
 ## v0.10.0
 
 - Added a `required` filter to all form input selectors
