@@ -12,14 +12,7 @@ Gem::Specification.new do |s|
   s.license = "ISC"
   s.required_ruby_version = ">= 2.7.0"
 
-  s.add_runtime_dependency "capybara", ">= 3.36.0"
+  s.add_runtime_dependency "capybara", "~> 3.36"
 
-  s.add_development_dependency "debug"
-  s.add_development_dependency "puma"
-  s.add_development_dependency "rack-test"
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "rubocop"
-  s.add_development_dependency "selenium-webdriver"
-  s.add_development_dependency "sinatra"
   s.metadata["rubygems_mfa_required"] = "true"
 end

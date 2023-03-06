@@ -80,17 +80,17 @@ describe "focused" do
   end
 
   it "selects a focused xpath selector" do
-    expect(page).to have_no_selector :xpath, XPath.descendant(:div), text: "Focusable", focused: true
-    expect(page).to have_selector :xpath, XPath.descendant(:div), text: "Focusable", focused: false
+    expect(page).to have_no_xpath XPath.descendant(:div), text: "Focusable", focused: true
+    expect(page).to have_xpath XPath.descendant(:div), text: "Focusable", focused: false
     focus_on find(:xpath, XPath.descendant(:div), text: "Focusable")
-    expect(page).to have_selector :xpath, XPath.descendant(:div), text: "Focusable", focused: true
+    expect(page).to have_xpath XPath.descendant(:div), text: "Focusable", focused: true
   end
 
   it "selects a focused css selector" do
-    expect(page).to have_no_selector :css, "div", text: "Focusable", focused: true
-    expect(page).to have_selector :css, "div", text: "Focusable", focused: false
+    expect(page).to have_no_css "div", text: "Focusable", focused: true
+    expect(page).to have_css "div", text: "Focusable", focused: false
     focus_on find(:css, "div", text: "Focusable")
-    expect(page).to have_selector :css, "div", text: "Focusable", focused: true
+    expect(page).to have_css "div", text: "Focusable", focused: true
   end
 
   it "selects a focused combo box" do

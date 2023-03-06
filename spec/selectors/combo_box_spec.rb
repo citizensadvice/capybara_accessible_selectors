@@ -267,7 +267,7 @@ describe "combo_box selector" do
         end
 
         context "with a disabled option" do
-          it "will not select a disabled option" do
+          it "does not select a disabled option" do
             expect do
               select_combo_box_option "Disabled", from: label, wait: false
             end.to raise_error(Capybara::ElementNotFound, /Unable to find option "Disabled" that is not disabled/)
@@ -277,6 +277,7 @@ describe "combo_box selector" do
         context "when called on the node" do
           it "fills in a combo box" do
             find(:combo_box, label).select_combo_box_option "Banana"
+            expect(page).to have_selector :field, label, with: "Banana"
           end
         end
       end
@@ -400,7 +401,7 @@ describe "combo_box selector" do
       end
 
       context "with a disabled option" do
-        it "will not select a disabled option" do
+        it "does not select a disabled option" do
           expect do
             select_combo_box_option "Disabled", from: label, wait: false
           end.to raise_error(Capybara::ElementNotFound, /Unable to find option "Disabled" that is not disabled/)
@@ -410,6 +411,7 @@ describe "combo_box selector" do
       context "when called on the node" do
         it "fills in a combo box" do
           find(:combo_box, label).select_combo_box_option "Banana"
+          expect(page).to have_selector :field, label, with: "Banana"
         end
       end
     end

@@ -6,7 +6,7 @@ describe "aria" do
       <button aria-selected="true" aria-pressed="true">A button</button>
     HTML
 
-    expect(page).to have_selector :xpath, XPath.descendant(:button), aria: { selected: true, pressed: true }
+    expect(page).to have_xpath XPath.descendant(:button), aria: { selected: true, pressed: true }
   end
 
   it "selects an element with matching aria- attributes by css selector" do
@@ -14,7 +14,7 @@ describe "aria" do
       <button aria-selected="true" aria-pressed="true">A button</button>
     HTML
 
-    expect(page).to have_selector :css, "button", aria: { selected: true, pressed: true }
+    expect(page).to have_css "button", aria: { selected: true, pressed: true }
   end
 
   it "selects a button with matching aria- attributes" do
@@ -111,7 +111,7 @@ describe "aria" do
     HTML
 
     expect do
-      expect(page).to have_selector "div", aria: { selected: false, pressed: false }, wait: false
+      expect(page).to have_css "div", aria: { selected: false, pressed: false }, wait: false
     end.to raise_error RSpec::Expectations::ExpectationNotMetError, /with aria-selected="false" and aria-pressed="false"/
   end
 end
