@@ -1,5 +1,6 @@
 # Change log
 
+- Add `img` selector and matcher
 - Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
 
 ## v0.10.0
