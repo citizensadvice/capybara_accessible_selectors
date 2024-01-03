@@ -20,7 +20,7 @@ Capybara.add_selector(:img, locator_type: [String, Symbol]) do
       CapybaraAccessibleSelectors::Helpers.element_labelledby(node)
     elsif node[:"aria-label"]
       node[:"aria-label"]
-    end.public_send method, locator.to_s
+    end&.public_send method, locator.to_s
   end
 
   filter_set(:capybara_accessible_selectors, %i[aria described_by])
