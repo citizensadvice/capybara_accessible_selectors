@@ -3,10 +3,10 @@
 Capybara.add_selector(:img, locator_type: [String, Symbol]) do
   xpath do |*|
     XPath.descendant[
-      [
-        XPath.attr(:role) == "img",
-        XPath.self(:img) & XPath.attr(:alt)
-      ].reduce(&:|)
+      (XPath.attr(:role) == "img") & (
+        XPath.attr(:"aria-label") | XPath.attr(:"aria-labelledby")
+      ) |
+      XPath.self(:img)[XPath.attr(:alt)]
     ]
   end
 
