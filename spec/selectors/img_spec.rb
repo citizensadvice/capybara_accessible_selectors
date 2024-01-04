@@ -48,7 +48,7 @@ describe "img selector" do
   end
 
   it "selects by alt" do
-    img = find(:element, :img)
+    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
     expect(find(:img, "alt text")).to eq img
   end
 

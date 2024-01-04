@@ -73,3 +73,20 @@ within_rich_text("Description") do
   expect(page).to have_text "my text"
 end
 ```
+
+## Img
+
+Selectors and helpers for finding an [ARIA compliant image](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/img_role).
+
+```ruby
+# find an image
+page.find(:img, "Label") # `aria-label`, `aria-labelledby` and for img tags `alt` attributes are supported
+
+# expect displayed value
+expect(page).to have_img "Label"
+
+# using custom filters to expect a specific `src` attribute
+expect(page).to have_img("Label") { |element| element["src"].match?(/image\.png/) }
+```
+
+[Combo box documentation](README.md#combo_box)
