@@ -14,7 +14,7 @@ describe "aria" do
       <button aria-selected="true" aria-pressed="true">A button</button>
     HTML
 
-    expect(page).to have_css "button", aria: { selected: true, pressed: true }
+    expect(page).to have_css "button", aria: { selected: true, pressed: true } # rubocop:disable Capybara/SpecificMatcher
   end
 
   it "selects a button with matching aria- attributes" do
