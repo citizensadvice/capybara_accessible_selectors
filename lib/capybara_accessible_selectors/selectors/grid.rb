@@ -131,32 +131,32 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Columnheader label
     # @param [Hash] options Finder options
-    def within_columnheader(*arguments, **options, &block)
-      within(:columnheader, *arguments, **options, &block)
+    def within_columnheader(...)
+      within(:columnheader, ...)
     end
 
     # Limit supplied block to within a grid
     #
     # @param [String] Name Grid label
     # @param [Hash] options Finder options
-    def within_grid(*arguments, **options, &block)
-      within(:grid, *arguments, **options, &block)
+    def within_grid(...)
+      within(:grid, ...)
     end
 
     # Limit supplied block to within a gridcell
     #
     # @param [String] Name Gridcell label
     # @param [Hash] options Finder options
-    def within_gridcell(*arguments, **options, &block)
-      within(:gridcell, *arguments, **options, &block)
+    def within_gridcell(...)
+      within(:gridcell, ...)
     end
 
     # Limit supplied block to within a row
     #
     # @param [String] Name Row label
     # @param [Hash] options Finder options
-    def within_row(*arguments, **options, &block)
-      within(:row, *arguments, **options, &block)
+    def within_row(...)
+      within(:row, ...)
     end
   end
 end

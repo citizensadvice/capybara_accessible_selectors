@@ -26,8 +26,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Navigation label
     # @param [Hash] options Finder options
-    def within_navigation(*arguments, **options, &block)
-      within(:navigation, *arguments, **options, &block)
+    def within_navigation(...)
+      within(:navigation, ...)
     end
   end
 end

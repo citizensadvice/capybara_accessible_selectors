@@ -28,8 +28,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Main label
     # @param [Hash] options Finder options
-    def within_main(*arguments, **options, &block)
-      within(:main, *arguments, **options, &block)
+    def within_main(...)
+      within(:main, ...)
     end
   end
 end

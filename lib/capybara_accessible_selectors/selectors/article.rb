@@ -26,8 +26,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Article label
     # @param [Hash] options Finder options
-    def within_article(*arguments, **options, &block)
-      within(:article, *arguments, **options, &block)
+    def within_article(...)
+      within(:article, ...)
     end
   end
 end

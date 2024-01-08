@@ -76,7 +76,6 @@ module CapybaraAccessibleSelectors
         editable.click
         editable.send_keys [command_modifier, "a"], :backspace if editable.text != "" && clear
         editable.send_keys text
-        puts editable.text
       end
     end
 
