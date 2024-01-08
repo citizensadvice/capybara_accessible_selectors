@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 Capybara.add_selector(:img, locator_type: [String, Symbol]) do
+  expression_filter(:src, [String, Regexp]) do |xpath, src|
+    builder(xpath).add_attribute_conditions(src: src)
+  end
+
+  describe(:expression_filters) do |src: nil, **|
+    " expected to match src \"#{src}\"" unless src.nil?
+  end
+
   xpath do |*|
     XPath.descendant[
       (XPath.attr(:role) == "img") & (

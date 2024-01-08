@@ -85,8 +85,8 @@ page.find(:img, "Label") # `aria-label`, `aria-labelledby` and for img tags `alt
 # expect displayed value
 expect(page).to have_img "Label"
 
-# using custom filters to expect a specific `src` attribute
-expect(page).to have_img("Label") { |element| element["src"].match?(/image\.png/) }
+# using expression filter to expect a specific `src` attribute
+expect(page).to have_img("Label", src: /image\.png/)
 ```
 
 [Combo box documentation](README.md#combo_box)

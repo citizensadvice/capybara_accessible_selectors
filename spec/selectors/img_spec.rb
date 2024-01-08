@@ -52,13 +52,18 @@ describe "img selector" do
     expect(find(:img, "alt text")).to eq img
   end
 
+  it "selects by src" do
+    img = find(:element, :img) { |el| el["src"].match?(/twice\.png/) }
+    expect(find(:img, "twice", src: /twice\.png/)).to eq img
+  end
+
   it "selects by partial alt" do
-    img = find(:element, :img)
+    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
     expect(find(:img, "alt te")).to eq img
   end
 
   it "selects by exact alt" do
-    img = find(:element, :img)
+    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
     expect(find(:img, "alt text", exact: true)).to eq img
   end
 
