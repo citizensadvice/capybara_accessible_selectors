@@ -36,7 +36,7 @@ describe "section selector" do
 
   it "does not find by unknown section elements" do
     blockquote = page.find(:element, :blockquote)
-    expect(blockquote).to have_selector :xpath, XPath.child(:h3), text: "Block quote"
+    expect(blockquote).to have_xpath XPath.child(:h3), text: "Block quote"
     expect(page).to have_no_selector :section, "Block quote"
   end
 
@@ -51,7 +51,7 @@ describe "section selector" do
   end
 
   %i[main section article header footer aside form].each do |element|
-    context "<#{element}>" do
+    context "with <#{element}>" do
       it "finds by #{element}" do
         expect(page).to have_selector :section, element.to_s.capitalize, section_element: element, count: 1
       end
