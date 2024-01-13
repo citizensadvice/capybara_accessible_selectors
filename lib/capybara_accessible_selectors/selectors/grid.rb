@@ -50,7 +50,6 @@ Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do
   filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
-# rubocop:disable Metrics/BlockLength
 Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
   xpath do |locator|
     gridcell = XPath.descendant[(XPath.local_name == "td") | (XPath.attr(:role) == "gridcell")]

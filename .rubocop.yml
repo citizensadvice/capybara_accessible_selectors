@@ -9,6 +9,9 @@ AllCops:
 Metrics/MethodLength:
   Max: 20
 
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 21
 
