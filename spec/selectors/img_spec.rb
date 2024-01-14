@@ -72,4 +72,14 @@ describe "img selector" do
       find(:img, "alt tex", exact: true)
     end.to raise_error Capybara::ElementNotFound
   end
+
+  it "selects img tag by role and aria-label without alt" do
+    img = find(:element, :img) { |el| el["src"].match?(/by_aria_label\.png/) }
+    expect(find(:img, "without alt")).to eq img
+  end
+
+  it "selects img tag by role and aria-labelledby without alt" do
+    img = find(:element, :img) { |el| el["src"].match?(/by_aria_labelledby\.png/) }
+    expect(find(:img, "labelled by no alt")).to eq img
+  end
 end

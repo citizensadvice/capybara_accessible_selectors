@@ -22,7 +22,7 @@ Capybara.add_selector(:img, locator_type: [String, Symbol]) do
     next true if locator.nil?
 
     method = exact ? :eql? : :include?
-    if node.tag_name === "img"
+    if node.tag_name === "img" && !node[:"alt"].empty?
       node[:"alt"]
     elsif node[:"aria-labelledby"]
       CapybaraAccessibleSelectors::Helpers.element_labelledby(node)
