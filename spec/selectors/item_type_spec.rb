@@ -9,7 +9,7 @@ describe "item_type" do
 
   it "does not select a missing type" do
     expect do
-      expect(page).to have_selector :item_type, "build", text: "Forth bridge"
+      expect(page).to have_selector :item_type, "build", text: "Forth bridge", wait: false
     end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
       expected to find item_type "build" but there were no matches
     EXPECTED
