@@ -28,8 +28,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Banner label
     # @param [Hash] options Finder options
-    def within_banner(*arguments, **options, &block)
-      within(:banner, *arguments, **options, &block)
+    def within_banner(...)
+      within(:banner, ...)
     end
   end
 end

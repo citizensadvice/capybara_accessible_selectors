@@ -6,7 +6,7 @@ describe "role" do
       <div role="tablist">Tablist</div>
     HTML
 
-    expect(page).to have_selector :xpath, XPath.descendant(:div), role: "tablist"
+    expect(page).to have_xpath XPath.descendant(:div), role: "tablist"
   end
 
   it "selects an element with a matching role by css selector" do
@@ -14,7 +14,7 @@ describe "role" do
       <div role="tablist">Tablist</div>
     HTML
 
-    expect(page).to have_selector :css, "div", role: "tablist"
+    expect(page).to have_css "div", role: "tablist"
   end
 
   it "selects a button with a matching role by selector" do

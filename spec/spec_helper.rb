@@ -33,13 +33,6 @@ end
 driver = ENV["DRIVER"]&.to_sym || :selenium_chrome_headless
 
 Capybara.register_driver(:safari) { |app| Capybara::Selenium::Driver.new(app, browser: :safari) }
-Capybara.register_driver(:firefox_developer_edition) do |app|
-  options = Selenium::WebDriver::Firefox::Options.new(
-    binary: "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox-bin"
-  )
-  options.headless!
-  Capybara::Selenium::Driver.new(app, browser: :firefox, capabilities: options)
-end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }

@@ -71,7 +71,7 @@ describe "modal selector" do
   end
 
   it "selects a native modal" do
-    click_button "Open native"
+    click_on "Open native"
     modal = find(:element, :dialog)
     expect(find(:modal, "Native modal heading")).to eq modal
   end

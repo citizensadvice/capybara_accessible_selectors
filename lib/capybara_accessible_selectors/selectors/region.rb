@@ -26,8 +26,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Region label
     # @param [Hash] options Finder options
-    def within_region(*arguments, **options, &block)
-      within(:region, *arguments, **options, &block)
+    def within_region(...)
+      within(:region, ...)
     end
   end
 end
