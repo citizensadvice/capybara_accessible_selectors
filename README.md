@@ -166,8 +166,8 @@ For example:
 
 ```html
 <label>
-<input requied />
-Text
+  <input requied />
+  Text
 </label>
 ```
 
@@ -183,22 +183,28 @@ Filters for an element that declares a matching [role](https://www.w3.org/TR/wai
 
 ```html
 <label for="switch-input">A switch input</label>
-<input id="switch-input" type="checkbox" role="switch">
+<input id="switch-input" type="checkbox" role="switch" />
 ```
 
 ```ruby
 expect(page).to have_field "A switch input", role: "switch"
 ```
 
-#### `validation_error` [String]
+#### `validation_error` [String, true, false]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
 Filters for an element being both invalid, and has a description or label containing the error message.
 
-To be invalid, the element must [`willValidate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/willValidate) and have a [`validity.valid`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) that is false. Additionally the `aria-invalid` must not contradict the validity state.
+This differs from the Capybara `valid` and `validation_message` filters which only consider the HTML validation API.
 
-For the error description, this can be contained in the ARIA description, or the label.
+To be invalid, the element must
+
+- Not have [`willValidate === false`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/willValidate)
+- Have [`validity.valid === false`](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) **or** or have `aria-invalid="true"`
+- Not have the `validity.valid === false` and `aria-invalid="false"
+
+For the error description, this can be contained in the accessible description, or the accessible name.
 
 ```html
 <label>
@@ -210,6 +216,12 @@ For the error description, this can be contained in the ARIA description, or the
 
 ```ruby
 expect(page).to have_field "My field", validation_error: "This is required"
+
+# Just check the field is invalid
+expect(page).to have_field "My field", validation_error: true
+
+# Just check the field is not invalid
+expect(page).to have_field "My field", validation_error: false
 ```
 
 Also see:
@@ -282,7 +294,6 @@ Finds a [banner landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-reg
 Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
-
 
 #### `columnheader`
 
@@ -844,7 +855,10 @@ Also see [↑ `tab_panel` selector](#tab_panel)
 
 #### `have_validation_errors(&block)`
 
-Checks if a page has a set of validation errors. This will fail if the page does not have the exact set of errors.
+Checks if a page has a set of validation errors.
+
+This will compare all the validation errors on a page with an expected set of errors.
+If the errors do not match it will not pass.
 
 - `&block` - this takes a block. In the block each validation error exception should be added using the following DSL:
 
@@ -852,10 +866,14 @@ Checks if a page has a set of validation errors. This will fail if the page does
 expect(page).to have_validation_errors do
   field "Name", validation_error: "This is required"
   select "Gender", validation_error: "This is required"
-  field "Age", validation_error: "Please choose a number less than 120"
+  field "Age", validation_error: "Choose a number less than 120"
+  radio_group "Radio questions", validation_error: "Select an option"
 
-  # The block methods correspond to the following selectors:
-  # field, radio_button, checkbox, select, file_field and combo_box
+  # You can use all the field selectors in the block
+  # checkbox datalist_input field file_field fillable_field radio_button select combo_box rich_text
+
+  # Additionally a "radio_group" selector will find all radios in a fieldset
+  # You can also use "within" and "within_fieldset" methods
 end
 ```
 
