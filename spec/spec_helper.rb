@@ -2,6 +2,8 @@
 
 ENV["APP_ENV"] = "test"
 
+Warning[:performance] = true
+
 require "debug"
 require "capybara/rspec"
 require "selenium-webdriver"

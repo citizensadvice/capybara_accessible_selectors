@@ -8,7 +8,7 @@ group :test, :development do
   gem "puma"
   gem "rack-test"
   gem "rspec"
-  gem "rubocop"
+  gem "rubocop-performance"
   gem "selenium-webdriver"
   gem "sinatra"
 end

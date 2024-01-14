@@ -38,7 +38,7 @@ module CapybaraAccessibleSelectors
         if current_xpath.is_a? XPath::Union
           current_xpath.expressions.map do |x|
             fieldset.descendant(x)
-          end.reduce(:+)
+          end.reduce(:+) # rubocop:disable Performance/Sum
         else
           fieldset.descendant(current_xpath)
         end
