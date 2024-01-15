@@ -2,7 +2,7 @@
 
 ENV["APP_ENV"] = "test"
 
-Warning[:performance] = true
+Warning[:performance] = true if RUBY_VERSION >= "3.3.0"
 
 require "debug"
 require "capybara/rspec"

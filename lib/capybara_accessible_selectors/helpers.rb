@@ -36,9 +36,7 @@ module CapybaraAccessibleSelectors
       Array(fieldsets).reverse.reduce(xpath) do |current_xpath, locator|
         fieldset = XPath.descendant(:fieldset)[XPath.child(:legend)[XPath.string.n.is(locator.to_s)]]
         if current_xpath.is_a? XPath::Union
-          current_xpath.expressions.map do |x|
-            fieldset.descendant(x)
-          end.reduce(:+) # rubocop:disable Performance/Sum
+          current_xpath.expressions.map { fieldset.descendant(_1) }.reduce(:union)
         else
           fieldset.descendant(current_xpath)
         end
