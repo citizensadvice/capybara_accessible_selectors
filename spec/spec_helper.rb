@@ -2,6 +2,9 @@
 
 ENV["APP_ENV"] = "test"
 
+Warning[:deprecated] = true
+Warning[:performance] = true if RUBY_VERSION >= "3.3.0"
+
 require "debug"
 require "capybara/rspec"
 require "selenium-webdriver"
