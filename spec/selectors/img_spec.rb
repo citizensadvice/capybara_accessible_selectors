@@ -48,22 +48,22 @@ describe "img selector" do
   end
 
   it "selects by alt" do
-    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("doesnt_matter.png") }
     expect(find(:img, "alt text")).to eq img
   end
 
   it "selects by src" do
-    img = find(:element, :img) { |el| el["src"].match?(/twice\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("twice.png") }
     expect(find(:img, "twice", src: /twice\.png/)).to eq img
   end
 
   it "selects by partial alt" do
-    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("doesnt_matter.png") }
     expect(find(:img, "alt te")).to eq img
   end
 
   it "selects by exact alt" do
-    img = find(:element, :img) { |el| el["src"].match?(/doesnt_matter\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("doesnt_matter.png") }
     expect(find(:img, "alt text", exact: true)).to eq img
   end
 
@@ -74,12 +74,12 @@ describe "img selector" do
   end
 
   it "selects img tag by role and aria-label without alt" do
-    img = find(:element, :img) { |el| el["src"].match?(/by_aria_label\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("by_aria_label.png") }
     expect(find(:img, "without alt")).to eq img
   end
 
   it "selects img tag by role and aria-labelledby without alt" do
-    img = find(:element, :img) { |el| el["src"].match?(/by_aria_labelledby\.png/) }
+    img = find(:element, :img) { |el| el["src"].include?("by_aria_labelledby.png") }
     expect(find(:img, "labelled by no alt")).to eq img
   end
 end
