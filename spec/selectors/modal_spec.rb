@@ -37,7 +37,7 @@ describe "modal selector" do
 
   it "does not find exact aria-label with the wrong text" do
     expect do
-      find(:modal, "aria-labe", exact: true)
+      find :modal, "aria-labe", exact: true, wait: false
     end.to raise_error Capybara::ElementNotFound
   end
 
@@ -58,7 +58,7 @@ describe "modal selector" do
 
   it "does not find by exact aria-labelledby with the wrong text" do
     expect do
-      find(:modal, "split la", exact: true)
+      find :modal, "split la", exact: true, wait: false
     end.to raise_error Capybara::ElementNotFound
   end
 

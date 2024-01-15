@@ -2,6 +2,9 @@
 
 ENV["APP_ENV"] = "test"
 
+Warning[:deprecated] = true
+Warning[:performance] = true if RUBY_VERSION >= "3.3.0"
+
 require "debug"
 require "capybara/rspec"
 require "selenium-webdriver"
@@ -31,7 +34,6 @@ class String
 end
 
 driver = ENV["DRIVER"]&.to_sym || :selenium_chrome_headless
-
 Capybara.register_driver(:safari) { |app| Capybara::Selenium::Driver.new(app, browser: :safari) }
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
@@ -53,4 +55,26 @@ RSpec.configure do |config|
       visit("/pages/new?body=#{CGI.escape(html.strip)}")
     end
   end)
+end
+
+module Capybara
+  module Node
+    module WarnOnTimeouts
+      def synchronize(seconds = nil, *, **)
+        start_time = Time.now
+        super
+      rescue Capybara::ElementNotFound => e
+        seconds ||= Capybara.default_max_wait_time
+        unless seconds.zero? || Time.now - start_time <= seconds
+          stack = caller.select { _1.start_with?(Dir.pwd) }.map { _1.slice(Dir.pwd.length..) }.drop(1)
+          warn("selector has timed out #{stack}")
+        end
+        raise e
+      end
+    end
+
+    class Base
+      prepend WarnOnTimeouts
+    end
+  end
 end
