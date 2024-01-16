@@ -1,5 +1,6 @@
 # Change log
 
+- Add `img` selector and matcher
 - Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
 - Removed support for Ruby 2.7. Minimum supported Ruby version is now 3.0
 
