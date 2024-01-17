@@ -1,5 +1,7 @@
 # Change log
 
+## Unreleased
+
 - Add `img` selector and matcher
 - Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
 - Removed support for Ruby 2.7. Minimum supported Ruby version is now 3.0
@@ -12,6 +14,7 @@
 - added `radio_group` to 'have_validation_errors` to match multiple radios
 - added some missing selectors to 'have_validation_errors`
 - corrected logic for `add_validation_errors` finding invalid fields
+- fix a `<section>` can only be a `:region` if it has an accessible name
 - Added `:heading` selector
 
 ## v0.10.0
