@@ -1,7 +1,10 @@
 # Change log
 
+- Add `img` selector and matcher
 - Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
 - Removed support for Ruby 2.7. Minimum supported Ruby version is now 3.0
+- Added a ':dialog' selector
+- The `:modal` selector will now check a native modal is displaying as a modal
 - `validation_error` filter now checks for validity.valid or aria-invalid=true. Previously it required aria-invalid=true
 - `validation_error` filter now allows the error message to be in the aria-labelledby name
 - `validation_error` filter now also takes a boolean allowing you to check for an invalid field without an error message, and for the absence of a validation error by using `false`

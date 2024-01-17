@@ -365,6 +365,25 @@ Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `dialog`
+
+Finds a dialog.
+
+This checks for either
+
+- an element with the role `dialog` or `alertdialog`
+- or, an open `<dialog>` element
+
+- `locator` [String, Symbol] The title of the modal
+- Filters:
+  - `modal` [Boolean] Is dialog a modal. Modals are either opened with `showModal()`, or have the `aria-modal="true"` attribute
+
+Also see:
+
+- [↓ `modal` selector](#modal)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+- [↓ `within_dialog`](#within_dialogname-find_options-block)
+
 #### `disclosure`
 
 Finds a [disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/). This will find both a [native disclosure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) (`<details>`/`<summary>`) and an ARIA disclosure.
@@ -552,15 +571,14 @@ Finds a [modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/).
 
 This checks for either
 
-- a modal with the correct aria role, `aria-modal="true"` attribute, and it has an associated title.
-- or, an open `<dialog>` element.
-
-Note that it is not possible to distinguish between a `<dialog>` opened as a modal and as non-modal.
+- a modal with the `dialog` or `alertdialog` role and `aria-modal="true"` attribute
+- or, a `<dialog>` element opened with `showModal()`
 
 - `locator` [String, Symbol] The title of the modal
 
 Also see:
 
+- [↑ `dialog` selector](#dialog)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
 
@@ -802,6 +820,18 @@ end
 ```
 
 Also see [↑ `disclosure` selector](#disclosure)
+
+#### `within_dialog(name, **find_options, &block)`
+
+Execute the block within a dialog
+
+```ruby
+within_dialog "Settings" do
+  check "Dark mode"
+end
+```
+
+Also see [↑ `dialog` selector](#dialog)
 
 #### `within_modal(name, **find_options, &block)`
 

@@ -2,12 +2,18 @@ inherit_gem:
   citizens-advice-style:
     - default.yml
 
+require:
+  - rubocop-performance
+
 AllCops:
   SuggestExtensions: false
   TargetRubyVersion: 3.0
 
 Metrics/MethodLength:
   Max: 20
+
+Metrics/BlockLength:
+  Enabled: false
 
 Metrics/AbcSize:
   Max: 21

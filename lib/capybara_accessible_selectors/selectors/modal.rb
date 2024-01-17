@@ -14,6 +14,8 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
   end
 
   locator_filter do |node, locator, exact:, **|
+    # The only way to determine an open dialog is modal is via a CSS selector
+    next false if node.tag_name == "dialog" && node.not_matches_css?(":modal", wait: 0)
     next true if locator.nil?
 
     method = exact ? :eql? : :include?
