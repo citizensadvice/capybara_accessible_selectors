@@ -166,8 +166,8 @@ For example:
 
 ```html
 <label>
-<input requied />
-Text
+  <input requied />
+  Text
 </label>
 ```
 
@@ -183,7 +183,7 @@ Filters for an element that declares a matching [role](https://www.w3.org/TR/wai
 
 ```html
 <label for="switch-input">A switch input</label>
-<input id="switch-input" type="checkbox" role="switch">
+<input id="switch-input" type="checkbox" role="switch" />
 ```
 
 ```ruby
@@ -283,7 +283,6 @@ Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
-
 #### `columnheader`
 
 Finds a [columnheader](https://w3c.github.io/aria/#columnheader) cell that's either a `<th>` element descendant of a `<table>`, or a `[role="columnheader"]` element.
@@ -353,6 +352,25 @@ Finds a [contentinfo landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmar
 Also see:
 
 - [↓ Expectation shortcuts](#expectation-shortcuts)
+
+#### `dialog`
+
+Finds a dialog.
+
+This checks for either
+
+- an element with the role `dialog` or `alertdialog`
+- or, an open `<dialog>` element
+
+- `locator` [String, Symbol] The title of the modal
+- Filters:
+  - `modal` [Boolean] Is dialog a modal. Modals are either opened with `showModal()`, or have the `aria-modal="true"` attribute
+
+Also see:
+
+- [↓ `modal` selector](#modal)
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+- [↓ `within_dialog`](#within_dialogname-find_options-block)
 
 #### `disclosure`
 
@@ -541,15 +559,14 @@ Finds a [modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialogmodal/).
 
 This checks for either
 
-- a modal with the correct aria role, `aria-modal="true"` attribute, and it has an associated title.
-- or, an open `<dialog>` element.
-
-Note that it is not possible to distinguish between a `<dialog>` opened as a modal and as non-modal.
+- a modal with the `dialog` or `alertdialog` role and `aria-modal="true"` attribute
+- or, a `<dialog>` element opened with `showModal()`
 
 - `locator` [String, Symbol] The title of the modal
 
 Also see:
 
+- [↑ `dialog` selector](#dialog)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_modal`](#within_modalname-find_options-block)
 
@@ -791,6 +808,18 @@ end
 ```
 
 Also see [↑ `disclosure` selector](#disclosure)
+
+#### `within_dialog(name, **find_options, &block)`
+
+Execute the block within a dialog
+
+```ruby
+within_dialog "Settings" do
+  check "Dark mode"
+end
+```
+
+Also see [↑ `dialog` selector](#dialog)
 
 #### `within_modal(name, **find_options, &block)`
 

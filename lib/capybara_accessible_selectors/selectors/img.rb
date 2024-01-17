@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 Capybara.add_selector(:img, locator_type: [String, Symbol]) do
   expression_filter(:src, [String, Regexp]) do |xpath, src|
     builder(xpath).add_attribute_conditions(src: src)
@@ -34,4 +33,3 @@ Capybara.add_selector(:img, locator_type: [String, Symbol]) do
 
   filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
-# rubocop:enable Metrics/BlockLength

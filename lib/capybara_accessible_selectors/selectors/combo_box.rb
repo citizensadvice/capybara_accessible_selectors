@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do # rubocop:disable Metrics/BlockLength
+Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   label "combo box"
 
   xpath do |locator, allow_self: nil, **options|
