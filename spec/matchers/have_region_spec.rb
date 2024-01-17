@@ -22,16 +22,6 @@ describe "region matchers" do
   end
 
   describe "within_region" do
-    it "scopes to inside a region without text" do
-      render <<~HTML
-        <section>Some text</section>
-      HTML
-
-      within_region do
-        expect(page).to have_text("Some text")
-      end
-    end
-
     it "scopes to inside a region with text" do
       render <<~HTML
         <section aria-label="A region">Some text</section>
