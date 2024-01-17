@@ -16,6 +16,8 @@
 - corrected logic for `add_validation_errors` finding invalid fields
 - fix a `<section>` can only be a `:region` if it has an accessible name
 - Added `:heading` selector
+- Fix `:section` selector matching sections with no headings
+- `:section` selector will also match aria headings
 
 ## v0.10.0
 
