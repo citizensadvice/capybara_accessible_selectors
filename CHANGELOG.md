@@ -12,6 +12,7 @@
 - added `radio_group` to 'have_validation_errors` to match multiple radios
 - added some missing selectors to 'have_validation_errors`
 - corrected logic for `add_validation_errors` finding invalid fields
+- Added `:heading` selector
 
 ## v0.10.0
 

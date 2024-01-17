@@ -475,6 +475,29 @@ Example:
 expect(page).to have_selector :gridcell, "A gridcell", count: 2
 ```
 
+#### `heading`
+
+Finds a heading. This can be either an element with the role "heading" or `h1` to `h6`.
+
+- `locator` [String, Symbol]
+- filters:
+  - `level` [1..6] Filter for a heading level
+
+Also see:
+
+- [↓ Expectation shortcuts](#expectation-shortcuts)
+
+Example:
+
+```html
+<div role="heading">Heading</div>
+<h2>Heading</h2>
+```
+
+```ruby
+expect(page).to have_selector :heading, "Heading", count: 2
+```
+
 #### `item` and `item_type`
 
 Finds a [microdata](https://developer.mozilla.org/en-US/docs/Web/HTML/Microdata) item.
@@ -933,6 +956,7 @@ The following expectation shortcuts are also added for both `have_selector_` and
 - `have_disclosure_button`
 - `have_grid`
 - `have_gridcell`
+- `have_heading`
 - `have_item`
 - `have_main`
 - `have_modal`
@@ -948,7 +972,6 @@ For example the following two are equivalent:
 ```ruby
 expect(page).to have_selector :combo_box, "Foo"
 expect(page).to have_combo_box, "Foo"
-
 ```
 
 ## Local development
