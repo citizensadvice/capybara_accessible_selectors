@@ -1,28 +1,30 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
-  node_filter(:validation_error, valid_types: String) do |node, value|
-    state = true
-    if Capybara.evaluate_script("arguments[0].willValidate === false", node)
-      add_error " expected element validity.willValidate to be true"
-      state = false
+  node_filter(:validation_error, valid_values: [String, true, false]) do |node, value|
+    if value.is_a?(String) && value.strip == ""
+      Capybara::Helpers.warn("Checking for a validation message of an empty string is confusing and/or pointless as it will always match")
+      value = true
     end
-    if Capybara.evaluate_script("'validity' in arguments[0] && arguments[0].validity.valid", node)
-      add_error " expected element validity.valid to be false"
-      state = false
+    error_messages = []
+    will_validate = node.evaluate_script("this.willValidate")
+    aria_invalid = node[:"aria-invalid"]
+    native_invalid = node.evaluate_script("this.validity?.valid === false")
+    error_messages << " expected element to be a candidate for constraint validation" if will_validate == false
+    error_messages << " expected element to be invalid" if value && will_validate && aria_invalid != "true" && !native_invalid
+    error_messages << " expected element to have aria-invalid=true" if value && !will_validate && aria_invalid != "true"
+    error_messages << " expected element not to be invalid" if !value && native_invalid
+    error_messages << " expected element not to have aria-invalid=true" if !value && aria_invalid
+    error_messages << " expected aria-invalid not to be false if the element is invalid" if native_invalid && aria_invalid == "false"
+
+    if value.is_a?(String)
+      description = CapybaraAccessibleSelectors::Helpers.element_description(node)
+      unless description.include?(value)
+        error_messages << " expected to be described by \"#{value}\" but it was described by \"#{description}\"."
+      end
     end
-    if Capybara.evaluate_script("!('validity' in arguments[0])", node) && node[:"aria-invalid"] != "true"
-      add_error " expected aria-invalid to be true"
-      state = false
-    elsif node[:"aria-invalid"] == "false"
-      add_error " aria-invalid cannot be false"
-      state = false
-    end
-    description = CapybaraAccessibleSelectors::Helpers.element_description(node)
-    unless description.include? value
-      add_error " expected to be described by \"#{value}\" but it was described by \"#{description}\"."
-      state = false
-    end
-    state
+
+    errors.push(*error_messages)
+    error_messages.empty?
   end
 end

@@ -7,7 +7,7 @@ describe "has_validation_errors" do
     within(:section, "Form with many errors") do
       expect(page).to have_validation_errors do
         field "Text", validation_error: "is required"
-        radio_button "Radio", validation_error: "is required"
+        radio_group "Radios", validation_error: "is required"
         checkbox "Checkbox", validation_error: "is required"
         select "Select", validation_error: "is required"
         file_field "File field", validation_error: "is required"
@@ -21,7 +21,7 @@ describe "has_validation_errors" do
     expect do
       expect(page).to have_validation_errors do
         field "Text", validation_error: "is required"
-        radio_button "Radio", validation_error: "is required"
+        radio_group "Radios", validation_error: "is required"
         checkbox "Checkbox", validation_error: "is required"
         select "Select", validation_error: "is required"
         file_field "File field", validation_error: "is required"
