@@ -18,6 +18,7 @@
 - Added `:heading` selector
 - Fix `:section` selector matching sections with no headings
 - `:section` selector will also match aria headings
+- Selector filters will now validate their values more strictly
 
 ## v0.10.0
 
