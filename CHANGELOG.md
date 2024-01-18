@@ -19,6 +19,7 @@
 - Fix `:section` selector matching sections with no headings
 - `:section` selector will also match aria headings
 - Selector filters will now validate their values more strictly
+- `described_by` and `validation_error` will also accept a regular expression
 
 ## v0.10.0
 

@@ -112,7 +112,7 @@ values. A `current: true` will match against `[aria-current="true"]`, and a
 `current: false` will match against `[aria-current="false"]`. To match an
 element **without any** `[aria-current]` attribute, pass `current: nil`.
 
-#### `described_by` [String]
+#### `described_by` [String, Regexp]
 
 Added to all selectors.
 
@@ -196,7 +196,7 @@ Filters for an element that declares a matching [role](https://www.w3.org/TR/wai
 expect(page).to have_field "A switch input", role: "switch"
 ```
 
-#### `validation_error` [String, true, false]
+#### `validation_error` [String, Regexp, true, false]
 
 Added to: `field`, `fillable_field`, `datalist_input`, `radio_button`, `checkbox`, `select`, `file_field`, `combo_box` and `rich_text`.
 
