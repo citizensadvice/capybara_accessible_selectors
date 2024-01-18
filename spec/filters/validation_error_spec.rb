@@ -221,4 +221,25 @@ describe "validation error filter" do
       end.to raise_error RSpec::Expectations::ExpectationNotMetError, /expected element to have aria-invalid=true/
     end
   end
+
+  context "with a regular expression" do
+    it "selects an invalid field" do
+      render <<~HTML
+        <label>Text<input aria-describedby="id" required></label>
+        <span id="id">Text error</span>
+      HTML
+      expect(page).to have_selector :field, "Text", validation_error: /error/
+    end
+
+    it "provides a friendly error" do
+      render <<~HTML
+        <label>Text<input aria-describedby="id" required></label>
+        <span id="id">Text error</span>
+      HTML
+      expect do
+        expect(page).to have_selector :field, "Text", validation_error: /foo/, wait: false
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                         %r{expected to be described by /foo/ but it was described by "Text Text error"}
+    end
+  end
 end

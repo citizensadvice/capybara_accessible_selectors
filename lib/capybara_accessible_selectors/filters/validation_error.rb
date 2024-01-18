@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
-  node_filter(:validation_error, valid_values: [String, true, false]) do |node, value|
+  node_filter(:validation_error, valid_values: [String, Regexp, true, false]) do |node, value|
     if value.is_a?(String) && value.strip == ""
       Capybara::Helpers.warn("Checking for a validation message of an empty string is confusing and/or pointless as it will always match")
       value = true
@@ -17,11 +17,10 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
     error_messages << " expected element not to have aria-invalid=true" if !value && aria_invalid
     error_messages << " expected aria-invalid not to be false if the element is invalid" if native_invalid && aria_invalid == "false"
 
-    if value.is_a?(String)
+    if value && value != true
       description = CapybaraAccessibleSelectors::Helpers.element_description(node)
-      unless description.include?(value)
-        error_messages << " expected to be described by \"#{value}\" but it was described by \"#{description}\"."
-      end
+      valid = (value.is_a?(Regexp) && value.match?(description)) || (value.is_a?(String) && description.include?(value))
+      error_messages << " expected to be described by #{value.inspect} but it was described by \"#{description}\"." unless valid
     end
 
     errors.push(*error_messages)

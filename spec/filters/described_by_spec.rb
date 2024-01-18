@@ -64,4 +64,17 @@ describe "described by filter" do
     end.to raise_error RSpec::Expectations::ExpectationNotMetError,
                        /expected to be described by "foo" but it was described by "Text description"/
   end
+
+  context "with a regular expression" do
+    it "filters a field" do
+      expect(page).to have_selector :field, "Text", described_by: /description/
+    end
+
+    it "provides a friendly error" do
+      expect do
+        expect(page).to have_selector :field, "Text", described_by: /foo/, wait: false
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError,
+                         %r{expected to be described by /foo/ but it was described by "Text description"}
+    end
+  end
 end
