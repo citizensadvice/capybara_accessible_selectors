@@ -23,7 +23,7 @@ Capybara.add_selector(:menu, locator_type: [String, Symbol]) do
     xpath[button.attr(:"aria-controls") == XPath.attr(:id)]
   end
 
-  node_filter(:orientation, [String, Symbol]) do |node, value|
+  node_filter(:orientation, valid_values: [String, Symbol]) do |node, value|
     orientation = (node[:"aria-orientation"] || "vertical").to_s
 
     orientation == value.to_s

@@ -22,7 +22,7 @@ describe "img selector" do
 
   it "does not find exact aria-label with the wrong text" do
     expect do
-      find(:img, "aria-labe", exact: true)
+      find(:img, "aria-labe", exact: true, wait: false)
     end.to raise_error Capybara::ElementNotFound
   end
 
@@ -43,7 +43,7 @@ describe "img selector" do
 
   it "does not find by exact aria-labelledby with the wrong text" do
     expect do
-      find(:img, "split la", exact: true)
+      find(:img, "split la", exact: true, wait: false)
     end.to raise_error Capybara::ElementNotFound
   end
 
@@ -69,7 +69,7 @@ describe "img selector" do
 
   it "does not find exact alt with the wrong text" do
     expect do
-      find(:img, "alt tex", exact: true)
+      find(:img, "alt tex", exact: true, wait: false)
     end.to raise_error Capybara::ElementNotFound
   end
 

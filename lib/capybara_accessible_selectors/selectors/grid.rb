@@ -14,7 +14,7 @@ Capybara.add_selector(:grid, locator_type: [String, Symbol]) do
     end
   end
 
-  node_filter(:described_by, valid_values: String) do |node, value|
+  node_filter(:described_by, valid_values: [String]) do |node, value|
     if node.tag_name == "table" && node.has_css?("caption") && (caption = node.find("caption")) && caption.text.include?(value)
       true
     else
@@ -40,7 +40,7 @@ Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do
     end
   end
 
-  expression_filter(:colindex, [Integer, String], skip_if: nil) do |xpath, value|
+  expression_filter(:colindex, valid_values: [Integer, String], skip_if: nil) do |xpath, value|
     colindex = XPath.attr(:"aria-colindex") == value.to_s
     position = (!XPath.attr(:"aria-colindex")) & (XPath.local_name == "th") & (XPath.position == value.to_i - 1)
 
@@ -61,7 +61,7 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
     end
   end
 
-  expression_filter(:colindex, [Integer, String], skip_if: nil) do |xpath, value|
+  expression_filter(:colindex, valid_values: [Integer, String], skip_if: nil) do |xpath, value|
     row_ancestor = XPath.ancestor[(XPath.attr(:role) == "row") | (XPath.local_name == "tr")]
     colindex = row_ancestor & (XPath.attr(:"aria-colindex") == value.to_s)
     position = row_ancestor & (!XPath.attr(:"aria-colindex")) & (XPath.position == value.to_i)
@@ -69,7 +69,7 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
     xpath[colindex | position]
   end
 
-  node_filter(:rowindex, [Integer, String], skip_if: nil) do |gridcell, value|
+  node_filter(:rowindex, valid_values: [Integer, String], skip_if: nil) do |gridcell, value|
     if gridcell.has_ancestor?(:row)
       row = gridcell.ancestor(:row)
 
@@ -85,7 +85,7 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
     end
   end
 
-  node_filter(:columnheader, [String, Symbol], skip_if: nil) do |node, value|
+  node_filter(:columnheader, valid_values: [String, Symbol], skip_if: nil) do |node, value|
     colindex = node[:"aria-colindex"] || node.ancestor(:row).all(:gridcell).index(node)
     grid = node.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
 
@@ -107,7 +107,7 @@ Capybara.add_selector(:row, locator_type: [String, Symbol]) do
     end
   end
 
-  node_filter(:rowindex, [Integer, String], skip_if: nil) do |row, value|
+  node_filter(:rowindex, valid_values: [Integer, String], skip_if: nil) do |row, value|
     case row[:"aria-rowindex"]
     when value.to_s then true
     when NilClass

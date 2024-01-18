@@ -17,7 +17,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   filter_set(:capybara_accessible_selectors, %i[aria fieldset described_by validation_error required])
 
   # with a value
-  node_filter(:with) do |node, with|
+  node_filter(:with, valid_values: [String, Regexp, Symbol]) do |node, with|
     val = node.value
     (with.is_a?(Regexp) ? with.match?(val) : val == with.to_s).tap do |res|
       add_error("Expected value to be #{with.inspect} but was #{val.inspect}") unless res
@@ -37,7 +37,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with exact options
-  node_filter(:options) do |node, options|
+  node_filter(:options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil))
     match_all_options?(actual, options).tap do |res|
@@ -46,7 +46,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with parital options
-  node_filter(:with_options) do |node, options|
+  node_filter(:with_options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil))
     match_some_options?(actual, options).tap do |res|
@@ -55,7 +55,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with exact enabled options
-  node_filter(:enabled_options) do |node, options|
+  node_filter(:enabled_options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] != "true" }
     match_all_options?(actual, options).tap do |res|
@@ -64,7 +64,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with exact enabled options
-  node_filter(:with_enabled_options) do |node, options|
+  node_filter(:with_enabled_options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] != "true" }
     match_some_options?(actual, options).tap do |res|
@@ -73,7 +73,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with exact disabled options
-  node_filter(:disabled_options) do |node, options|
+  node_filter(:disabled_options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] == "true" }
     match_all_options?(actual, options).tap do |res|
@@ -82,7 +82,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
   end
 
   # with exact enabled options
-  node_filter(:with_disabled_options) do |node, options|
+  node_filter(:with_disabled_options, valid_values: [Array, String, Regexp]) do |node, options|
     options = Array(options)
     actual = options_text(node, expression_for(:list_box_option, nil)) { |n| n["aria-disabled"] == "true" }
     match_some_options?(actual, options).tap do |res|
