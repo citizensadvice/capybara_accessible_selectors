@@ -103,8 +103,14 @@ For example:
 ```
 
 ```ruby
+expect(page).to have_link "Home", current: nil
 expect(page).to have_link "About us", current: "page"
 ```
+
+**Note:** The `[aria-current]` attribute supports both `"true"` and `"false"`
+values. A `current: true` will match against `[aria-current="true"]`, and a
+`current: false` will match against `[aria-current="false"]`. To match an
+element **without any** `[aria-current]` attribute, pass `current: nil`.
 
 #### `described_by` [String]
 
