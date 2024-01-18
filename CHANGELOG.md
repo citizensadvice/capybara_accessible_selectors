@@ -1,6 +1,23 @@
 # Change log
 
+## Unreleased
+
+- Add `img` selector and matcher
 - Added `aria` filter to `:combo_box`, `:disclosure`, and `:disclosure_button` [Sean Doyle]
+- Removed support for Ruby 2.7. Minimum supported Ruby version is now 3.0
+- Added a ':dialog' selector
+- The `:modal` selector will now check a native modal is displaying as a modal
+- `validation_error` filter now checks for validity.valid or aria-invalid=true. Previously it required aria-invalid=true
+- `validation_error` filter now allows the error message to be in the aria-labelledby name
+- `validation_error` filter now also takes a boolean allowing you to check for an invalid field without an error message, and for the absence of a validation error by using `false`
+- `have_validation_errors` allows use of `within` and `within_fieldset` within the block
+- added `radio_group` to 'have_validation_errors` to match multiple radios
+- added some missing selectors to 'have_validation_errors`
+- corrected logic for `add_validation_errors` finding invalid fields
+- fix a `<section>` can only be a `:region` if it has an accessible name
+- Added `:heading` selector
+- Fix `:section` selector matching sections with no headings
+- `:section` selector will also match aria headings
 
 ## v0.10.0
 

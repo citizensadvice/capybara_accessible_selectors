@@ -67,7 +67,7 @@ module CapybaraAccessibleSelectors
       button = _locate_disclosure_button(name, **find_options)
       _toggle_disclosure_button(button, expand)
 
-      if block_given?
+      if block
         if is_a?(Capybara::Node::Element) && name.nil?
           Capybara.page.within(_locate_disclosure(name, **find_options), &block)
         else
@@ -88,7 +88,7 @@ module CapybaraAccessibleSelectors
       button = _locate_disclosure_button(name, **find_options)
       _toggle_disclosure_button(button, true)
 
-      if block_given?
+      if block
         if is_a?(Capybara::Node::Element) && name.nil?
           Capybara.page.within(_locate_disclosure(name, **find_options), &block)
         else
@@ -139,8 +139,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Fieldset label
     # @param [Hash] options Finder options
-    def within_disclosure(name, **options, &block)
-      within(:disclosure, name, **options, &block)
+    def within_disclosure(...)
+      within(:disclosure, ...)
     end
   end
 end

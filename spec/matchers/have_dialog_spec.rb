@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-describe "have_modal" do
+describe "have_dialog" do
   before do
     visit "/dialog.html"
   end
 
   it "matches using a custom matcher" do
-    expect(page).to have_modal "Modal title"
+    expect(page).to have_dialog "Dialog title"
   end
 
   it "matches using a negated custom matcher" do

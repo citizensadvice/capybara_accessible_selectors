@@ -59,7 +59,7 @@ module CapybaraAccessibleSelectors
         find(:tab_button, name, **find_options)
       end.click
 
-      within_tab_panel(name, **find_options, &block) if block_given?
+      within_tab_panel(name, **find_options, &block) if block
     end
   end
 
@@ -68,8 +68,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] name The tab button label
     # @param [Hash] options Finder options
-    def within_tab_panel(name, **options, &block)
-      within(:tab_panel, name, **options, &block)
+    def within_tab_panel(...)
+      within(:tab_panel, ...)
     end
   end
 end

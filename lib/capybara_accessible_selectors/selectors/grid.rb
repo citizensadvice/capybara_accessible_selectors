@@ -50,7 +50,6 @@ Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do
   filter_set(:capybara_accessible_selectors, %i[described_by])
 end
 
-# rubocop:disable Metrics/BlockLength
 Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
   xpath do |locator|
     gridcell = XPath.descendant[(XPath.local_name == "td") | (XPath.attr(:role) == "gridcell")]
@@ -131,32 +130,32 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Columnheader label
     # @param [Hash] options Finder options
-    def within_columnheader(*arguments, **options, &block)
-      within(:columnheader, *arguments, **options, &block)
+    def within_columnheader(...)
+      within(:columnheader, ...)
     end
 
     # Limit supplied block to within a grid
     #
     # @param [String] Name Grid label
     # @param [Hash] options Finder options
-    def within_grid(*arguments, **options, &block)
-      within(:grid, *arguments, **options, &block)
+    def within_grid(...)
+      within(:grid, ...)
     end
 
     # Limit supplied block to within a gridcell
     #
     # @param [String] Name Gridcell label
     # @param [Hash] options Finder options
-    def within_gridcell(*arguments, **options, &block)
-      within(:gridcell, *arguments, **options, &block)
+    def within_gridcell(...)
+      within(:gridcell, ...)
     end
 
     # Limit supplied block to within a row
     #
     # @param [String] Name Row label
     # @param [Hash] options Finder options
-    def within_row(*arguments, **options, &block)
-      within(:row, *arguments, **options, &block)
+    def within_row(...)
+      within(:row, ...)
     end
   end
 end

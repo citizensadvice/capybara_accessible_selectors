@@ -22,7 +22,7 @@ describe "item" do
 
   it "does not select an missing type" do
     expect do
-      expect(page).to have_selector :item, "age", type: "foo", text: "222"
+      expect(page).to have_selector :item, "age", type: "foo", text: "222", wait: false
     end.to raise_error RSpec::Expectations::ExpectationNotMetError, include(<<~EXPECTED.squish)
       expected to find item "age" within scope foo but there were no matches
     EXPECTED

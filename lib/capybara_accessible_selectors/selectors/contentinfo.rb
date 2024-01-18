@@ -28,8 +28,8 @@ module CapybaraAccessibleSelectors
     #
     # @param [String] Name Contentinfo label
     # @param [Hash] options Finder options
-    def within_contentinfo(*arguments, **options, &block)
-      within(:contentinfo, *arguments, **options, &block)
+    def within_contentinfo(...)
+      within(:contentinfo, ...)
     end
   end
 end

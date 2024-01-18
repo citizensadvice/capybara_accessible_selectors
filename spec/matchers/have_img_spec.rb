@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-describe "have_modal" do
+describe "have_img" do
   before do
-    visit "/dialog.html"
+    visit "/img.html"
   end
 
   it "matches using a custom matcher" do
-    expect(page).to have_modal "Modal title"
+    expect(page).to have_img "Img title"
   end
 
   it "matches using a negated custom matcher" do
-    expect(page).to have_no_modal "foo"
+    expect(page).to have_no_img "foo"
   end
 end
