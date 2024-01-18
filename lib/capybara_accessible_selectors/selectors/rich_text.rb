@@ -25,6 +25,8 @@ Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
   end
 end
 
+# rubocop:disable Style/ArgumentsForwarding
+
 module CapybaraAccessibleSelectors
   module Actions
     # Fill in a rich text area with text
@@ -92,3 +94,5 @@ module CapybaraAccessibleSelectors
     end
   end
 end
+
+# rubocop:enable Style/ArgumentsForwarding
