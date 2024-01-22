@@ -30,6 +30,7 @@
   - allows you to use `radio_group` to match multiple radios by a fieldset legend
   - added some missing selectors
   - corrected logic for finding invalid fields
+- `current` filter will now accept `nil` to match having no `aria-current` [Sean Doyle]
 
 ### Removed
 
