@@ -3,7 +3,7 @@
   <meta charset="UTF-8">
   <title>Rich text</title>
   <style>
-    [contenteditable=true], iframe {
+    [contenteditable=true], [contenteditable=""], iframe {
       height: 100px;
       border: 1px solid #ddd;
       width: 100%;
@@ -33,6 +33,11 @@
   <div id="label-id-part2">aria-labelledby</div>
   <div id="label-id-part1">with</div>
   <div contenteditable="true" role="textbox" aria-labelledby="label-id-part1 label-id-part2" id="rt-aria-labelledby">
+  </div>
+
+  <h2>Empty content editable attribute</h2>
+
+  <div contenteditable role="textbox" aria-label="empty [contenteditable]" id="rt-empty-contenteditable">
   </div>
 
   <h2>Content editable iframe with title</h2>
