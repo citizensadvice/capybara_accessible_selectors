@@ -1,9 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Rich text</title>
   <style>
-    [contenteditable=true], [contenteditable=""], iframe {
+    [contenteditable="true"],
+    [contenteditable=""],
+    iframe {
       height: 100px;
       border: 1px solid #ddd;
       width: 100%;
@@ -15,33 +17,65 @@
 
   <h2>Content editable with aria-label</h2>
 
-  <div contenteditable="true" role="textbox" aria-label="with label" id="rt-aria-label" tabindex="0">
+  <div
+    contenteditable="true"
+    role="textbox"
+    aria-label="with label"
+    id="rt-aria-label"
+    tabindex="0"
+  >
     <p>test</p>
   </div>
 
   <h3>Missing role</h3>
 
-  <div contenteditable="true" aria-label="with label" tabindex="0">
-  </div>
+  <div contenteditable="true" aria-label="with label" tabindex="0"></div>
 
   <h3>Missing contenteditable</h3>
-  <div role="textbox" aria-label="with label">
-  </div>
+  <div role="textbox" aria-label="with label"></div>
 
   <h2>Content editable with aria-labelledby</h2>
 
   <div id="label-id-part2">aria-labelledby</div>
   <div id="label-id-part1">with</div>
-  <div contenteditable="true" role="textbox" aria-labelledby="label-id-part1 label-id-part2" id="rt-aria-labelledby">
-  </div>
+  <div
+    contenteditable="true"
+    role="textbox"
+    aria-labelledby="label-id-part1 label-id-part2"
+    id="rt-aria-labelledby"
+  ></div>
 
   <h2>Empty content editable attribute</h2>
 
-  <div contenteditable role="textbox" aria-label="empty [contenteditable]" id="rt-empty-contenteditable">
-  </div>
+  <div
+    contenteditable
+    role="textbox"
+    aria-label="empty [contenteditable]"
+    id="rt-empty-contenteditable"
+  ></div>
+
+  <h2>Disabled content editable attribute</h2>
+
+  <div
+    contenteditable="false"
+    role="textbox"
+    aria-label="disabled [contenteditable]"
+  ></div>
+
+  <h2>Invalid content editable attribute</h2>
+
+  <div
+    contenteditable="foo"
+    role="textbox"
+    aria-label="foo [contenteditable]"
+  ></div>
 
   <h2>Content editable iframe with title</h2>
-  <iframe title="editable iframe" src="rich_text_iframe.html" id="rt-iframe"></iframe>
+  <iframe
+    title="editable iframe"
+    src="rich_text_iframe.html"
+    id="rt-iframe"
+  ></iframe>
 
   <h3>plain iframe</h3>
   <iframe src="rich_text_iframe.html"></iframe>
