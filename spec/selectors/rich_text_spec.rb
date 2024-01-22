@@ -10,6 +10,11 @@ describe "rich text" do
         expect(page.find(:rich_text, "with label")).to eq rich_text
       end
 
+      it "finds a rich text area with empty [contenteditable]" do
+        rich_text = page.find(:id, "rt-empty-contenteditable")
+        expect(page.find(:rich_text, "empty [contenteditable]")).to eq rich_text
+      end
+
       it "finds a rich text area with a partial label" do
         rich_text = page.find(:id, "rt-aria-label")
         expect(page.find(:rich_text, "with la")).to eq rich_text

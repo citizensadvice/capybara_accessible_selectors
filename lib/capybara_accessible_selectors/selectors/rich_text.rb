@@ -4,7 +4,7 @@ Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
   xpath do |locator, *|
     XPath.descendant[[
       XPath.attribute(:role) == "textbox",
-      XPath.attribute(:contenteditable) == "true"
+      ((XPath.attribute(:contenteditable) == "true") | (XPath.attribute(:contenteditable) == ""))
     ].reduce(:&)] + XPath.descendant(:iframe)[XPath.attr(:title).is(locator.to_s)]
   end
 
