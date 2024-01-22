@@ -669,7 +669,7 @@ Also see:
 
 Finds a rich text editor.
 
-This should be compatible with most browser based rich text editors. It searches for `contenteditable` section marked up with the correct role. It is also compatible with `<iframe>` based editors such as CKEditor 4 and TinyMCE.
+This should be compatible with most browser based rich text editors. It searches for an element with the [`contenteditable` attribute][] marked up with the [`textbox` role][]. It is also compatible with `<iframe>` based editors such as CKEditor 4 and TinyMCE.
 
 - `locator` [String, Symbol] The label for the editor. This can be an `aria-label` or `aria-labelledby`. For iframe editors this is the `title` attribute.
 
@@ -690,6 +690,9 @@ Also see:
 - [↓ `fill_in_rich_text` action](#fill_in_rich_textlocator-options)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 - [↓ `within_rich_text`](#within_rich_textname-find_options-block)
+
+[`contenteditable` attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable
+[`textbox` role]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/textbox_role
 
 #### `section`
 
