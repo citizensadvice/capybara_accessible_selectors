@@ -15,6 +15,14 @@ describe "rich text" do
         expect(page.find(:rich_text, "empty [contenteditable]")).to eq rich_text
       end
 
+      it "does not finds a rich text area with a false [contenteditable]" do
+        expect(page).to have_no_selector :rich_text, "disabled [contenteditable]"
+      end
+
+      it "does not finds a rich text area with an invalid value [contenteditable]" do
+        expect(page).to have_no_selector :rich_text, "foo [contenteditable]"
+      end
+
       it "finds a rich text area with a partial label" do
         rich_text = page.find(:id, "rt-aria-label")
         expect(page.find(:rich_text, "with la")).to eq rich_text
