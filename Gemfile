@@ -7,6 +7,7 @@ group :test, :development do
   gem "debug"
   gem "puma"
   gem "rack-test"
+  gem "rackup"
   gem "rspec"
   gem "rubocop-performance"
   gem "selenium-webdriver"
