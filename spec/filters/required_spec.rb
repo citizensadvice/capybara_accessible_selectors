@@ -142,7 +142,7 @@ describe "required" do
       expect do
         expect(page).to have_selector :checkbox, required: true, wait: 0
       end.to raise_error RSpec::Expectations::ExpectationNotMetError, <<~EXPECTED.squish
-        expected to find checkbox nil that is not disabled that is required but there were no matches
+        expected to find checkbox that is not disabled that is required but there were no matches
       EXPECTED
     end
   end
