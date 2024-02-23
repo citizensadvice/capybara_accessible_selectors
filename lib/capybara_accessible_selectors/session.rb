@@ -2,16 +2,8 @@
 
 module CapybaraAccessibleSelectors
   # Methods to extend the DSL and page
-  module Session
-  end
-end
+  module Session; end
 
-module Capybara
-  module DSL
-    include CapybaraAccessibleSelectors::Session
-  end
-
-  class Session
-    include CapybaraAccessibleSelectors::Session
-  end
+  ::Capybara::DSL.include Session
+  ::Capybara::Session.include Session
 end
