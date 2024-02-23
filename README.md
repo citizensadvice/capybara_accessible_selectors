@@ -788,7 +788,7 @@ Also see [↑ `tab_panel` selector](#tab_panel)
 
 Fill in a combo box and select an option
 
-- `with` [String] - Option to select
+- `with` [String] - Option to select, or an empty string to clear the combo box
 - `options`:
   - `from` [String, Symbol, Array] - Locator for the field
   - `search` [String] - Alternative text to search for in the input

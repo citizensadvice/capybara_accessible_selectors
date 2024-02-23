@@ -256,6 +256,19 @@ describe "combo_box selector" do
           expect(page).to have_selector :combo_box, label, with: "Orange"
         end
 
+        it "allows finding an option with a block" do
+          select_combo_box_option(from: label) { _1.text.include? "Orange" }
+          expect(page).to have_selector :combo_box, label, with: "Orange"
+        end
+
+        it "clears a current option with a string" do
+          select_combo_box_option "Orange", from: label
+          expect(page).to have_selector :combo_box, label, with: "Orange"
+          select_combo_box_option "", from: label
+          expect(page).to have_field label, with: ""
+          expect(page).to have_no_selector :combo_box_list_box, find(:combo_box, label)
+        end
+
         describe "currently_with" do
           it "fills in a combo box with an existing value" do
             select_combo_box_option "Banana", from: label
@@ -388,6 +401,19 @@ describe "combo_box selector" do
       it "allows finding an option with finder options" do
         select_combo_box_option from: label, option_match: :first, option_text: /orange/i
         expect(page).to have_selector :combo_box, label, with: "Orange"
+      end
+
+      it "allows finding an option with a block" do
+        select_combo_box_option(from: label) { _1.text.include? "Orange" }
+        expect(page).to have_selector :combo_box, label, with: "Orange"
+      end
+
+      it "clears a current option with a string" do
+        select_combo_box_option "Orange", from: label
+        expect(page).to have_selector :combo_box, label, with: "Orange"
+        select_combo_box_option "", from: label
+        expect(page).to have_field label, with: ""
+        expect(page).to have_no_selector :combo_box_list_box, find(:combo_box, label)
       end
 
       describe "currently_with" do

@@ -86,6 +86,25 @@
         target.parentNode.setAttribute('aria-expanded', 'true');
       }
     });
+
+    input.addEventListener('change', ({ target }) => {
+      if (target.value === "") {
+        listbox.querySelectorAll('[role=option],.tt-selectable').forEach((option) => {
+          option.removeAttribute('aria-selected');
+        });
+      }
+    });
+
+    input.addEventListener('keydown', ({ target, key }) => {
+      if (key === "Escape") {
+        target.nextElementSibling.hidden = true;
+        if (target.hasAttribute('aria-expanded')) {
+          target.setAttribute('aria-expanded', 'false');
+        } else if (target.parentNode.hasAttribute('aria-expanded')) {
+          target.parentNode.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
   });
   document.querySelectorAll('[role=listbox],.tt-menu').forEach((listbox) => {
     listbox.addEventListener('click', ({ target }) => {

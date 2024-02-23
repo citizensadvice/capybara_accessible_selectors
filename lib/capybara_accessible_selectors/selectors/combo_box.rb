@@ -189,30 +189,40 @@ module CapybaraAccessibleSelectors
   module Actions
     # Selects an option from a combo box
     #
-    # @param [String] with The option to select
+    # @param [String] with The option to select, or an empty string to clear the selected option
     # @option options [String] from Locator for the combo box
     # @option options [String] currently_with The current combo box selection
     # @option options [String] search Alternative search text to find the option
     # @option options [Hash] fill_options Additional driver specific fill options
-    #
-    # Option names prefixed with option_ will be used to find the option element. eg option_text
+    #   Option names prefixed with option_ will be used to find the option element. eg option_text
+    # @yield [Capybara::Node::Element] An option considered for inclusion in the results
+    # @yield [Boolean] Should the element be included
     #
     # @return [Capybara::Node::Element] The combo box
-    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options) # rubocop:disable Metrics/ParameterLists
+    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &block) # rubocop:disable Metrics/*
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)
       input = find(:combo_box, from, **find_options)
+      wait_options = { wait: find_options[:wait] }.compact
       if search
         input.set(search, **fill_options)
       else
         input.click
       end
-      listbox = find(:combo_box_list_box, input, **{ wait: find_options[:wait] }.compact)
-      option = listbox.find(:list_box_option, with, disabled: false, **find_option_options)
-      # Some drivers complain about clicking on a tr
-      option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
-      option.click
+      if with == ""
+        # Clearing input can press the END key if the :backspace fill option is used
+        # this may cause a combo box to open the list box and this can obscure other actions
+        # Pressing escape will close an open listbox
+        input.send_keys(:escape) if has_selector?(:combo_box_list_box, input, wait: 0)
+      else
+        listbox = find(:combo_box_list_box, input, **wait_options)
+        option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &block)
+        # Some drivers complain about clicking on a tr
+        option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
+        option.click
+      end
+      assert_no_selector(:combo_box_list_box, input, **wait_options)
       input
     end
 
