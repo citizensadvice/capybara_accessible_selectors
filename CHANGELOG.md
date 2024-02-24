@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- `accessible_name` method to Node (Selenium only)
+- `accessible_name` filter (Selenium only)
+
 ### Changed
 
 - Passing an empty string to `select_combo_box_option` will clear the combo-box

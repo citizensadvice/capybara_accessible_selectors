@@ -69,6 +69,30 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `accessible_name` [String, Regexp]
+
+Added to all selectors.
+
+Currently only supported for Selenium drivers.
+
+Filters for an element's computed accessible name. A string will do a partial match, unless the `exact` option is set.
+
+This uses the Selenium driver `accessible_name` method which uses the accessible name calculated by the browser. Support
+is reasonably good in modern browsers for common use cases, but browsers do not produce the same results for
+all cases and some screen-readers will perform their own calculations.
+
+This method must request the accessible name from the driver for each node found by the selector individually.
+Therefore, using this with a selector that returns a large number of elements will be inefficient.
+
+```html
+<button id="id1" aria-labelledby="id1 id2">Delete</button>
+<a id="id2" href="./files/Documentation.pdf">Documentation.pdf</a>
+```
+
+```ruby
+click_button accessible_name: "Delete Documentation.pdf"
+```
+
 #### `aria` [Hash]
 
 Added to: `button`, `checkbox`, `css`, `element`, `field`, `file_field`, `fillable_field`, `link`, `link_or_button`, `radio_button`, `select`, and `xpath`

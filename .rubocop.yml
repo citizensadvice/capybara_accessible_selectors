@@ -9,6 +9,9 @@ AllCops:
   SuggestExtensions: false
   TargetRubyVersion: 3.0
 
+Capybara/ClickLinkOrButtonStyle:
+  Enabled: false
+
 Metrics/MethodLength:
   Max: 20
 
