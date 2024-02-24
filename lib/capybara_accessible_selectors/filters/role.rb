@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
-  expression_filter(:role, valid_values: [String, Symbol], skip_if: nil) do |scope, value|
-    case scope
-    when String then %(#{scope}[role="#{value}"])
-    else             scope[XPath.attr(:role) == value.to_s]
-    end
+  node_filter(:role, valid_values: [String, Symbol, nil]) do |node, value|
+    role = node.role
+    next true if role == value
+
+    add_error " expected to have #{value ? "role #{value.inspect}" : 'no role'} but it had #{role ? "role #{role.inspect}" : 'no role'}."
+    false
   end
 end
