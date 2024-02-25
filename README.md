@@ -205,11 +205,23 @@ For example:
 find :field, required: true
 ```
 
-#### `role` [String]
+#### `role` [String, Symbol, nil]
 
-Added to: `button`, `checkbox`, `css`, `element`, `field`, `file_field`, `fillable_field`, `link`, `link_or_button`, `radio_button`, `select`, and `xpath`
+Added to all selectors
 
-Filters for an element that declares a matching [role](https://www.w3.org/TR/wai-aria/#usage_intro) attribute.
+Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles), or with no role if `nil` is supplied.
+
+The roles "none", "presentation" and "generic" are returned as `nil` as they are implementation details not
+exposed to users.
+
+This uses the Selenium driver `aria_role` method which uses the role calculated by the browser taking
+into account [implicit role mappings](https://www.w3.org/TR/html-aria/). The results for implicit roles are
+not consistent across all browsers, but are good for more common use cases.
+
+Rack test will currently only use the value of the `role` attribute and does not return implicit role values.
+
+This method must request the role from the driver for each node found by the selector individually.
+Therefore, using this with a selector that returns a large number of elements will be inefficient.
 
 ```html
 <label for="switch-input">A switch input</label>

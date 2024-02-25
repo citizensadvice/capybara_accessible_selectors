@@ -6,9 +6,14 @@
 
 - `accessible_name` method to Node (Selenium only)
 - `accessible_name` filter (Selenium only)
+- `role` method to Node
+  - A selenium driver will use the browser's computed role
+  - Rack test will only return the value of the role attribute
 
 ### Changed
 
+- (potentially breaking) the `role` filter now uses the browser's resolved accessible role (Selenium only)
+  and will return "none" and "presentation" as `nil`
 - Passing an empty string to `select_combo_box_option` will clear the combo-box
 - `select_combo_box_option` takes a block which can be used to filter the found options
 - `select_combo_box_option` will assert the list box has been closed after selecting an option
