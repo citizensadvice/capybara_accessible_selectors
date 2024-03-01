@@ -66,4 +66,18 @@ describe "accessible_name" do
       find :element, :section, accessible_name: "foo", wait: false
     end.to raise_error Capybara::ElementNotFound, /with accessible name "foo"/
   end
+
+  it "composes the error description with the sibling filter" do
+    render <<~HTML
+      <section>
+        <h1>Heading</h1>
+      </section>
+    HTML
+
+    section = find :element, :section
+
+    expect do
+      section.sibling :section, accessible_name: "foo", wait: false
+    end.to raise_error Capybara::ElementNotFound, /with accessible name "foo" that is a sibling/
+  end
 end

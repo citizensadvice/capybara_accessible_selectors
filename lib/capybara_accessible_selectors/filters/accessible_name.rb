@@ -4,7 +4,7 @@ module CapybaraAccessibleSelectors
   # This is hacked into SelectorQuery to the "exact" option can be supported
 
   module AccessibleNameFilter
-    def description(_)
+    def description(*)
       desc = super
       desc << " with accessible name #{options[:accessible_name].inspect}" if options[:accessible_name]
       desc
