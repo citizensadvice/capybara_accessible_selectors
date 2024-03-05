@@ -17,7 +17,7 @@ module CapybaraAccessibleSelectors
     end
 
     def matches_accessible_name_filter?(node)
-      return true unless options.key?(:accessible_name)
+      return true unless use_default_accessible_name_filter?
 
       accessible_name = node.accessible_name
       value = options[:accessible_name]
@@ -27,6 +27,10 @@ module CapybaraAccessibleSelectors
       when Regexp
         value.match?(accessible_name)
       end
+    end
+
+    def use_default_accessible_name_filter?
+      options.key?(:accessible_name) && !custom_keys.include?(:accessible_name)
     end
   end
 

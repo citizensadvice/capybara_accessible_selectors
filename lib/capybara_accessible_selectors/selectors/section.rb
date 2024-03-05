@@ -21,7 +21,7 @@ Capybara.add_selector(:section) do
     XPath.descendant(*Array(section_element).map(&:to_sym))[has_heading]
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 module CapybaraAccessibleSelectors

@@ -39,6 +39,11 @@ describe "tab selector" do
       tabpanel = find(:element, :div, text: "Panel one")
       expect(tabpanel).to match_selector :tab_panel, "One"
     end
+
+    it "matches by tabpanel and accessible name" do
+      tabpanel = find(:element, :div, text: "Panel one")
+      expect(tabpanel).to match_selector :tab_panel, accessible_name: "One"
+    end
   end
 
   describe "tab_button selector" do
@@ -66,6 +71,11 @@ describe "tab selector" do
       tab = find(:button, "One")
       expect(tab).to match_selector :tab_button, "One"
     end
+
+    it "matches a tab button using accessible name" do
+      tab = find(:button, "One")
+      expect(tab).to match_selector :tab_button, accessible_name: "One"
+    end
   end
 
   describe "select_tab action" do
@@ -87,6 +97,11 @@ describe "tab selector" do
       button = find(:button, "Two")
       button.select_tab
       expect(page).to have_selector :tab_panel, "Two", open: true
+    end
+
+    it "opens a tab panel using the accessible name" do
+      select_tab accessible_name: "Two"
+      expect(page).to have_selector :tab_panel, accessible_name: "Two", open: true
     end
 
     context "with a block" do

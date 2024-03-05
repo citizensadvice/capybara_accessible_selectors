@@ -5,5 +5,5 @@ Capybara.add_selector(:alert) do
     XPath.descendant[XPath.attr(:role) == "alert"]
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end

@@ -29,7 +29,7 @@ Capybara.add_selector(:menu, locator_type: [String, Symbol]) do
     orientation == value.to_s
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 Capybara.add_selector(:menuitem, locator_type: [String, Symbol]) do
@@ -55,5 +55,5 @@ Capybara.add_selector(:menuitem, locator_type: [String, Symbol]) do
     (node[:"aria-disabled"] || "false") == value.to_s
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end

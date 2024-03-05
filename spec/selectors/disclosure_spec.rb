@@ -17,6 +17,19 @@ describe "Disclosure" do
       expect(details).to match_selector :disclosure, expanded: false
     end
 
+    it "finds a disclosure using the accessible name filter" do
+      details = page.find(:element, :details, text: "Summary button")
+      expect(find(:disclosure, accessible_name: "Summary")).to eq details
+      expect(find(:disclosure, accessible_name: /Summary/)).to eq details
+      expect(page).to have_no_selector :disclosure, accessible_name: "foo"
+    end
+
+    it "provides a friendly error message with an accessible name filter" do
+      expect do
+        find(:disclosure, accessible_name: "foo", wait: false)
+      end.to raise_error Capybara::ElementNotFound, /with accessible name "foo"/
+    end
+
     it "selects a summary button" do
       summary = page.find(:element, :summary, text: "Summary button")
       expect(page.find(:disclosure_button, "Summary button")).to eq summary
@@ -94,6 +107,13 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      it "toggles a disclosure using the accessible_name filter" do
+        expect(page).to have_selector :disclosure, accessible_name: "Summary button", expanded: false
+        # Open
+        toggle_disclosure accessible_name: "Summary button"
+        expect(page).to have_selector :disclosure, accessible_name: "Summary button", expanded: true
+      end
     end
 
     describe "#select_disclosure" do
@@ -150,6 +170,12 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      it "opens and returns a closed disclosure using the accessible name filter" do
+        disclosure = find(:disclosure, accessible_name: "Summary button", expanded: false)
+        expect(select_disclosure(accessible_name: "Summary button")).to eq disclosure
+        expect(page).to have_selector :disclosure, accessible_name: "Summary button", expanded: true
+      end
     end
 
     describe "#within_disclosure" do
@@ -178,6 +204,12 @@ describe "Disclosure" do
       disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
       expect(page.find(:disclosure, "Disclosure button", visible: false)).to eq disclosure
       expect(page).to have_no_selector :disclosure, "Disclosure button"
+    end
+
+    it "finds a disclosure using the accessible name filter" do
+      disclosure = page.find(:element, :div, text: "Disclosure content", visible: false)
+      expect(find(:disclosure, accessible_name: "Disclosure bu", visible: false)).to eq disclosure
+      expect(find(:disclosure, accessible_name: /Disclosure bu/, visible: false)).to eq disclosure
     end
 
     describe "#toggle_disclosure" do
@@ -242,6 +274,12 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      it "toggles a disclosure using the accessible_name filter" do
+        expect(page).to have_selector :disclosure_button, accessible_name: "Disclosure button", expanded: false
+        toggle_disclosure(accessible_name: "Disclosure button")
+        expect(page).to have_selector :disclosure, accessible_name: "Disclosure button", expanded: true
+      end
     end
 
     describe "#select_disclosure" do
@@ -295,6 +333,12 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      it "opens and returns a closed disclosure using the accessible name filter" do
+        disclosure = find(:id, "disclosure-button-content", visible: false)
+        expect(select_disclosure(accessible_name: "Disclosure button")).to eq disclosure
+        expect(page).to have_selector :disclosure, accessible_name: "Disclosure button", expanded: true
+      end
     end
 
     describe "#within_disclosure" do
@@ -320,6 +364,12 @@ describe "Disclosure" do
       button = page.find(:element, :div, text: "Disclosure span content", visible: false)
       expect(page.find(:disclosure, "Disclosure span button", visible: false)).to eq button
       expect(page).to have_no_selector :disclosure, "Disclosure span button"
+    end
+
+    it "finds a disclosure using the accessible name filter" do
+      disclosure = page.find(:element, :div, text: "Disclosure span content", visible: false)
+      expect(find(:disclosure, accessible_name: "Disclosure span", visible: false)).to eq disclosure
+      expect(find(:disclosure, accessible_name: /Disclosure span/, visible: false)).to eq disclosure
     end
 
     describe "#toggle_disclosure" do
@@ -384,6 +434,12 @@ describe "Disclosure" do
           TEXT
         end
       end
+
+      it "toggles a disclosure using the accessible_name filter" do
+        expect(page).to have_selector :disclosure_button, accessible_name: "Disclosure span button", expanded: false
+        toggle_disclosure accessible_name: "Disclosure span button"
+        expect(page).to have_selector :disclosure, accessible_name: "Disclosure span button", expanded: true
+      end
     end
 
     describe "#select_disclosure" do
@@ -436,6 +492,12 @@ describe "Disclosure" do
             Disclosure span content
           TEXT
         end
+      end
+
+      it "opens and returns a closed disclosure using the accessible name filter" do
+        disclosure = find(:id, "disclosure-span-content", visible: false)
+        expect(select_disclosure(accessible_name: "Disclosure span button")).to eq disclosure
+        expect(page).to have_selector :disclosure, accessible_name: "Disclosure span button", expanded: true
       end
     end
 

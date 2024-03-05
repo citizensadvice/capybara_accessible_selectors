@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 Capybara.add_selector(:tab_button) do
-  xpath do |name|
+  xpath do |name = nil|
     XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name.to_s)
-    ].reduce(:&)]
+      (XPath.string.n.is(name.to_s) if name)
+    ].compact.reduce(:&)]
   end
 
   expression_filter(:open, :boolean) do |xpath, open|
@@ -19,16 +19,16 @@ Capybara.add_selector(:tab_button) do
     open ? " open" : " closed"
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 Capybara.add_selector(:tab_panel) do
-  xpath do |name|
+  xpath do |name = nil|
     tab = XPath.anywhere[[
       XPath.attr(:role) == "tab",
       XPath.parent[XPath.attr(:role) == "tablist"],
-      XPath.string.n.is(name.to_s)
-    ].reduce(:&)]
+      (XPath.string.n.is(name.to_s) if name)
+    ].compact.reduce(:&)]
     XPath.descendant[XPath.attr(:role) == "tabpanel"][XPath.attr(:id) == tab.attr(:"aria-controls")]
   end
 
@@ -42,7 +42,7 @@ Capybara.add_selector(:tab_panel) do
     " expected to be #{open ? :open : :closed}"
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 module CapybaraAccessibleSelectors

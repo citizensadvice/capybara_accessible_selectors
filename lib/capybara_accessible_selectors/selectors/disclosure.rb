@@ -5,10 +5,13 @@ Capybara.add_selector(:disclosure) do
     XPath.self(:button) | (XPath.attr(:role) == "button")
   end
 
-  xpath do |name, **|
-    button = aria_or_real_button & XPath.string.n.is(name.to_s)
+  xpath do |name = nil, **|
+    button = aria_or_real_button
+    button &= XPath.string.n.is(name.to_s) if name
     aria = XPath.descendant[XPath.attr(:id) == XPath.anywhere[button][XPath.attr(:"aria-expanded")].attr(:"aria-controls")]
-    details = XPath.descendant(:details)[XPath.child(:summary)[XPath.string.n.is(name.to_s)]]
+    summary = XPath.child(:summary)
+    summary = summary[XPath.string.n.is(name.to_s)] if name
+    details = XPath.descendant(:details)[summary]
     aria + details
   end
 
@@ -18,13 +21,35 @@ Capybara.add_selector(:disclosure) do
     xpath[open | (button.attr(:"aria-controls") == XPath.attr(:id))]
   end
 
+  node_filter(:accessible_name, valid_values: [String, Regexp], skip_nil: true) do |node, value|
+    # As a disclosure isn't actually named, we need to re-find the button
+    button = node.first(:element, :summary, wait: false) if node.tag_name == "details"
+    unless button
+      id = node[:id]
+      return false unless id
+
+      button = node.first(
+        :xpath,
+        XPath.anywhere[XPath.self(:button) | XPath.attr(:role) == "button"][XPath.attr(:"aria-controls") == id]
+      )
+    end
+    next false unless button
+
+    case value
+    when String
+      button.accessible_name.include?(value)
+    when Regexp
+      value.match?(button.accessible_name)
+    end
+  end
+
   describe_expression_filters do |expanded: nil, **|
     next if expanded.nil?
 
     expanded ? " expanded" : " closed"
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 # Specifically selects the disclosure button
