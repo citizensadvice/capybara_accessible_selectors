@@ -95,7 +95,7 @@ click_button accessible_name: "Delete Documentation.pdf"
 
 #### `aria` [Hash]
 
-Added to: `button`, `checkbox`, `css`, `element`, `field`, `file_field`, `fillable_field`, `link`, `link_or_button`, `radio_button`, `select`, and `xpath`
+Added to all selectors.
 
 Filters for an element that declares [ARIA attributes](https://www.w3.org/TR/wai-aria/#introstates)
 
