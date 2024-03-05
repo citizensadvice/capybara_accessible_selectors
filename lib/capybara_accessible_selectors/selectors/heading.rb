@@ -37,5 +37,5 @@ Capybara.add_selector :heading, locator_type: [String, Symbol] do
     end
   end
 
-  filter_set(:capybara_accessible_selectors, %i[described_by])
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
