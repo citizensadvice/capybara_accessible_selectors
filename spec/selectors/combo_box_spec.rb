@@ -262,7 +262,7 @@ describe "combo_box selector" do
         end
 
         it "clears a current option with a string" do
-          select_combo_box_option "Orange", from: label
+          select_combo_box_option "Orange", search: "or", from: label
           expect(page).to have_selector :combo_box, label, with: "Orange"
           select_combo_box_option "", from: label
           expect(page).to have_field label, with: ""
@@ -409,7 +409,7 @@ describe "combo_box selector" do
       end
 
       it "clears a current option with a string" do
-        select_combo_box_option "Orange", from: label
+        select_combo_box_option "Orange", search: "or", from: label
         expect(page).to have_selector :combo_box, label, with: "Orange"
         select_combo_box_option "", from: label
         expect(page).to have_field label, with: ""
