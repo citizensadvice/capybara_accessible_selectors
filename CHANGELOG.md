@@ -16,7 +16,6 @@
   and will return "none" and "presentation" as `nil`
 - Passing an empty string to `select_combo_box_option` will clear the combo-box
 - `select_combo_box_option` takes a block which can be used to filter the found options
-- `select_combo_box_option` will assert the list box has been closed after selecting an option
 - Added the `aria` filter to all selectors that didn't have it
 
 ## v0.11.0

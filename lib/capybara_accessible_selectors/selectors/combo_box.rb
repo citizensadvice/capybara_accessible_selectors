@@ -222,7 +222,6 @@ module CapybaraAccessibleSelectors
         option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
         option.click
       end
-      assert_no_selector(:combo_box_list_box, input, **wait_options)
       input
     end
 
