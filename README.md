@@ -59,7 +59,8 @@ Include in your Gemfile:
 
 ```ruby
 group :test do
-  gem "capybara_accessible_selectors", git: "https://github.com/citizensadvice/capybara_accessible_selectors", branch: "main"
+  # It is recommended you use a tag as the main branch may contain breaking changes
+  gem "capybara_accessible_selectors", git: "https://github.com/citizensadvice/capybara_accessible_selectors", tag: "v0.12.0"
 end
 ```
 
