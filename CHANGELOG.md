@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## v0.12.0
 
 ### Added
 
@@ -17,6 +17,10 @@
 - Passing an empty string to `select_combo_box_option` will clear the combo-box
 - `select_combo_box_option` takes a block which can be used to filter the found options
 - Added the `aria` filter to all selectors that didn't have it
+
+### Removed
+
+- Removed support for Ruby 3.0. Minimum supported Ruby version is now 3.1
 
 ## v0.11.0
 

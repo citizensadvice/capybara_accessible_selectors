@@ -89,7 +89,7 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
     colindex = node[:"aria-colindex"] || node.ancestor(:row).all(:gridcell).index(node)
     grid = node.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
 
-    grid.has_selector?(:columnheader, value, colindex: colindex)
+    grid.has_selector?(:columnheader, value, colindex:)
   end
 
   filter_set(:capybara_accessible_selectors, %i[aria described_by])

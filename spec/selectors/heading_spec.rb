@@ -112,7 +112,7 @@ describe "heading selector" do
           <div role="heading" aria-level=#{level + 1}>Heading</div>
         HTML
 
-        expect(page).to have_heading level: level, count: 1
+        expect(page).to have_heading level:, count: 1
       end
 
       it "filters for an h#{level}" do
@@ -121,7 +121,7 @@ describe "heading selector" do
           <h#{level + 1}>Heading</div>
         HTML
 
-        expect(page).to have_heading level: level, count: 1
+        expect(page).to have_heading level:, count: 1
       end
 
       it "filters for a native heading with overridden aria-level" do
@@ -131,7 +131,7 @@ describe "heading selector" do
           <h#{wrong_level}>Heading</h#{wrong_level}>
         HTML
 
-        expect(page).to have_heading level: level, count: 1
+        expect(page).to have_heading level:, count: 1
       end
     end
   end
