@@ -39,19 +39,19 @@ Capybara.register_driver(:firefox_aurora) do |app|
   options = Selenium::WebDriver::Firefox::Options.new(
     binary: "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox"
   )
-  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options:)
 end
 Capybara.register_driver(:firefox_aurora_headless) do |app|
   options = Selenium::WebDriver::Firefox::Options.new(
     binary: "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox",
     args: ["--headless"]
   )
-  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options:)
 end
 Capybara.register_driver(:edge) { |app| Capybara::Selenium::Driver.new(app, browser: :edge) }
 Capybara.register_driver(:edge_headless) do |app|
   options = Selenium::WebDriver::Edge::Options.new(args: ["--headless"])
-  Capybara::Selenium::Driver.new(app, browser: :edge, options: options)
+  Capybara::Selenium::Driver.new(app, browser: :edge, options:)
 end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication

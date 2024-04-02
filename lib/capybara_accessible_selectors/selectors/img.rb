@@ -2,7 +2,7 @@
 
 Capybara.add_selector(:img, locator_type: [String, Symbol]) do
   expression_filter(:src, valid_values: [String, Regexp]) do |xpath, src|
-    builder(xpath).add_attribute_conditions(src: src)
+    builder(xpath).add_attribute_conditions(src:)
   end
 
   describe(:expression_filters) do |src: nil, **|

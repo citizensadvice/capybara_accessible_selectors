@@ -4,10 +4,10 @@ module Capybara
   module RSpecMatchers
     module Matchers
       class HaveValidationErrors
-        def matches?(element, &block)
+        def matches?(element, &)
           @page = element
           @elements = []
-          instance_eval(&block)
+          instance_eval(&)
           @errors = []
 
           all_invalid_elements.reject { |el| @elements.include? el }.each do |el|
@@ -43,7 +43,7 @@ module Capybara
         end
 
         def radio_group(name, exact: nil, **options)
-          @page.within(:fieldset, name, exact: exact) do
+          @page.within(:fieldset, name, exact:) do
             @elements.push(*@page.all(:radio_button, **options))
           end
         end
