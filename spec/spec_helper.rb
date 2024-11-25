@@ -11,6 +11,10 @@ require "selenium-webdriver"
 require "capybara_accessible_selectors"
 require "sinatra"
 
+# Suppress gecko driver warnings
+# https://github.com/teamcapybara/capybara/issues/2779
+Selenium::WebDriver.logger.ignore(:clear_local_storage, :clear_session_storage)
+
 set :public_folder, "./spec/fixtures"
 
 module CapybaraAccessibleSelectors

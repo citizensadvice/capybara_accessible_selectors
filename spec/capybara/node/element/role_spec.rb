@@ -12,9 +12,11 @@ RSpec.describe Capybara::Node::Element, "#role" do
 
   it "returns the value of an explicit role" do
     render <<~HTML
-      <a role="option" href="http://example.com">
-        contents
-      </a>
+      <div role="listbox">
+        <a role="option" href="http://example.com">
+          contents
+        </a>
+      </div>
     HTML
     expect(find(:element, "a").role).to eq "option"
   end

@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license = "ISC"
   s.required_ruby_version = ">= 3.1"
 
-  s.add_runtime_dependency "capybara", "~> 3.36"
+  s.add_dependency "capybara", "~> 3.36"
 
   s.metadata["rubygems_mfa_required"] = "true"
 end
