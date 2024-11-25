@@ -22,8 +22,9 @@ describe "role" do
 
   it "selects an element with no role" do
     render <<~HTML
-      <div role="tablist">Tablist</div>
-      <div role="tab">Tab</div>
+      <div role="tablist">
+        <div role="tab">Tab</div>
+      </div>
       <div id="test">Not a role</div>
     HTML
 
@@ -32,7 +33,9 @@ describe "role" do
 
   it "provides a friendly error for role" do
     render <<~HTML
-      <button type="button" role="tab">Tab</button>
+      <div role="tablist">
+        <button type="button" role="tab">Tab</button>
+      </div>
     HTML
 
     expect do

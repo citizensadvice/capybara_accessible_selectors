@@ -220,9 +220,7 @@ module CapybaraAccessibleSelectors
         option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &block)
         # Some drivers complain about clicking on a tr
         option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
-        synchronize do
-          option.click
-        end
+        option.synchronize { option.click }
       end
       input
     end
