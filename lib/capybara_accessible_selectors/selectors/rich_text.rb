@@ -60,7 +60,7 @@ module CapybaraAccessibleSelectors
           Capybara.page.within_rich_text(locator, **find_options, &block)
         end
       end
-      within_iframe_rich_text(locator, **find_options, &block) # rubocop:disable Naming/BlockForwarding
+      within_iframe_rich_text(locator, **find_options, &block)
     end
 
     private
