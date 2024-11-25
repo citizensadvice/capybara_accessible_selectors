@@ -11,6 +11,9 @@ group :test, :development do
   gem "rspec"
   gem "selenium-webdriver"
   gem "sinatra"
+
+  # This gets pulled in by the style guide.  As we still support Ruby 3.1 we can't go to 8
+  gem "activesupport", "~> 7.2", require: false
 end
 
 gemspec

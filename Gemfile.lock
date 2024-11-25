@@ -18,7 +18,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (8.0.0)
+    activesupport (7.2.2)
       base64
       benchmark (>= 0.3)
       bigdecimal
@@ -30,7 +30,6 @@ GEM
       minitest (>= 5.1)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
-      uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.2)
@@ -168,7 +167,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
-    uri (1.0.2)
     websocket (1.2.11)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -178,6 +176,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport (~> 7.2)
   capybara_accessible_selectors!
   citizens-advice-style!
   debug
