@@ -284,13 +284,13 @@ describe "Disclosure" do
 
     describe "#select_disclosure" do
       it "opens and returns a closed disclosure" do
-        disclosure = find(:id, "disclosure-button-content", visible: false)
+        disclosure = find_by_id("disclosure-button-content", visible: false)
         expect(select_disclosure("Disclosure button")).to eq disclosure
         expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
       end
 
       it "returns an open disclosure" do
-        disclosure = find(:id, "disclosure-button-content", visible: false)
+        disclosure = find_by_id("disclosure-button-content", visible: false)
         select_disclosure("Disclosure button")
         expect(select_disclosure("Disclosure button")).to eq disclosure
         expect(page).to have_selector :disclosure, "Disclosure button", expanded: true
@@ -335,7 +335,7 @@ describe "Disclosure" do
       end
 
       it "opens and returns a closed disclosure using the accessible name filter" do
-        disclosure = find(:id, "disclosure-button-content", visible: false)
+        disclosure = find_by_id("disclosure-button-content", visible: false)
         expect(select_disclosure(accessible_name: "Disclosure button")).to eq disclosure
         expect(page).to have_selector :disclosure, accessible_name: "Disclosure button", expanded: true
       end
@@ -444,13 +444,13 @@ describe "Disclosure" do
 
     describe "#select_disclosure" do
       it "opens and returns a closed disclosure" do
-        disclosure = find(:id, "disclosure-span-content", visible: false)
+        disclosure = find_by_id("disclosure-span-content", visible: false)
         expect(select_disclosure("Disclosure span button")).to eq disclosure
         expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
       end
 
       it "returns an open disclosure" do
-        disclosure = find(:id, "disclosure-span-content", visible: false)
+        disclosure = find_by_id("disclosure-span-content", visible: false)
         select_disclosure("Disclosure span button")
         expect(select_disclosure("Disclosure span button")).to eq disclosure
         expect(page).to have_selector :disclosure, "Disclosure span button", expanded: true
@@ -495,7 +495,7 @@ describe "Disclosure" do
       end
 
       it "opens and returns a closed disclosure using the accessible name filter" do
-        disclosure = find(:id, "disclosure-span-content", visible: false)
+        disclosure = find_by_id("disclosure-span-content", visible: false)
         expect(select_disclosure(accessible_name: "Disclosure span button")).to eq disclosure
         expect(page).to have_selector :disclosure, accessible_name: "Disclosure span button", expanded: true
       end

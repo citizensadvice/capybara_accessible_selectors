@@ -6,12 +6,12 @@ describe "rich text" do
   context "when inline" do
     context "with aria-label" do
       it "finds a rich text area" do
-        rich_text = page.find(:id, "rt-aria-label")
+        rich_text = page.find_by_id("rt-aria-label")
         expect(page.find(:rich_text, "with label")).to eq rich_text
       end
 
       it "finds a rich text area with empty [contenteditable]" do
-        rich_text = page.find(:id, "rt-empty-contenteditable")
+        rich_text = page.find_by_id("rt-empty-contenteditable")
         expect(page.find(:rich_text, "empty [contenteditable]")).to eq rich_text
       end
 
@@ -24,12 +24,12 @@ describe "rich text" do
       end
 
       it "finds a rich text area with a partial label" do
-        rich_text = page.find(:id, "rt-aria-label")
+        rich_text = page.find_by_id("rt-aria-label")
         expect(page.find(:rich_text, "with la")).to eq rich_text
       end
 
       it "finds a rich text area with exact and the exact text" do
-        rich_text = page.find(:id, "rt-aria-label")
+        rich_text = page.find_by_id("rt-aria-label")
         expect(page.find(:rich_text, "with label", exact: true)).to eq rich_text
       end
 
@@ -40,7 +40,7 @@ describe "rich text" do
       end
 
       it "matches a rich text area" do
-        rich_text = page.find(:id, "rt-aria-label")
+        rich_text = page.find_by_id("rt-aria-label")
         expect(rich_text).to match_selector :rich_text
       end
 
@@ -77,17 +77,17 @@ describe "rich text" do
 
     context "with aria-labelledby" do
       it "finds a rich text area" do
-        rich_text = page.find(:id, "rt-aria-labelledby")
+        rich_text = page.find_by_id("rt-aria-labelledby")
         expect(page.find(:rich_text, "with aria-labelledby")).to eq rich_text
       end
 
       it "finds a rich text area with a partial label" do
-        rich_text = page.find(:id, "rt-aria-labelledby")
+        rich_text = page.find_by_id("rt-aria-labelledby")
         expect(page.find(:rich_text, "with aria-")).to eq rich_text
       end
 
       it "finds a rich text area with exact and the exact text" do
-        rich_text = page.find(:id, "rt-aria-labelledby")
+        rich_text = page.find_by_id("rt-aria-labelledby")
         expect(page.find(:rich_text, "with aria-labelledby", exact: true)).to eq rich_text
       end
 
@@ -98,7 +98,7 @@ describe "rich text" do
       end
 
       it "matches a rich text area" do
-        rich_text = page.find(:id, "rt-aria-labelledby")
+        rich_text = page.find_by_id("rt-aria-labelledby")
         expect(rich_text).to match_selector :rich_text
       end
 
@@ -136,17 +136,17 @@ describe "rich text" do
 
   context "with an iframe" do
     it "finds a rich text area" do
-      rich_text = page.find(:id, "rt-iframe")
+      rich_text = page.find_by_id("rt-iframe")
       expect(page.find(:rich_text, "editable iframe")).to eq rich_text
     end
 
     it "finds a rich text area with a partial label" do
-      rich_text = page.find(:id, "rt-iframe")
+      rich_text = page.find_by_id("rt-iframe")
       expect(page.find(:rich_text, "editable i")).to eq rich_text
     end
 
     it "matches a rich text area" do
-      rich_text = page.find(:id, "rt-iframe")
+      rich_text = page.find_by_id("rt-iframe")
       expect(rich_text).to match_selector :rich_text
     end
 

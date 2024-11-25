@@ -8,7 +8,7 @@ describe "role" do
       <div>Not a role</div>
     HTML
 
-    expect(find(:element, "div", role: "tablist")).to eq find(:id, "test")
+    expect(find(:element, "div", role: "tablist")).to eq find_by_id("test")
   end
 
   it "selects an element with a matching implicit role" do
@@ -17,7 +17,7 @@ describe "role" do
       <input role="searchbox">
     HTML
 
-    expect(find(:element, "input", role: "textbox")).to eq find(:id, "test")
+    expect(find(:element, "input", role: "textbox")).to eq find_by_id("test")
   end
 
   it "selects an element with no role" do
@@ -27,7 +27,7 @@ describe "role" do
       <div id="test">Not a role</div>
     HTML
 
-    expect(find(:element, "div", role: nil)).to eq find(:id, "test")
+    expect(find(:element, "div", role: nil)).to eq find_by_id("test")
   end
 
   it "provides a friendly error for role" do
