@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*.rb"]
   s.authors = ["Daniel Lewis", "Sean Doyle"]
   s.license = "ISC"
-  s.required_ruby_version = ">= 3.1"
+  s.required_ruby_version = ">= 3.2"
 
   s.add_dependency "capybara", "~> 3.36"
 

@@ -199,7 +199,7 @@ module CapybaraAccessibleSelectors
     # @yield [Boolean] Should the element be included
     #
     # @return [Capybara::Node::Element] The combo box
-    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &block) # rubocop:disable Metrics/*
+    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &) # rubocop:disable Metrics
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)
@@ -217,7 +217,7 @@ module CapybaraAccessibleSelectors
         input.send_keys(:escape) if has_selector?(:combo_box_list_box, input, wait: 0)
       else
         listbox = find(:combo_box_list_box, input, **wait_options)
-        option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &block)
+        option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &)
         # Some drivers complain about clicking on a tr
         option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
         # Work around occasional Chrome errors

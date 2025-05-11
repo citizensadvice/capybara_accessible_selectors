@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
+
 ## v0.12.0
 
 ### Added

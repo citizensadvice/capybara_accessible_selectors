@@ -64,7 +64,7 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
   expression_filter(:colindex, valid_values: [Integer, String], skip_if: nil) do |xpath, value|
     row_ancestor = XPath.ancestor[(XPath.attr(:role) == "row") | (XPath.local_name == "tr")]
     colindex = row_ancestor & (XPath.attr(:"aria-colindex") == value.to_s)
-    position = row_ancestor & (!XPath.attr(:"aria-colindex")) & (XPath.position == value.to_i)
+    position = row_ancestor & !XPath.attr(:"aria-colindex") & (XPath.position == value.to_i)
 
     xpath[colindex | position]
   end
