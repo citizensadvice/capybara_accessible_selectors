@@ -83,6 +83,20 @@ RSpec.describe Capybara::Node::Element, "#role" do
     expect(find(:element, "summary").role).to be_nil
   end
 
+  it "returns math as math (Chromium only)" do
+    render <<~HTML
+      <math data-testid="target">
+        <mfrac>
+          <mn>1</mn>
+          <msqrt>
+            <mn>2</mn>
+          </msqrt>
+        </mfrac>
+      </math>
+    HTML
+    expect(find(:element, "math").role).to eq "math"
+  end
+
   it "ignores role removal on focusable elements" do
     render <<~HTML
       <input aria-label="foo" role="none">

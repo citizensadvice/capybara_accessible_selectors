@@ -17,6 +17,14 @@ Selenium::WebDriver.logger.ignore(:clear_local_storage, :clear_session_storage)
 
 set :public_folder, "./spec/fixtures"
 
+class Object
+  # Provide a way to enter debug when the calling context is a C function
+  # This is generally the case with selectors
+  def _enter_debug(*args, **kwargs)
+    binding.b # rubocop:disable Lint/Debugger
+  end
+end
+
 module CapybaraAccessibleSelectors
   class TestApplication < Sinatra::Application
     get "/pages/new" do
