@@ -3,6 +3,10 @@
 module CapybaraAccessibleSelectors
   # Based on https://www.w3.org/TR/html-aria/
   module Aria # rubocop:disable Metrics
+    ROLE_SYNONYMS = [
+      %w[img image graphics-document]
+    ].freeze
+
     IMPLICIT_ROLE_SELECTORS = {
       link: [
         XPath.descendant(:a, :area)[XPath.attr(:href)]
@@ -33,7 +37,6 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:del, :s)
       ],
       listbox: [
-        XPath.descendant(:datalist),
         XPath.descendant(:select)[XPath.attr(:multiple) | (XPath.attr(:size) > 1)]
       ],
       term: [
@@ -69,20 +72,17 @@ module CapybaraAccessibleSelectors
       separator: [
         XPath.descendant(:hr)
       ],
-      document: [
-        XPath.descendant(:html)
-      ],
-      img: [
-        XPath.descendant(:img)
-      ],
       image: [
-        XPath.descendant(:img)
+        XPath.descendant(:img),
+        # svg should be "graphics-document" by spec but this is inconsistent across browsers
+        XPath.descendant[XPath.function(:"local-name") == "svg"][XPath.function(:"namespace-uri") == "http://www.w3.org/2000/svg"]
       ],
       textbox: [
-        XPath.descendant(:input)[[
-          !XPath.attr(:type),
-          *%w[text email tel url].map { XPath.attr(:type) == _1 }
-        ].inject(:|)][!XPath.attr(:list)],
+        XPath.descendant(:input)[
+          !XPath.attr(:type) |
+          [*%w[button checkbox color date datetime-local file hidden image month
+               number password radio range reset search submit time week].map { XPath.attr(:type) != _1 }].inject(:|)
+        ][!XPath.attr(:list)],
         XPath.descendant(:textarea)
       ],
       searchbox: [
@@ -102,8 +102,9 @@ module CapybaraAccessibleSelectors
       ],
       combobox: [
         XPath.descendant(:input)[[
-          !XPath.attr(:type),
-          *%w[text email tel url search].map { XPath.attr(:type) == _1 }
+          !XPath.attr(:type) |
+          [*%w[button checkbox color date datetime-local file hidden image month
+               number password radio range reset submit time week].map { XPath.attr(:type) != _1 }].inject(:|)
         ].inject(:|)][XPath.attr(:list)],
         XPath.descendant(:select)[!XPath.attr(:multiple)][!XPath.attr(:size) | (XPath.attr(:size) <= 1)]
       ],
@@ -130,7 +131,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:ul, :ol, :menu)
       ],
       option: [
-        XPath.descendant(:option)[XPath.ancestor(:select, :datalist)]
+        XPath.descendant(:option)[XPath.ancestor(:select)]
       ],
       status: [
         XPath.descendant(:output)
@@ -164,6 +165,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:table)
       ],
       rowgroup: [
+        # tbody is to spec but not recognised by any browsers
         XPath.descendant(:thead, :tbody, :tfoot)
       ],
       cell: [

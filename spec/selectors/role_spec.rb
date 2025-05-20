@@ -92,7 +92,19 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit role on custom element"
+    it "finds implicit role on custom element" do
+      visit "/element_internals.html"
+
+      expect(page.find(:role, :textbox, custom_elements: "custom-role")).to eq page.find(:css, "custom-role[data-role=textbox]")
+    end
+
+    it "finds implicit role on custom element with an array" do
+      visit "/element_internals.html"
+
+      expect(
+        page.find(:role, :button, custom_elements: %w[custom-role custom-other])
+      ).to eq page.find(:css, "custom-role[data-role=button]")
+    end
   end
 
   describe "implicit roles" do
@@ -183,18 +195,6 @@ describe "role selector" do
       expect(page.find(:role, :code)).to eq target
     end
 
-    it "finds implicit listbox on a datalist", skip: "datalist is not exposed in accessibility tree" do
-      render <<~HTML
-        <input list="list">
-        <datalist id="list" data-testid="target">
-          <option>One</option>
-          <option>Two</option>
-        </datalist>
-      HTML
-
-      expect(page.find(:role, :listbox, visible: :all)).to eq target
-    end
-
     it "finds implicit deletion on a del" do
       render <<~HTML
         <del data-testid="target">Foo</del>
@@ -265,37 +265,44 @@ describe "role selector" do
       expect(page.find(:role, :contentinfo)).to eq target
     end
 
-    it "finds implicit contentinfo on a footer that is a child of a sectioning element", skip: "Find cross browser test" do
+    it "does not find implicit contentinfo on a footer that is a child of a native sectioning element" do
       render <<~HTML
         <article>
-          <footer>Foo</footer>
+          <footer>article</footer>
         </article>
         <aside>
-          <footer>Foo</footer>
+          <footer>aside</footer>
         </aside>
         <main>
-          <footer>Foo</footer>
+          <footer>main</footer>
         </main>
         <nav>
-          <footer>Foo</footer>
+          <footer>nav</footer>
         </nav>
         <section>
-          <footer>Foo</footer>
+          <footer>section</footer>
         </section>
+      HTML
+
+      expect(page).to have_no_selector :role, :contentinfo
+    end
+
+    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element", skip: "not implemented in browsers" do
+      render <<~HTML
         <div role="article">
-          <footer>Foo</footer>
+          <footer>role article</footer>
         </div>
         <div role="complementary">
-          <footer>Foo</footer>
+          <footer>role complementary</footer>
         </div>
         <div role="main">
-          <footer>Foo</footer>
+          <footer>role main</footer>
         </div>
         <div role="navigation">
-          <footer>Foo</footer>
+          <footer>role navigation</footer>
         </div>
         <div role="region">
-          <footer>Foo</footer>
+          <footer>role region</footer>
         </div>
       HTML
 
@@ -366,41 +373,48 @@ describe "role selector" do
       expect(page.find(:role, :banner)).to eq target
     end
 
-    it "finds implicit banner on a header that is a child of a sectioning element", skip: "Find cross browser test" do
+    it "does not find implicit banner on a header that is a child of a native sectioning element" do
       render <<~HTML
         <article>
-          <header>Foo</header>
+          <header>article</header>
         </article>
         <aside>
-          <header>Foo</header>
+          <header>aside</header>
         </aside>
         <main>
-          <header>Foo</header>
+          <header>main</header>
         </main>
         <nav>
-          <header>Foo</header>
+          <header>nav</header>
         </nav>
         <section>
-          <header>Foo</header>
+          <header>section</header>
         </section>
+      HTML
+
+      expect(page).to have_no_selector :role, :banner
+    end
+
+    it "does not find implicit banner on a header that is a child of a aria sectioning element", skip: "not implemented in browsers" do
+      render <<~HTML
         <div role="article">
-          <header>Foo</header>
+          <header>role article</header>
         </div>
         <div role="complementary">
-          <header>Foo</header>
+          <header>role complementary</header>
         </div>
         <div role="main">
-          <header>Foo</header>
+          <header>role main</header>
         </div>
         <div role="navigation">
-          <header>Foo</header>
+          <header>role navigation</header>
         </div>
         <div role="region">
-          <header>Foo</header>
+          <header>role region</header>
         </div>
       HTML
 
-      expect(page).to have_no_selector :role, :contentinfo
+      expect(page).to have_no_selector :role, :banner
     end
 
     it "finds implicit group on a hgroup" do
@@ -422,17 +436,9 @@ describe "role selector" do
       expect(page.find(:role, :separator)).to eq target
     end
 
-    it "finds implicit document on a html", skip: "document is not returned on the html role" do
-      render <<~HTML
-        <p>Foo</p>
-      HTML
-
-      expect(page.find(:role, :document)).to eq page.find(:css, "html")
-    end
-
     it "finds implicit img on an img" do
       render <<~HTML
-        <img data-testid="target" width="10" height="10" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+        <img data-testid="target" width="10" height="10" alt="foo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
       HTML
 
       expect(page.find(:role, :img)).to eq target
@@ -448,7 +454,7 @@ describe "role selector" do
 
     it "finds implicit image on an img" do
       render <<~HTML
-        <img data-testid="target" width="10" height="10" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+        <img data-testid="target" width="10" height="10" alt="foo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
       HTML
 
       expect(page.find(:role, :image)).to eq target
@@ -482,7 +488,7 @@ describe "role selector" do
       expect(page.find(:role, :combobox)).to eq target
     end
 
-    it "finds implicit textbox on an input with an invalid type", skip: "fix code" do
+    it "finds implicit textbox on an input with an invalid type" do
       render <<~HTML
         <input data-testid="target" type="foo" aria-label="foo">
       HTML
@@ -490,7 +496,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input with an invalid type and a list", skip: "fix code" do
+    it "finds implicit combobox on an input with an invalid type and a list" do
       render <<~HTML
         <input data-testid="target" list="list" type="foo" aria-label="foo">
         <datalist id="list">
@@ -812,16 +818,6 @@ describe "role selector" do
       expect(page.find(:role, :option)).to eq target
     end
 
-    it "finds implicit option on an option in a datalist", skip: "datalist is not part of the accessibility tree" do
-      render <<~HTML
-        <datalist>
-          <option data-testid="target">Foo</option>
-        </datalist>
-      HTML
-
-      expect(page.find(:role, :option)).to eq target
-    end
-
     it "finds implicit option on an option in a select and optgroup" do
       render <<~HTML
         <select>
@@ -978,12 +974,28 @@ describe "role selector" do
       expect(page.find(:role, :superscript)).to eq target
     end
 
-    it "finds implicit graphics-document on a svg", skip: "seems to be image" do
+    it "finds implicit graphics-document on a svg" do
+      render <<~HTML
+        <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
+      HTML
+
+      expect(page.find(:role, "graphics-document")).to eq target
+    end
+
+    it "finds implicit image on a svg" do
+      render <<~HTML
+        <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
+      HTML
+
+      expect(page.find(:role, :image)).to eq target
+    end
+
+    it "finds implicit img on a svg" do
       render <<~HTML
         <svg data-testid="target"><rect width="100%" height="100%" fill="red" /></svg>
       HTML
 
-      expect(page.find(:role, "graphics-document")).to eq target
+      expect(page.find(:role, :img)).to eq target
     end
 
     it "finds implicit table on a table" do
@@ -1006,28 +1018,6 @@ describe "role selector" do
       HTML
 
       expect(page.find(:role, :table)).to eq target
-    end
-
-    it "finds implicit rowgroup on a tbody", skip: "actually not exposed" do
-      render <<~HTML
-        <table>
-          <caption>Foo</caption>
-          <thead>
-            <tr>
-              <th>One</th>
-              <th>Two</th>
-            </tr>
-          </thead>
-          <tbody data-testid="target">
-            <tr>
-              <td>One</td>
-              <td>Two</td>
-            </tr>
-          </tbody>
-        </table>
-      HTML
-
-      expect(page.find(:role, :rowgroup)).to eq target
     end
 
     it "finds implicit cell on a td" do
@@ -1314,10 +1304,14 @@ describe "role selector" do
             <th>One</th>
             <th>Two</th>
           </tr>
+          <tr>
+            <td>One</td>
+            <td>Two</td>
+          </tr>
         </table>
       HTML
 
-      expect(page.find(:role, :row)).to eq target
+      expect(page.find(:role, :row, match: :first)).to eq target
     end
 
     it "finds implicit list on a ul" do

@@ -22,8 +22,9 @@ Capybara.add_selector :role do
 
   def expand_roles(locator)
     roles = Array(locator).map(&:to_s)
-    roles << "image" if roles.include?("img")
-    roles << "img" if roles.include?("image")
+    CapybaraAccessibleSelectors::Aria::ROLE_SYNONYMS.each do |s|
+      roles.push(*s) if s.intersect?(roles)
+    end
     roles.uniq
   end
 
