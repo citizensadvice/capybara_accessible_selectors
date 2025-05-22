@@ -4,7 +4,7 @@ module CapybaraAccessibleSelectors
   # Based on https://www.w3.org/TR/html-aria/
   module Aria # rubocop:disable Metrics
     ROLE_SYNONYMS = [
-      %w[img image graphics-document]
+      %w[img image]
     ].freeze
 
     IMPLICIT_ROLE_SELECTORS = {
@@ -73,9 +73,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:hr)
       ],
       image: [
-        XPath.descendant(:img),
-        # svg should be "graphics-document" by spec but this is inconsistent across browsers
-        XPath.descendant[XPath.function(:"local-name") == "svg"][XPath.function(:"namespace-uri") == "http://www.w3.org/2000/svg"]
+        XPath.descendant(:img)
       ],
       textbox: [
         XPath.descendant(:input)[
@@ -115,7 +113,8 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:main)
       ],
       math: [
-        # Math is on a different namespace
+        XPath.descendant(:math),
+        # Math is on a different namespace in browsers
         XPath.descendant[XPath.function(:"local-name") == "math"][XPath.function(:"namespace-uri") == "http://www.w3.org/1998/Math/MathML"]
       ],
       meter: [
@@ -158,7 +157,8 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:sup)
       ],
       "graphics-document": [
-        # svg is on a different namespace
+        XPath.descendant[:svg],
+        # svg is on a different namespace in browsers
         XPath.descendant[XPath.function(:"local-name") == "svg"][XPath.function(:"namespace-uri") == "http://www.w3.org/2000/svg"]
       ],
       table: [

@@ -65,19 +65,46 @@ Capybara.register_driver(:edge_headless) do |app|
   options = Selenium::WebDriver::Edge::Options.new(args: ["--headless"])
   Capybara::Selenium::Driver.new(app, browser: :edge, options:)
 end
+Capybara.register_driver(:chrome_canary) do |app|
+  options = Selenium::WebDriver::Chrome::Options.new(
+    binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
+  )
+  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+end
+Capybara.register_driver(:chrome_canary_headless) do |app|
+  options = Selenium::WebDriver::Chrome::Options.new(
+    binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
+    args: ["--headless"]
+  )
+  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+end
+Capybara.register_driver(:edge_headless) do |app|
+  options = Selenium::WebDriver::Edge::Options.new(args: ["--headless"])
+  Capybara::Selenium::Driver.new(app, browser: :edge, options:)
+end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
-    # Disallow should syntax
     expectations.syntax = :expect
     expectations.max_formatted_output_length = 1000
   end
 
   config.define_derived_metadata do |metadata|
     metadata[:type] = :feature
+  end
+
+  config.before do |example|
+    next if ENV["IGNORE_DRIVER_SKIPS"]
+
+    skip_driver = Array(example.metadata[:skip_driver])
+    next unless skip_driver.include?(:all) || skip_driver.include?(Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym)
+
+    skip "not compatible with current driver"
   end
 
   config.include(Module.new do

@@ -34,14 +34,7 @@ module CapybaraAccessibleSelectors
     end
   end
 
-  module RackTestNodeExtensions
-    def role
-      native[:role]
-    end
-  end
-
   ::Capybara::Driver::Node.include DriverNodeExtensions
   ::Capybara::Node::Element.include NodeElementExtensions
   ::Capybara::Selenium::Node.include SeleniumNodeExtensions
-  ::Capybara::RackTest::Node.include RackTestNodeExtensions
 end

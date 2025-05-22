@@ -17,7 +17,7 @@ Capybara.add_selector :role do
   rescue NotImplementedError
     # If not implemented just go with the simple resolution
     # using the first role in the list
-    !node[:role] || expand_roles.include?(node[:role].strip.split(/\s/).first)
+    !node[:role] || expand_roles(locator).include?(node[:role].to_s.strip.split(/\s/).first)
   end
 
   def expand_roles(locator)

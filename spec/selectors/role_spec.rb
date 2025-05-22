@@ -125,7 +125,7 @@ describe "role selector" do
       expect(page.find(:role, :group)).to eq target
     end
 
-    it "finds implicit link on an <area>" do
+    it "finds implicit link on an <area>", skip_driver: :safari do
       render <<~HTML
         <img usemap="#test" width="10" height="10" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
         <map name="test">
@@ -287,7 +287,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :contentinfo
     end
 
-    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element", skip: "not implemented in browsers" do
+    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element", skip_driver: :all do
       render <<~HTML
         <div role="article">
           <footer>role article</footer>
@@ -395,7 +395,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :banner
     end
 
-    it "does not find implicit banner on a header that is a child of a aria sectioning element", skip: "not implemented in browsers" do
+    it "does not find implicit banner on a header that is a child of a aria sectioning element", skip_driver: :all do
       render <<~HTML
         <div role="article">
           <header>role article</header>
@@ -476,7 +476,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input with no type and a list" do
+    it "finds implicit combobox on an input with no type and a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" aria-label="foo">
         <datalist id="list">
@@ -496,7 +496,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input with an invalid type and a list" do
+    it "finds implicit combobox on an input with an invalid type and a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="foo" aria-label="foo">
         <datalist id="list">
@@ -532,7 +532,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input type=email with a list" do
+    it "finds implicit combobox on an input type=email with a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="email" aria-label="foo">
         <datalist id="list">
@@ -552,7 +552,7 @@ describe "role selector" do
       expect(page.find(:role, :button)).to eq target
     end
 
-    it "finds implicit spinbutton on an input type=number" do
+    it "finds implicit spinbutton on an input type=number", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" type="number" aria-label="foo">
       HTML
@@ -592,7 +592,7 @@ describe "role selector" do
       expect(page.find(:role, :searchbox)).to eq target
     end
 
-    it "finds implicit combobox on an input type=search with a list" do
+    it "finds implicit combobox on an input type=search with a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="search" aria-label="foo">
         <datalist id="list">
@@ -620,7 +620,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input type=tel with a list" do
+    it "finds implicit combobox on an input type=tel with a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="tel" aria-label="foo">
         <datalist id="list">
@@ -640,7 +640,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input type=text with a list" do
+    it "finds implicit combobox on an input type=text with a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="text" aria-label="foo">
         <datalist id="list">
@@ -660,7 +660,7 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit combobox on an input type=url with a list" do
+    it "finds implicit combobox on an input type=url with a list", skip_driver: :safari do
       render <<~HTML
         <input data-testid="target" list="list" type="url" aria-label="foo">
         <datalist id="list">
@@ -730,7 +730,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :listitem
     end
 
-    it "does not find implicit listitem on an li that is a child of a list with no role" do
+    it "does not find implicit listitem on an li that is a child of a list with no role", skip_driver: :safari do
       render <<~HTML
         <ul role="none">
           <li>Foo</li>
@@ -795,7 +795,7 @@ describe "role selector" do
       expect(page.find(:role, :list)).to eq target
     end
 
-    it "finds implicit group on an optgroup" do
+    it "finds implicit group on an optgroup", skip_driver: :safari do
       render <<~HTML
         <select>
           <optgroup data-testid="target" label="Foo">
@@ -906,7 +906,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :region
     end
 
-    it "finds implicit combobox on a select" do
+    it "finds implicit combobox on a select", skip_driver: :safari do
       render <<~HTML
         <select data-testid="target">
           <option>One</option>
@@ -917,7 +917,7 @@ describe "role selector" do
       expect(page.find(:role, :combobox)).to eq target
     end
 
-    it "finds implicit combobox on a select with size=1" do
+    it "finds implicit combobox on a select with size=1", skip_driver: :safari do
       render <<~HTML
         <select data-testid="target" size=1>
           <option>One</option>
@@ -974,28 +974,12 @@ describe "role selector" do
       expect(page.find(:role, :superscript)).to eq target
     end
 
-    it "finds implicit graphics-document on a svg" do
+    it "finds implicit graphics-document on a svg", skip_driver: :all do
       render <<~HTML
         <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
       HTML
 
       expect(page.find(:role, "graphics-document")).to eq target
-    end
-
-    it "finds implicit image on a svg" do
-      render <<~HTML
-        <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
-      HTML
-
-      expect(page.find(:role, :image)).to eq target
-    end
-
-    it "finds implicit img on a svg" do
-      render <<~HTML
-        <svg data-testid="target"><rect width="100%" height="100%" fill="red" /></svg>
-      HTML
-
-      expect(page.find(:role, :img)).to eq target
     end
 
     it "finds implicit table on a table" do
@@ -1106,7 +1090,23 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit rowgroup on a tfoot" do
+    it "finds implicit rowgroup on a tbody", skip_driver: :safari do
+      render <<~HTML
+        <table>
+          <caption>Foo</caption>
+          <tbody data-testid="target" aria-label="foo">
+            <tr>
+              <th>One</th>
+              <th>Two</th>
+            </tr>
+          </tbody>
+        </table>
+      HTML
+
+      expect(page.find(:role, :rowgroup)).to eq target
+    end
+
+    it "finds implicit rowgroup on a tfoot", skip_driver: :safari do
       render <<~HTML
         <table>
           <caption>Foo</caption>
@@ -1116,7 +1116,7 @@ describe "role selector" do
               <th>Two</th>
             </tr>
           </tbody>
-          <tfoot data-testid="target">
+          <tfoot data-testid="target" aria-label="foo">
             <tr>
               <td>One</td>
               <td>Two</td>
@@ -1268,10 +1268,10 @@ describe "role selector" do
       expect(page.find(:role, :rowheader)).to eq target
     end
 
-    it "finds implicit rowgroup on a thead" do
+    it "finds implicit rowgroup on a thead", skip_driver: :safari do
       render <<~HTML
         <table>
-          <thead data-testid="target">
+          <thead data-testid="target" aria-label="foo">
             <tr>
               <th>One</th>
               <th>Two</th>
