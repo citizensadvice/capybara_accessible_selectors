@@ -208,6 +208,9 @@ find :field, required: true
 
 #### `role` [String, Symbol, nil]
 
+> [!WARNING]
+> Not supported by the `:rack_test` driver
+
 Added to all selectors
 
 Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles), or with no role if `nil` is supplied.
@@ -218,8 +221,6 @@ exposed to users.
 This uses the Selenium driver `aria_role` method which uses the role calculated by the browser taking
 into account [implicit role mappings](https://www.w3.org/TR/html-aria/). The results for implicit roles are
 not consistent across all browsers, but are good for more common use cases.
-
-Rack test will currently only use the value of the `role` attribute and does not return implicit role values.
 
 This method must request the role from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.
@@ -730,6 +731,44 @@ Also see:
 
 [`contenteditable` attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable
 [`textbox` role]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/textbox_role
+
+#### `role`
+
+Finds element by their aria role.
+
+This will find elements by both their implicit and explict roles.
+
+- `locator` [String, Symbol, String[], Symbol[]] a role or array of roles
+- filters:
+  - `custom_elements` [String, String[]] custom elements to include in the search
+
+```html
+<button>Press me</button>
+```
+
+```ruby
+expect(page).to have_selector :role, :button
+```
+
+The selector will try to match the [ARIA in HTML spec](https://www.w3.org/TR/html-aria/)
+however different drivers can return slightly different roles. For example Safari
+currently returns "button" instead of "combobox" for a `<select>`.
+
+You can work around this by providing a list of acceptable roles.
+
+```ruby
+expect(page).to have_selector :role, %i[combobox button]
+```
+
+If you use [`ElementInternals`](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals)
+on custom elements to set the aria role, you will need to tell the the selector to include
+these elements in the search. Use the `custom_elements` filter for this.
+
+```ruby
+expect(page).to have_selector :role, :textbox, custom_elements: "custom-textbox"
+```
+
+The `:rack_test` driver is only partly supported and is not spec compliant.
 
 #### `section`
 
