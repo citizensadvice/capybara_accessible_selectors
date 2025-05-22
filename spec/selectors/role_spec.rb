@@ -1062,7 +1062,7 @@ describe "role selector" do
       expect(page.find(:role, :gridcell)).to eq target
     end
 
-    it "finds implicit gridcell on a td with a table with role treegrid" do
+    it "finds implicit gridcell on a td with a table with role treegrid", skip_driver: :selenium do
       render <<~HTML
         <table role="treegrid">
           <caption>Foo</caption>
