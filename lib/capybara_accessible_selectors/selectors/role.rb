@@ -38,7 +38,7 @@ module CapybaraAccessibleSelectors
     # @param [String|String[]] role Roles to find
     # @param [Hash] options Finder options
     def within_role(...)
-      within(:main, ...)
+      within(:role, ...)
     end
   end
 end

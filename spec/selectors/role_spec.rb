@@ -1322,4 +1322,16 @@ describe "role selector" do
       expect(page.find(:role, :list)).to eq target
     end
   end
+
+  describe "within_role" do
+    it "limits to within a role" do
+      render <<~HTML
+        <dialog data-testid="target" open>Foo</dialog>
+      HTML
+
+      within_role :dialog do
+        expect(page).to have_text "Foo", exact: true
+      end
+    end
+  end
 end
