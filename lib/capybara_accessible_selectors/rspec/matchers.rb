@@ -7,7 +7,7 @@ require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 module Capybara
   module RSpecMatchers
     %i[alert article banner columnheader combo_box contentinfo dialog grid gridcell heading img main
-       menu menuitem modal navigation region row tab_panel tab_button disclosure
+       menu menuitem modal navigation region role row tab_panel tab_button disclosure
        disclosure_button section item].each do |selector|
       define_method :"have_#{selector}" do |locator = nil, **options, &optional_filter_block|
         Matchers::HaveSelector.new(selector, locator, **options, &optional_filter_block)
