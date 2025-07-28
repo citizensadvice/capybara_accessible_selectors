@@ -43,4 +43,5 @@ module CapybaraAccessibleSelectors
   ::Capybara::Node::Element.include NodeElementExtensions
   ::Capybara::Selenium::Node.include SeleniumNodeExtensions
   ::Capybara::RackTest::Node.include RackTestNodeExtensions
+  ::Capybara::Node::Simple.include RackTestNodeExtensions
 end
