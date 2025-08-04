@@ -3,6 +3,9 @@
 ## Unreleased
 
 - Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
+- Added role selector to find elements by their implicit or explicit aria role
+- BREAKING CHANGE: the `role` filter and `node.role` computed value will new raise
+  `NotImplementedError` in the `:rack_test` driver.
 
 ## v0.12.0
 
