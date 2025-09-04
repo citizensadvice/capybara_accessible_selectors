@@ -6,13 +6,24 @@ Capybara.add_selector(:disclosure) do
   end
 
   xpath do |name = nil, **|
-    button = aria_or_real_button
-    button &= XPath.string.n.is(name.to_s) if name
-    aria = XPath.descendant[XPath.attr(:id) == XPath.anywhere[button][XPath.attr(:"aria-expanded")].attr(:"aria-controls")]
+    # Any summary and details
     summary = XPath.child(:summary)
     summary = summary[XPath.string.n.is(name.to_s)] if name
     details = XPath.descendant(:details)[summary]
-    aria + details
+
+    # Find the ids of buttons with `aria-expanded`
+    button = aria_or_real_button
+    button &= XPath.string.n.is(name.to_s) if name
+    button = XPath.anywhere[button][XPath.attr(:"aria-expanded")][XPath.attr(:"aria-controls")]
+    # Preload the ids in a separate operation as xpath dynamic selectors are SLOW
+    ids = Capybara.page.all(:xpath, button, wait: false).map { _1[:"aria-controls"] }
+
+    if ids.any?
+      aria = XPath.descendant[ids.map { XPath.attr(:id) == _1 }.reduce(:|)]
+      aria + details
+    else
+      details
+    end
   end
 
   expression_filter(:expanded, :boolean) do |xpath, expanded|
