@@ -5,7 +5,7 @@ describe "combo_box selector" do
     visit "/combo_box.html"
   end
 
-  ["aria 1.0", "aria 1.1"].each do |label|
+  ["aria 1.0", "aria 1.1", "aria 1.2"].each do |label|
     context label do
       it "finds a combo box" do
         combo_box = find(:field, label)
