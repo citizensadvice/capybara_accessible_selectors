@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## v0.13.0
 
 - Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
 - Fix xpath query timeout errors when using the disclosure selector with pages with large elements with ids
