@@ -3,7 +3,7 @@
 ## v0.13.0
 
 - Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
-- Fix xpath query timeout errors when using the disclosure selector with pages with large elements with ids
+- Fix xpath query timeout errors when using the disclosure selector with pages with a large number of id attributes
 - Improve how the `select_combo_box_option` waits for the option to show
 
 ## v0.12.0
