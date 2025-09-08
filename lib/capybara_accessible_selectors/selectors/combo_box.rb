@@ -215,7 +215,7 @@ module CapybaraAccessibleSelectors
         # Pressing escape will close an open listbox
         input.send_keys(:escape) if has_selector?(:combo_box_list_box, input, wait: 0)
       else
-        input.synchronize(find_options[:wait] || 0) do
+        input.synchronize(find_options[:wait] == false ? 0 : find_options[:wait]) do
           listbox = find(:combo_box_list_box, input)
           option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &)
           # Some drivers complain about clicking on a tr
