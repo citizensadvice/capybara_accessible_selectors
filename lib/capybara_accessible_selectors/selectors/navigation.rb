@@ -2,7 +2,7 @@
 
 Capybara.add_selector :navigation, locator_type: [String, Symbol] do
   xpath do |*|
-    XPath.descendant[[
+    XPath.descendant_or_self[[
       XPath.local_name == "nav",
       XPath.attr(:role) == "navigation"
     ].reduce(:|)]

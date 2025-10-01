@@ -2,12 +2,12 @@
 
 Capybara.add_selector :contentinfo, locator_type: [String, Symbol] do
   xpath do |*|
-    contentinfo = XPath.descendant[[
-      XPath.local_name == "footer",
-      XPath.attr(:role) == "contentinfo"
-    ].reduce(:|)]
-
-    contentinfo[XPath.parent(:body)]
+    implicit = XPath.self(:footer)[!XPath.ancestor[[
+      *%i[article aside main nav section].map { XPath.self(_1) },
+      *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
+    ].inject(:|)]]
+    explicit = XPath.attr(:role) == "contentinfo"
+    XPath.descendant_or_self[implicit | explicit]
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
