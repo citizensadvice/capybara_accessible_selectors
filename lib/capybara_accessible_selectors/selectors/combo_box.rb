@@ -92,7 +92,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
 
   describe_expression_filters do |expanded: nil, **|
     desc = ""
-    desc += " that is#{expanded ? '' : ' not'} expanded" unless expanded.nil?
+    desc += " that is#{' not' unless expanded} expanded" unless expanded.nil?
     desc
   end
 
@@ -181,7 +181,7 @@ Capybara.add_selector(:list_box_option, locator_type: String) do
   describe_expression_filters do |disabled: nil, **|
     next if disabled.nil?
 
-    " that is #{disabled ? '' : 'not '}disabled"
+    " that is #{'not ' unless disabled}disabled"
   end
 end
 
