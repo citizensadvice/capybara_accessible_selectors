@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO: rename to accessible_description
+# TODO: rename to support https://www.w3.org/TR/html-aam-1.0/#accdesc-computation
+
 Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
   node_filter(:described_by, valid_values: [String, Regexp]) do |node, value|
     next false unless node[:"aria-describedby"]
