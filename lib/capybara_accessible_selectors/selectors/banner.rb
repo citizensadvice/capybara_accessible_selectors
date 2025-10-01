@@ -2,12 +2,12 @@
 
 Capybara.add_selector :banner, locator_type: [String, Symbol] do
   xpath do |*|
-    banner = XPath.descendant[[
-      XPath.local_name == "header",
-      XPath.attr(:role) == "banner"
-    ].reduce(:|)]
-
-    banner[XPath.parent(:body)]
+    implicit = XPath.self(:header)[!XPath.ancestor[[
+      *%i[article aside main nav section].map { XPath.self(_1) },
+      *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
+    ].inject(:|)]]
+    explicit = XPath.attr(:role) == "banner"
+    XPath.descendant_or_self[implicit | explicit]
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|

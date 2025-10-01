@@ -11,6 +11,16 @@ describe "navigation selector" do
         expect(page).to have_selector :navigation, count: 1
       end
 
+      it "finds from self" do
+        render <<~HTML
+          <nav>Content</nav>
+        HTML
+
+        within :css, "nav" do
+          expect(page).to have_selector :navigation, count: 1
+        end
+      end
+
       it "finds based on [aria-label]" do
         render <<~HTML
           <nav aria-label="Nav navigation">Content</nav>
@@ -55,6 +65,16 @@ describe "navigation selector" do
         HTML
 
         expect(page).to have_selector :navigation, count: 1
+      end
+
+      it "finds from self" do
+        render <<~HTML
+          <div role="navigation">Content</div>
+        HTML
+
+        within :css, "[role=navigation]" do
+          expect(page).to have_selector :navigation, count: 1
+        end
       end
 
       it "finds based on [aria-label]" do

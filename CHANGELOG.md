@@ -1,7 +1,11 @@
 # Change log
 
-- Extend `Capybara::Node::Simple` with the `role` attribute to support the
-  `:role` filter
+## Unreleased
+
+- Extend `Capybara::Node::Simple` with the `role` attribute to support the `:role` filter
+- `:main`, `:banner` and `:contentinfo` selectors no longer requires the element to be a direct child of `<body>`
+- `:banner` and `:contentinfo` selectors use rules from [ARIA in HTML](https://w3c.github.io/html-aria/) for implicit matching
+- `:main`, `:banner`, `:contentinfo`, and `:navigation` are now implemented as `descendant_or_self`
 
 ## v0.13.0
 
