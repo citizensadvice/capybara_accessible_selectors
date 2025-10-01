@@ -219,7 +219,7 @@ This uses the Selenium driver `aria_role` method which uses the role calculated 
 into account [implicit role mappings](https://www.w3.org/TR/html-aria/). The results for implicit roles are
 not consistent across all browsers, but are good for more common use cases.
 
-Rack test will currently only use the value of the `role` attribute and does not return implicit role values.
+Assertions made against the output of [Caypbara.string][] or by tests driven by Rack Test will currently only use the value of the `role` attribute and does not return implicit role values.
 
 This method must request the role from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.
@@ -232,6 +232,8 @@ Therefore, using this with a selector that returns a large number of elements wi
 ```ruby
 expect(page).to have_field "A switch input", role: "switch"
 ```
+
+[Capybara.string]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara#string-class_method
 
 #### `validation_error` [String, Regexp, true, false]
 

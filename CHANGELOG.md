@@ -1,5 +1,8 @@
 # Change log
 
+- Extend `Capybara::Node::Simple` with the `role` attribute to support the
+  `:role` filter
+
 ## v0.13.0
 
 - Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
