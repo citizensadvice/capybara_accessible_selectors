@@ -12,7 +12,7 @@ Capybara.add_selector(:item, locator_type: [String, Symbol]) do
   end
 
   describe_expression_filters do |type: nil, **|
-    " within scope#{type.is_a?(Array) ? 's' : ''} #{Array(type).join(', ')}" if type
+    " within scope#{'s' if type.is_a?(Array)} #{Array(type).join(', ')}" if type
   end
 end
 
