@@ -18,8 +18,4 @@ module CapybaraAccessibleSelectors
       native.accessible_name&.strip || ""
     end
   end
-
-  ::Capybara::Driver::Node.include DriverNodeExtensions
-  ::Capybara::Node::Element.include NodeElementExtensions
-  ::Capybara::Selenium::Node.include SeleniumNodeExtensions
 end
