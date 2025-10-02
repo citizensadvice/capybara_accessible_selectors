@@ -38,10 +38,4 @@ module CapybaraAccessibleSelectors
       native[:role]
     end
   end
-
-  ::Capybara::Driver::Node.include DriverNodeExtensions
-  ::Capybara::Node::Element.include NodeElementExtensions
-  ::Capybara::Selenium::Node.include SeleniumNodeExtensions
-  ::Capybara::RackTest::Node.include RackTestNodeExtensions
-  ::Capybara::Node::Simple.include RackTestNodeExtensions
 end

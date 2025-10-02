@@ -15,7 +15,7 @@ module Capybara
           end.empty?
         end
 
-        def does_not_match?(element) # rubocop:disable Name/PredicatePrefix
+        def does_not_match?(element) # rubocop:disable Naming/PredicatePrefix
           @page = element
           @errors = []
           all_invalid_elements.each do |node|
