@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 group :test, :development do
-  gem "citizens-advice-style", git: "https://github.com/citizensadvice/citizens-advice-style-ruby", tag: "v12.0.0"
+  gem "citizens-advice-style", git: "https://github.com/citizensadvice/citizens-advice-style-ruby", tag: "v12.1.0"
   gem "debug"
   gem "puma"
   gem "rack-test"
