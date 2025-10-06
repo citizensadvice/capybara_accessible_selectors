@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/citizensadvice/citizens-advice-style-ruby
-  revision: e5314cb7aef03ed98a318d986aa80202c6fa33c0
-  tag: v12.0.0
+  revision: 893c2f0628a79daeee305a13e8849d8d771be0d4
+  tag: v12.1.0
   specs:
-    citizens-advice-style (12.0.0)
+    citizens-advice-style (12.1.0)
       rubocop (~> 1.73)
       rubocop-capybara (~> 2.22)
       rubocop-factory_bot (~> 2.27)
