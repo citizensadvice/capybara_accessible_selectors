@@ -1,6 +1,8 @@
 # Change log
 
-## Unreleased
+- Add `:test_id` selector
+
+## v0.14.0
 
 - Extend `Capybara::Node::Simple` with the `role` attribute to support the `:role` filter [Sean Doyle]
 - `:main`, `:banner` and `:contentinfo` selectors no longer requires the element to be a direct child of `<body>`

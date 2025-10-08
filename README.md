@@ -793,6 +793,31 @@ Also see:
 - [↓ `select_tab` action](#select_tabname-block)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `test_id
+
+Finds an element by the attribute set in `Capybara.test_id`.
+
+- `locator` [String, Symbol] The id to find
+
+This is equivalent to `find :xpath, '//*[@data-test-id="my_id"]'`
+
+It's only benefit is a clearer intent.
+
+```html
+<div data-test-id="foo"></div>
+```
+
+```ruby
+# Global setup
+Capybara.test_id = "data-test-id"
+
+find(:test_id, "foo")
+# or using the shortcut
+find_by_test_id(:test_id, "foo")
+```
+
+Also see [↓ `find_by_test_id` action](#find_by_test_id-id-options)
+
 ### Actions
 
 #### `fill_in_rich_text(locator, **options)`
@@ -809,6 +834,12 @@ fill_in_rich_text "Diary entry", with: "Today I published a gem"
 ```
 
 Also see [↑ `rich_text` selector](#rich_text)
+
+#### `find_by_test_id(id, **options)`
+
+Shortcut for `find(:test_id, "id")`
+
+Also see [↑ `test_id` selector](#test_id)
 
 #### `select_tab(name, &block)`
 
