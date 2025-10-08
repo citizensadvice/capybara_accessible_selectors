@@ -10,9 +10,9 @@ module CapybaraAccessibleSelectors
       NAME_FROM_CONTENT_ELEMENTS = %w[button tr td th h1 h2 h3 h4 h5 h6 a option].freeze
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
-      def initialize(node, within_labelled_by: false, within_content: false, include_hidden: false, visited: [])
+      def initialize(node, within_label: false, within_content: false, include_hidden: false, visited: [])
         @node = node
-        @within_labelled_by = within_labelled_by
+        @within_label = within_label
         @within_content = within_content
         @include_hidden = include_hidden
         @visited = visited
@@ -22,8 +22,6 @@ module CapybaraAccessibleSelectors
         # https://www.w3.org/TR/accname-1.2/
         return nil if hidden? || accessible_hidden? || @visited.include?(node)
 
-        # Technically some roles are prohibited from being named
-        # but browsers aren't enforcing this and aria-label/aria-labelledby still override these
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
           name_from_aria_label ||
@@ -55,7 +53,7 @@ module CapybaraAccessibleSelectors
       def name_from_aria_labelled_by
         return nil if @within_label
 
-        @node[:"aria-labelledby"].split(/[\t\n\r\f ]+/).filter_map do |name|
+        @node[:"aria-labelledby"].split(R_WHITE_SPACE).filter_map do |name|
           next if name == ""
 
           found = @node.document.at_xpath(XPath.descendant[XPath.attr(:id) == name])
@@ -179,8 +177,8 @@ module CapybaraAccessibleSelectors
         recurse_name(title, within_content: true)
       end
 
-      def recurse_name(node, within_labelled_by: @within_labelled_by, within_content: false)
-        AccessibleName.new(node, within_labelled_by:, within_content:, visited: [*@visited, @node]).accessible_name
+      def recurse_name(node, within_label: @within_label, within_content: false)
+        AccessibleName.new(node, within_label:, within_content:, visited: [*@visited, @node]).accessible_name
       end
 
       def block?
