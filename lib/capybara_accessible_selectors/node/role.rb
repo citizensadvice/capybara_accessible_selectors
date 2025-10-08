@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/nokogiri/accessible_role"
+
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions
     def role

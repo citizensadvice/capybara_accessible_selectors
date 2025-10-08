@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/nokogiri/accessible_role"
+
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleName
@@ -113,8 +115,8 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_content
-        next unless @within_content || name_from_content?
-        next " " if @node.node_name == "br"
+        return unless @within_content || name_from_content?
+        return " " if @node.node_name == "br"
 
         name = @node.children.filter_map do |node|
           next node.text if node.text?
@@ -153,14 +155,14 @@ module CapybaraAccessibleSelectors
 
       def name_from_title
         title = @node.at_xpath(XPath.descendant(:title))
-        next unless title
+        return unless title
 
         recurse_name(title, within_content: true, include_hidden: true)
       end
 
       def name_from_legend
         node = @node.children.find { _1.node_name == "legend" }
-        next unless node
+        return unless node
 
         recurse_name(title, within_content: true)
       end
@@ -170,10 +172,10 @@ module CapybaraAccessibleSelectors
         # but no other non-whitespace flow content descendants, then use the text equivalent
         # computation of the figcaption element's subtree.
         node = @node.ancestors.find { _1.node_name == "figure" }
-        next unless node
+        return unless node
 
         node = @node.children.find { _1.node_name == "figcaption" }
-        next unless node || @node.children.any? { _1 != node && node.text.strip != "" }
+        return unless node || @node.children.any? { _1 != node && node.text.strip != "" }
 
         recurse_name(title, within_content: true)
       end

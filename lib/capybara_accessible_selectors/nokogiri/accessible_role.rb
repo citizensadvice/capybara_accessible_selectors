@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "helpers"
+require "capybara_accessible_selectors/nokogiri/helpers"
+require "capybara_accessible_selectors/nokogiri/hidden"
+require "capybara_accessible_selectors/nokogiri/accessible_name"
 
 module CapybaraAccessibleSelectors
   module Nokogiri
@@ -50,14 +52,14 @@ module CapybaraAccessibleSelectors
       private
 
       def hidden?
-        return true if Hidden.resolve?(node)
-        return true if [node, *node.ancestors("*")].any? { _1["aria-hidden"] == "true" } && !focusable?
+        return true if Hidden.resolve?(@node)
+        return true if [@node, *@node.ancestors("*")].any? { _1["aria-hidden"] == "true" } && !focusable?
 
         false
       end
 
       def role_attribute
-        node[:role].to_s.split(R_WHITE_SPACE).filter_map do |role|
+        @node[:role].to_s.split(R_WHITE_SPACE).find do |role|
           next if role == ""
 
           valid_role?
@@ -68,16 +70,16 @@ module CapybaraAccessibleSelectors
         role = role_attribute
         # if an element is focusable an explicit none/presentation is ignored
         # if an element has global states or properties none/presentation is ignored
-        return nil if PESENTATIONAL_ROLES.include?(role) && (focusable? || global_aria_attribute?)
+        return nil if PRESENTATIONAL_ROLES.include?(role) && (focusable? || global_aria_attribute?)
         return nil if REQUIRES_NAME_FROM_AUTHOR.include?(role) && !accessible_name?(role)
 
         role
       end
 
       def implicit # rubocop:disable Metrics
-        case node.node_name
+        case @node.node_name
         when "a", "area"
-          node.has_attribute?("href") ? "link" : "generic"
+          @node.has_attribute?("href") ? "link" : "generic"
         when "address", "details", "fieldset", "hgroup"
           "group"
         when "abbr", "audio", "base", "br", "canvas", "cite", "col", "colgroup", "dd", "dl", "embed", "figcaption", "head", "iframe",
@@ -93,7 +95,7 @@ module CapybaraAccessibleSelectors
         when "button"
           "button"
         when "caption"
-          element_is?(node.parent, "table") && role_is?(node.parent, "table", "grid", "treegrid") ? "caption" : "generic"
+          element_is?(@node.parent, "table") && role_is?(@node.parent, "table", "grid", "treegrid") ? "caption" : "generic"
         when "code"
           "code"
         when "datalist"
@@ -121,13 +123,13 @@ module CapybaraAccessibleSelectors
         when "html"
           "document"
         when "img"
-          if !node.has_attribute?("alt") || node[:alt] != "" || accessible_name?("img")
+          if !@node.has_attribute?("alt") || @node[:alt] != "" || accessible_name?("img")
             "image"
           else
             "none"
           end
         when "input"
-          case node[:type]
+          case @node[:type]
           when "button", "image", "file", "reset", "submit"
             "button"
           when "checkbox"
@@ -148,7 +150,7 @@ module CapybaraAccessibleSelectors
         when "ins"
           "insertion"
         when "li"
-          element_is?(node.parent, "ul", "ol", "menu") && role_is?(node.parent, "list") ? "listitem" : "generic"
+          element_is?(@node.parent, "ul", "ol", "menu") && role_is?(@node.parent, "list") ? "listitem" : "generic"
         when "main"
           "main"
         when "mark"
@@ -160,7 +162,7 @@ module CapybaraAccessibleSelectors
         when "nav"
           "navigation"
         when "optgroup"
-          element_is?(node.parent, "select") ? "group" : "generic"
+          element_is?(@node.parent, "select") ? "group" : "generic"
         when "option"
           parent_listbox? ? "option" : nil
         when "output"
@@ -174,7 +176,7 @@ module CapybaraAccessibleSelectors
         when "section"
           accessible_name?("section") ? "region" : nil
         when "select"
-          !node.has_attribute?("multiple") && node[:size].to_i <= 1 ? "combobox" : "listbox"
+          !@node.has_attribute?("multiple") && @node[:size].to_i <= 1 ? "combobox" : "listbox"
         when "strong"
           "strong"
         when "sub"
@@ -183,15 +185,15 @@ module CapybaraAccessibleSelectors
           "superscript"
         when "summary"
           # Browsers do not expose these as buttons, although they currently have identical semantics
-          node.parent.node_name == "details" ? "button" : nil
+          @node.parent.node_name == "details" ? "button" : nil
         when "svg"
           "graphics-document"
         when "table"
           "table"
         when "tbody", "tfoot", "thead"
-          element_is?(node.parent, "table") && role_is?(node.parent, "table", "grid", "treegrid") ? "rowgroup" : "generic"
+          element_is?(@node.parent, "table") && role_is?(@node.parent, "table", "grid", "treegrid") ? "rowgroup" : "generic"
         when "td"
-          if element_is?(node.parent, "tr") && role_is?(node.parent, "row")
+          if element_is?(@node.parent, "tr") && role_is?(@node.parent, "row")
             parent_grid? ? "gridcell" : "cell"
           else
             "generic"
@@ -199,13 +201,13 @@ module CapybaraAccessibleSelectors
         when "textarea"
           "textbox"
         when "th"
-          return "generic" unless element_is?(node.parent, "tr") && role_is?(node.parent, "row")
+          return "generic" unless element_is?(@node.parent, "tr") && role_is?(@node.parent, "row")
 
-          if %w[col colgroup].include?(node[:scope])
+          if %w[col colgroup].include?(@node[:scope])
             "columnheader"
-          elsif %w[row rowgroup].include?(node[:scope])
+          elsif %w[row rowgroup].include?(@node[:scope])
             "rowheader"
-          elsif node.parent.at_xpath("./td") # rubocop:disable Lint/DuplicateBranch
+          elsif @node.parent.at_xpath("./td") # rubocop:disable Lint/DuplicateBranch
             "rowheader"
           else # rubocop:disable Lint/DuplicateBranch
             "columnheader"
@@ -213,8 +215,8 @@ module CapybaraAccessibleSelectors
         when "time"
           "time"
         when "tr"
-          if element_is?(node.parent, "tbody", "thead", "tfoot", "table") &&
-             role_is?(node.parent, "table", "grid", "treegrid", "rowgroup")
+          if element_is?(@node.parent, "tbody", "thead", "tfoot", "table") &&
+             role_is?(@node.parent, "table", "grid", "treegrid", "rowgroup")
             "row"
           else
             "generic"
@@ -231,33 +233,33 @@ module CapybaraAccessibleSelectors
       def focusable?
         return @focusable if instance_variable_defined?(:@focusable)
 
-        @focusable = Focusable.resolve?(node)
+        @focusable = Focusable.resolve?(@node)
       end
 
       def global_aria_attribute?
-        GLOBAL_ARIA_ATTRIBUTES.any? { node.has_attribute?("aria-#{_1}") }
+        GLOBAL_ARIA_ATTRIBUTES.any? { @node.has_attribute?("aria-#{_1}") }
       end
 
       def presentational_child?
-        node.ancestors("*").any? { CHILDREN_PRESENTATIONAL.include?(Role.resolve(_1)) }
+        @node.ancestors("*").any? { CHILDREN_PRESENTATIONAL.include?(AccessibleRole.resolve(_1)) }
       end
 
       def accessible_name?(role)
-        !AccessibleName.resolve(node, role: role).nil?
+        !AccessibleName.resolve(@node, role: role).nil?
       end
 
       def sectioning_ancestor?
-        node.ancestors("*").any? do |ancestor|
+        @node.ancestors("*").any? do |ancestor|
           role = Role.resolve(ancestor)
           next true if SECTIONING_ROLES.include?(role)
           next false unless ancestor.node_name == "section"
 
-          role.nil? || role == "region"
+          @role.nil? || role == "region"
         end
       end
 
       def valid_datalist?
-        node[:list].present? && node.document.at_xpath(XPath.descendant(:datalist)[XPath.attribute(:id) == node[:list]].to_s).present?
+        @node[:list].present? && @node.document.at_xpath(XPath.descendant(:datalist)[XPath.attribute(:id) == @node[:list]].to_s).present?
       end
 
       def role_is?(element, *roles)
@@ -269,14 +271,14 @@ module CapybaraAccessibleSelectors
       end
 
       def parent_listbox?
-        listbox = node.parent
+        listbox = @node.parent
         listbox = listbox.parent if listbox.node_name == "optgroup"
         element_is?(listbox, "datalist", "select")
       end
 
       def parent_grid?
-        table = node.parent.parent
-        table = node.parent unless table.node_name == "table"
+        table = @node.parent.parent
+        table = @node.parent unless table.node_name == "table"
         role_is?(table, "grid", "treegrid")
       end
     end
