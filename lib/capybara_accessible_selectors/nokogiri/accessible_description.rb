@@ -7,6 +7,10 @@ module CapybaraAccessibleSelectors
       HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
+      def self.resolve(...)
+        new(...).resolve
+      end
+
       def initialize(node, within_label: false, within_content: false, include_hidden: false, visited: [])
         @node = node
         @within_label = within_label
@@ -15,7 +19,7 @@ module CapybaraAccessibleSelectors
         @visited = visited
       end
 
-      def accessible_description
+      def resolve
         # https://www.w3.org/TR/accname-1.2/
         return nil if hidden? || accessible_hidden? || @visited.include?(node)
 
@@ -80,7 +84,7 @@ module CapybaraAccessibleSelectors
       end
 
       def recurse_description(node, within_label: @within_label, within_content: false)
-        AccessibleDescription.new(node, within_label:, within_content:, visited: [*@visited, @node]).accessible_description
+        AccessibleDescription.resolve(node, within_label:, within_content:, visited: [*@visited, @node])
       end
 
       def block?

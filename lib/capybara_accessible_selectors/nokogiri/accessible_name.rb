@@ -10,15 +10,20 @@ module CapybaraAccessibleSelectors
       NAME_FROM_CONTENT_ELEMENTS = %w[button tr td th h1 h2 h3 h4 h5 h6 a option].freeze
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
-      def initialize(node, within_label: false, within_content: false, include_hidden: false, visited: [])
+      def self.resolve(...)
+        new(...).resolve
+      end
+
+      def initialize(node, role: nil, within_label: false, within_content: false, include_hidden: false, visited: [])
         @node = node
         @within_label = within_label
         @within_content = within_content
         @include_hidden = include_hidden
         @visited = visited
+        @role = role
       end
 
-      def accessible_name # rubocop:disable Metrics
+      def resolve # rubocop:disable Metrics
         # https://www.w3.org/TR/accname-1.2/
         return nil if hidden? || accessible_hidden? || @visited.include?(node)
 
@@ -43,11 +48,7 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_content?
-        # TODO: support space separated list
-        role = striped_value(node[:role])
-        return NAME_FROM_CONTENT_ROLES.include?(role) if role
-
-        NAME_FROM_CONTENT_ELEMENTS.include?(@node.node_name)
+        NAME_FROM_CONTENT_ROLES.include?(role)
       end
 
       def name_from_aria_labelled_by
@@ -65,11 +66,11 @@ module CapybaraAccessibleSelectors
 
       def name_from_embedded_control
         # TODO: support space separated list
-        striped_value(node[:role])
+        nil
       end
 
       def name_from_aria_label
-        striped_value(@node[:"aria-label"])
+        striped_name(@node[:"aria-label"])
       end
 
       def name_from_host_language # rubocop:disable Metrics
@@ -122,7 +123,7 @@ module CapybaraAccessibleSelectors
         end.join
 
         name = " #{name} " if block?
-        striped_value(name)
+        striped_name(name)
       end
 
       def name_from_html_label
@@ -135,19 +136,19 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_tooltip
-        striped_value(@name[:title])
+        striped_name(@name[:title])
       end
 
       def name_from_value
-        striped_value(@name[:value])
+        striped_name(@name[:value])
       end
 
       def name_from_placeholder
-        striped_value(@name[:placeholder]) || striped_value(@node[:"aria-placeholder"])
+        striped_name(@name[:placeholder]) || striped_name(@node[:"aria-placeholder"])
       end
 
       def name_from_label
-        striped_value(@name[:label])
+        striped_name(@name[:label])
       end
 
       def name_from_title
@@ -178,11 +179,15 @@ module CapybaraAccessibleSelectors
       end
 
       def recurse_name(node, within_label: @within_label, within_content: false)
-        AccessibleName.new(node, within_label:, within_content:, visited: [*@visited, @node]).accessible_name
+        AccessibleName.resolve(node, within_label:, within_content:, visited: [*@visited, @node])
       end
 
       def block?
         BLOCK_ELEMENTS.include?(@node.tag_name)
+      end
+
+      def role
+        @role ||= AccessibleRole.resolve(@node)
       end
 
       def hidden_node?(_node)
@@ -201,7 +206,7 @@ module CapybaraAccessibleSelectors
         "text"
       end
 
-      def striped_value(value)
+      def striped_name(value)
         value = value&.strip&.gsub(/\s+/, " ")
         return nil if value == ""
 

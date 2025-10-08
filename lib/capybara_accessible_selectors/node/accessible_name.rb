@@ -18,4 +18,10 @@ module CapybaraAccessibleSelectors
       native.accessible_name&.strip || ""
     end
   end
+
+  module RackTestNodeExtensions
+    def accessible_name
+      Nokogiri::AccessibleName.resolve(native) || ""
+    end
+  end
 end

@@ -35,7 +35,7 @@ module CapybaraAccessibleSelectors
 
   module RackTestNodeExtensions
     def role
-      native[:role]
+      Nokogiri::AccessibleRole.resolve(native)
     end
   end
 end
