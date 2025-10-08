@@ -80,10 +80,6 @@ Capybara.register_driver(:chrome_canary_headless) do |app|
   service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
 end
-Capybara.register_driver(:edge_headless) do |app|
-  options = Selenium::WebDriver::Edge::Options.new(args: ["--headless"])
-  Capybara::Selenium::Driver.new(app, browser: :edge, options:)
-end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }
