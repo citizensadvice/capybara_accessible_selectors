@@ -27,7 +27,7 @@ module CapybaraAccessibleSelectors
 
       def resolve # rubocop:disable Metrics
         # https://www.w3.org/TR/accname-1.2/
-        return nil if hidden? || accessible_hidden? || @visited.include?(node)
+        return nil if hidden? || accessible_hidden? || @visited.include?(@node)
 
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
@@ -40,7 +40,7 @@ module CapybaraAccessibleSelectors
       private
 
       def accessible_hidden?
-        [@node, *@node.ancestors].any? do |node|
+        [@node, *@node.ancestors("*")].any? do |node|
           HIDDEN_ELEMENTS.include?(node.node_name) || node.matches?("[aria-hidden=true],[inert]")
         end
       end
@@ -56,7 +56,7 @@ module CapybaraAccessibleSelectors
       def name_from_aria_labelled_by
         return nil if @within_label
 
-        @node[:"aria-labelledby"].split(R_WHITE_SPACE).filter_map do |name|
+        @node[:"aria-labelledby"].to_s.split(R_WHITE_SPACE).filter_map do |name|
           next if name == ""
 
           found = @node.document.at_xpath(XPath.descendant[XPath.attr(:id) == name])
@@ -171,7 +171,7 @@ module CapybaraAccessibleSelectors
         # the img is a descendant of a figure element with a child figcaption
         # but no other non-whitespace flow content descendants, then use the text equivalent
         # computation of the figcaption element's subtree.
-        node = @node.ancestors.find { _1.node_name == "figure" }
+        node = @node.ancestors("figure").first
         return unless node
 
         node = @node.children.find { _1.node_name == "figcaption" }
@@ -193,8 +193,8 @@ module CapybaraAccessibleSelectors
       end
 
       def hidden_node?(_node)
-        [@node, *@node.ancestors].any? do |node|
-          node.key?(:hidden) || /display:\s?none/.match?(node[:style] || "")
+        [@node, *@node.ancestors("*")].any? do |node|
+          node.has_attribute?("hidden") || /display:\s?none/.match?(node[:style] || "")
         end
       end
 

@@ -3,6 +3,7 @@
 require "capybara_accessible_selectors/nokogiri/helpers"
 require "capybara_accessible_selectors/nokogiri/hidden"
 require "capybara_accessible_selectors/nokogiri/accessible_name"
+require "capybara_accessible_selectors/nokogiri/focusable"
 
 module CapybaraAccessibleSelectors
   module Nokogiri
@@ -62,7 +63,7 @@ module CapybaraAccessibleSelectors
         @node[:role].to_s.split(R_WHITE_SPACE).find do |role|
           next if role == ""
 
-          valid_role?
+          VALID_ROLES.include?(role)
         end
       end
 
@@ -226,10 +227,6 @@ module CapybaraAccessibleSelectors
         end
       end
 
-      def valid_role?(role)
-        VALID_ROLES.include?(role)
-      end
-
       def focusable?
         return @focusable if instance_variable_defined?(:@focusable)
 
@@ -250,7 +247,7 @@ module CapybaraAccessibleSelectors
 
       def sectioning_ancestor?
         @node.ancestors("*").any? do |ancestor|
-          role = Role.resolve(ancestor)
+          role = AccessibleRole.resolve(ancestor)
           next true if SECTIONING_ROLES.include?(role)
           next false unless ancestor.node_name == "section"
 
@@ -259,11 +256,14 @@ module CapybaraAccessibleSelectors
       end
 
       def valid_datalist?
-        @node[:list].present? && @node.document.at_xpath(XPath.descendant(:datalist)[XPath.attribute(:id) == @node[:list]].to_s).present?
+        id = @node[:list].to_s
+        return false if id == ""
+
+        !@node.document.at_xpath(XPath.descendant(:datalist)[XPath.attribute(:id) == id]).nil?
       end
 
       def role_is?(element, *roles)
-        roles.include?(Role.resolve(element))
+        roles.include?(AccessibleRole.resolve(element))
       end
 
       def element_is?(element, *names)
