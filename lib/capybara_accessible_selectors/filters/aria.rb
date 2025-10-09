@@ -5,12 +5,24 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
     prefixed_attributes = nested_attributes.transform_keys { |key| "aria-#{key}" }
 
     case scope
-    when String
-      selectors = prefixed_attributes.map { |key, value| %([#{key}="#{value}"]) }
+    when String # CSS
+      selectors = prefixed_attributes.map do |key, value|
+        if value.nil?
+          %(:not([#{key}]))
+        else
+          %([#{key}="#{Capybara::Selector::CSS.escape(value.to_s)}"])
+        end
+      end
 
       [scope, *selectors].join
-    else
-      expressions = prefixed_attributes.map { |key, value| XPath.attr(key.to_sym) == value.to_s }
+    else # XPath
+      expressions = prefixed_attributes.map do |key, value|
+        if value.nil?
+          !XPath.attr(key.to_sym)
+        else
+          XPath.attr(key.to_sym) == value.to_s
+        end
+      end
 
       scope[expressions.reduce(:&)]
     end

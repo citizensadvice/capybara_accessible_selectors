@@ -83,6 +83,7 @@ end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }
+Capybara.test_id = "data-test-id"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
