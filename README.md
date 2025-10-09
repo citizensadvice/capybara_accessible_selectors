@@ -106,6 +106,9 @@ Filters for an element that declares [ARIA attributes](https://www.w3.org/TR/wai
 
 ```ruby
 expect(page).to have_selector :button, "A pressed button", aria: { controls: "some-state", pressed: true }
+
+# If the value is nil it will select elements with the attribute
+expect(page).to have_selector :button, "A pressed button", aria: { selected: nil }
 ```
 
 #### `current` [String, Symbol]

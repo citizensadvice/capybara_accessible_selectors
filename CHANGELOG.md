@@ -1,6 +1,7 @@
 # Change log
 
 - Add `:test_id` selector
+- The `aria` filter will now filter for not having the attribute if the hash value is `nil`
 
 ## v0.14.0
 
