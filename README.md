@@ -816,7 +816,7 @@ Capybara.test_id = "data-test-id"
 
 find(:test_id, "foo")
 # or using the shortcut
-find_by_test_id(:test_id, "foo")
+find_by_test_id("foo")
 ```
 
 Also see [↓ `find_by_test_id` action](#find_by_test_id-id-options)
