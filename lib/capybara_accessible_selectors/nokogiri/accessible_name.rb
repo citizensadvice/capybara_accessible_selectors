@@ -56,14 +56,15 @@ module CapybaraAccessibleSelectors
       def name_from_aria_labelled_by
         return nil if @within_label
 
-        @node[:"aria-labelledby"].to_s.split(R_WHITE_SPACE).filter_map do |name|
+        parts = @node[:"aria-labelledby"].to_s.split(R_WHITE_SPACE).filter_map do |name|
           next if name == ""
 
           found = @node.document.at_xpath(XPath.descendant[XPath.attr(:id) == name])
           next unless found
 
           recurse_name(title, within_label: true, include_hidden: hidden_node?(found))
-        end.join(" ")
+        end
+        parts.join(" ").then { normalised_name(_1) }
       end
 
       def name_from_embedded_control
@@ -72,7 +73,7 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_aria_label
-        striped_name(@node[:"aria-label"])
+        normalised_name(@node[:"aria-label"])
       end
 
       def name_from_host_language # rubocop:disable Metrics
@@ -125,7 +126,7 @@ module CapybaraAccessibleSelectors
         end.join
 
         name = " #{name} " if block?
-        striped_name(name)
+        normalised_name(name)
       end
 
       def name_from_html_label
@@ -138,19 +139,19 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_tooltip
-        striped_name(@name[:title])
+        normalised_name(@node[:title])
       end
 
       def name_from_value
-        striped_name(@name[:value])
+        normalised_name(@node[:value])
       end
 
       def name_from_placeholder
-        striped_name(@name[:placeholder]) || striped_name(@node[:"aria-placeholder"])
+        normalised_name(@node[:placeholder]) || normalised_name(@node[:"aria-placeholder"])
       end
 
       def name_from_label
-        striped_name(@name[:label])
+        normalised_name(@name[:label])
       end
 
       def name_from_title
@@ -208,7 +209,7 @@ module CapybaraAccessibleSelectors
         "text"
       end
 
-      def striped_name(value)
+      def normalised_name(value)
         value = value&.strip&.gsub(/\s+/, " ")
         return nil if value == ""
 

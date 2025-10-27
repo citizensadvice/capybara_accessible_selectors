@@ -66,7 +66,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
 
     context "with an <audio>" do
-      it "returns article" do
+      it "returns nil" do
         render "<audio controls></audio>"
         expect(find(:element, "audio").role).to be_nil
       end
@@ -184,6 +184,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
       end
 
       it "returns nil without a table" do
+        # In browsers the caption element is not generated
         render <<~HTML
           <caption>Description</caption>
         HTML
@@ -244,6 +245,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
 
     context "with a <datalist>" do
       it "returns listbox" do
+        # In browsers the datalist is never included in the accessible tree
         render <<~HTML
           <datalist></datalist>
         HTML
@@ -254,7 +256,17 @@ RSpec.describe Capybara::Node::Element, "#role" do
     context "with a <dd>" do
       it "returns nil" do
         render "<dl><dt>Term</dt><dd>Defintion</dd></dl>"
-        expect(find(:element, "dd").role).to be_nil
+        expect(find(:element, "dd").role).to eq "definition"
+      end
+
+      it "returns term outside of a dl" do
+        render "<dd>Definition</dd>"
+        expect(find(:element, "dd").role).to eq "definition"
+      end
+
+      it "returns term with a dl set to role none" do
+        render "<dl role=none><dt>Term</dt><dd>Defintion</dd></dl>"
+        expect(find(:element, "dd").role).to eq "definition"
       end
     end
 
@@ -303,9 +315,19 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
 
     context "with a <dt>" do
-      it "returns nil" do
+      it "returns term" do
         render "<dl><dt>Term</dt><dd>Defintion</dd></dl>"
-        expect(find(:element, "dt").role).to be_nil
+        expect(find(:element, "dt").role).to eq "term"
+      end
+
+      it "returns term outside of a dl" do
+        render "<dt>Term</dt>"
+        expect(find(:element, "dt").role).to eq "term"
+      end
+
+      it "returns term with a dl set to role none" do
+        render "<dl role=none><dt>Term</dt><dd>Defintion</dd></dl>"
+        expect(find(:element, "dt").role).to eq "term"
       end
     end
 
@@ -360,24 +382,24 @@ RSpec.describe Capybara::Node::Element, "#role" do
       end
 
       %w[main article complementary navigation].each do |role|
-        it "returns nil with an ancestor with the role #{role}" do
+        it "returns sectionfooter with an ancestor with the role #{role}" do
           render <<~HTML
             <div role="#{role}">
               <footer>Content</footer>
             </div>
           HTML
-          expect(find(:element, "footer").role).to be_nil
+          expect(find(:element, "footer").role).to eq "sectionfooter"
         end
       end
 
       %w[article aside main nav].each do |name|
-        it "returns nil with an ancestor #{name}" do
+        it "returns sectionfooter with an ancestor #{name}" do
           render <<~HTML
             <#{name}>
               <footer>Content</footer>
             </#{name}>
           HTML
-          expect(find(:element, "footer").role).to be_nil
+          expect(find(:element, "footer").role).to eq "sectionfooter"
         end
 
         it "returns contentinfo with an ancestor #{name} with role none" do
@@ -390,22 +412,22 @@ RSpec.describe Capybara::Node::Element, "#role" do
         end
       end
 
-      it "returns nil with an ancestor section" do
+      it "returns sectionfooter with an ancestor section" do
         render <<~HTML
           <section>
             <footer>Content</footer>
           </section>
         HTML
-        expect(find(:element, "footer").role).to be_nil
+        expect(find(:element, "footer").role).to eq "sectionfooter"
       end
 
-      it "returns nil with an ancestor section explicitly mapped to region" do
+      it "returns sectionfooter with an ancestor section explicitly mapped to region" do
         render <<~HTML
           <section role="region">
             <footer>Content</footer>
           </section>
         HTML
-        expect(find(:element, "footer").role).to be_nil
+        expect(find(:element, "footer").role).to eq "sectionfooter"
       end
 
       it "returns contentinfo with an ancestor section remapped to a different role" do
@@ -445,24 +467,24 @@ RSpec.describe Capybara::Node::Element, "#role" do
       end
 
       %w[main article complementary navigation].each do |role|
-        it "returns nil with an ancestor with the role #{role}" do
+        it "returns sectionheader with an ancestor with the role #{role}" do
           render <<~HTML
             <div role="#{role}">
               <header>Content</header>
             </div>
           HTML
-          expect(find(:element, "header").role).to be_nil
+          expect(find(:element, "header").role).to eq "sectionheader"
         end
       end
 
       %w[article aside main nav].each do |name|
-        it "returns nil with an ancestor #{name}" do
+        it "returns sectionheader with an ancestor #{name}" do
           render <<~HTML
             <#{name}>
               <header>Content</header>
             </#{name}>
           HTML
-          expect(find(:element, "header").role).to be_nil
+          expect(find(:element, "header").role).to eq "sectionheader"
         end
 
         it "returns banner with an ancestor #{name} with role none" do
@@ -475,22 +497,22 @@ RSpec.describe Capybara::Node::Element, "#role" do
         end
       end
 
-      it "returns nil with an ancestor section" do
+      it "returns sectionheader with an ancestor section" do
         render <<~HTML
           <section>
             <header>Content</header>
           </section>
         HTML
-        expect(find(:element, "header").role).to be_nil
+        expect(find(:element, "header").role).to eq "sectionheader"
       end
 
-      it "returns nil with an ancestor section explicitly mapped to region" do
+      it "returns sectionheader with an ancestor section explicitly mapped to region" do
         render <<~HTML
           <section role="region">
             <header>Content</header>
           </section>
         HTML
-        expect(find(:element, "header").role).to be_nil
+        expect(find(:element, "header").role).to eq "sectionheader"
       end
 
       it "returns banner with an ancestor section remapped to a different role" do
@@ -534,9 +556,9 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
 
     context "with a <html>" do
-      it "returns separator" do
+      it "returns nil" do
         render ""
-        expect(find(:element, "html").role).to eq "document"
+        expect(find(:element, "html").role).to be_nil
       end
     end
 
@@ -608,7 +630,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
         expect(find(:element, "input").role).to eq "checkbox"
       end
 
-      %w[color date datetime-local month password time week].each do |type|
+      %w[color date datetime-local month time week].each do |type|
         it "returns nil for type #{type}" do
           render <<~HTML
             <input type="#{type}">
@@ -667,6 +689,13 @@ RSpec.describe Capybara::Node::Element, "#role" do
           HTML
           expect(find(:element, "input").role).to eq "combobox"
         end
+      end
+
+      it "returns textbox for password" do
+        render <<~HTML
+          <input type="password">
+        HTML
+        expect(find(:element, "input").role).to eq "textbox"
       end
 
       it "returns textbox for no type" do
@@ -1126,13 +1155,13 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
 
     context "with an <svg>" do
-      it "returns graphics-document" do
+      it "returns image" do
         render <<~HTML
           <svg height="500" width="500">
             <polygon points="250,60 100,400 400,400">
           </svg>
         HTML
-        expect(find(:element, "svg").role).to eq "graphics-document"
+        expect(find(:element, "svg").role).to eq "image"
       end
     end
 

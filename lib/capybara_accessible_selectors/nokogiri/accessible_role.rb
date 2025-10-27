@@ -83,7 +83,7 @@ module CapybaraAccessibleSelectors
           @node.has_attribute?("href") ? "link" : "generic"
         when "address", "details", "fieldset", "hgroup"
           "group"
-        when "abbr", "audio", "base", "br", "canvas", "cite", "col", "colgroup", "dd", "dl", "embed", "figcaption", "head", "iframe",
+        when "abbr", "audio", "base", "br", "canvas", "cite", "col", "colgroup", "dl", "embed", "figcaption", "head", "html", "iframe",
              "kbd", "label", "legend", "link", "map", "meta", "noscript", "object", "param", "picture", "rp", "rt", "ruby",
              "script", "slot", "source", "style", "template", "title", "track", "var", "video", "wbr"
           nil
@@ -101,9 +101,11 @@ module CapybaraAccessibleSelectors
           "code"
         when "datalist"
           "listbox"
+        when "dd"
+          "definition"
         when "del", "s"
           "deletion"
-        when "dfn"
+        when "dfn", "dt"
           "term"
         when "dialog"
           "dialog"
@@ -112,17 +114,15 @@ module CapybaraAccessibleSelectors
         when "figure"
           "figure"
         when "footer"
-          sectioning_ancestor? ? "generic" : "contentinfo"
+          sectioning_ancestor? ? "sectionfooter" : "contentinfo"
         when "form"
           accessible_name?("form") ? "form" : nil
         when "h1", "h2", "h3", "h4", "h5", "h6"
           "heading"
         when "header"
-          sectioning_ancestor? ? "generic" : "banner"
+          sectioning_ancestor? ? "sectionheader" : "banner"
         when "hr"
           "separator"
-        when "html"
-          "document"
         when "img"
           if !@node.has_attribute?("alt") || @node[:alt] != "" || accessible_name?("img")
             "image"
@@ -135,7 +135,7 @@ module CapybaraAccessibleSelectors
             "button"
           when "checkbox"
             "checkbox"
-          when "color", "date", "datetime-local", "hidden", "month", "password", "time", "week"
+          when "color", "date", "datetime-local", "hidden", "month", "time", "week"
             nil
           when "number"
             "spinbutton"
@@ -145,6 +145,9 @@ module CapybaraAccessibleSelectors
             "slider"
           when "search"
             "searchbox"
+          when "password"
+            # Safari and Chromium are now mapping to textbox (2025-10-27) and this is generally more useful
+            "textbox"
           else
             valid_datalist? ? "combobox" : "textbox"
           end
@@ -188,7 +191,8 @@ module CapybaraAccessibleSelectors
           # Browsers do not expose these as buttons, although they currently have identical semantics
           @node.parent.node_name == "details" ? "button" : nil
         when "svg"
-          "graphics-document"
+          # By the spec it should should be graphics-document, but image is more useful and is what Chromium returns
+          "image"
         when "table"
           "table"
         when "tbody", "tfoot", "thead"
@@ -251,7 +255,7 @@ module CapybaraAccessibleSelectors
           next true if SECTIONING_ROLES.include?(role)
           next false unless ancestor.node_name == "section"
 
-          @role.nil? || role == "region"
+          role.nil? || role == "region"
         end
       end
 

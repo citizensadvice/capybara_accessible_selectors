@@ -29,3 +29,7 @@ RSpec/ExampleLength:
 
 RSpec/NestedGroups:
   Enabled: false
+
+Performance/CollectionLiteralInLoop:
+  Exclude:
+    - spec/**/*
