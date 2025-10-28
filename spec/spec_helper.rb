@@ -69,16 +69,14 @@ Capybara.register_driver(:chrome_canary) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.register_driver(:chrome_canary_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
-    args: ["--headless"]
+    args: ["--headless=new"]
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication

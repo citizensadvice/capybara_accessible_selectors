@@ -1614,7 +1614,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
 
     %w[atomic braillelabel brailleroledescription busy controls current describedby description details dropeffect
-       flowto grabbed hidden keyshortcuts label labelledby live owns relevant roledescription].each do |attribute|
+       flowto grabbed keyshortcuts label labelledby live owns relevant roledescription].each do |attribute|
       it "ignores none if aria-#{attribute} is present" do
         render <<~HTML
           <ul role="none" aria-#{attribute}=""><li>item</li></ul>

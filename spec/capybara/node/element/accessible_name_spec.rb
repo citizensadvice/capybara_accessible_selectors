@@ -44,7 +44,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </element2>
       HTML
 
-      expect(find(:id, "el1", visible: :all).accessible_name).to eq "hello"
+      expect(find_by_id("el1", visible: :all).accessible_name).to eq "hello"
     end
 
     it "passes example 2" do
@@ -55,7 +55,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </element2>
       HTML
 
-      expect(find(:id, "el1", visible: :all).accessible_name).to eq ""
+      expect(find_by_id("el1", visible: :all).accessible_name).to eq ""
     end
 
     it "passes example 3" do
@@ -65,8 +65,8 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         <element3 id="el3"> hello </element3>
       HTML
 
-      expect(find(:id, "el1", visible: :all).accessible_name).to eq "hello"
-      expect(find(:id, "el2", visible: :all).accessible_name).to eq ""
+      expect(find_by_id("el1", visible: :all).accessible_name).to eq "hello"
+      expect(find_by_id("el2", visible: :all).accessible_name).to eq ""
     end
 
     it "passes example 4" do
@@ -77,7 +77,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </label>
       HTML
 
-      expect(find(:id, "flash").accessible_name).to eq "Flash the screen 5 times."
+      expect(find_by_id("flash").accessible_name).to eq "Flash the screen 5 times."
     end
 
     it "passes example 5" do
@@ -95,8 +95,8 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </ul>
       HTML
 
-      expect(find(:id, "del_row1", visible: :all).accessible_name).to eq "Delete Documentation.pdf"
-      expect(find(:id, "del_row2", visible: :all).accessible_name).to eq "Delete HolidayLetter.pdf"
+      expect(find_by_id("del_row1", visible: :all).accessible_name).to eq "Delete Documentation.pdf"
+      expect(find_by_id("del_row2", visible: :all).accessible_name).to eq "Delete HolidayLetter.pdf"
     end
   end
 
@@ -260,4 +260,5 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
   # area alt title
   # iframe title
   # section title
+  # core-aam resolutions
 end
