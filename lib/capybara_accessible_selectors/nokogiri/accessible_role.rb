@@ -54,7 +54,7 @@ module CapybaraAccessibleSelectors
 
       def hidden?
         return true if Hidden.resolve?(@node)
-        return true if [@node, *@node.ancestors("*")].any? { _1["aria-hidden"] == "true" } && !focusable?
+        return true if [@node, *@node.ancestors("*")].any? { _1["aria-hidden"] == "true" }
 
         false
       end
@@ -196,6 +196,7 @@ module CapybaraAccessibleSelectors
         when "table"
           "table"
         when "tbody", "tfoot", "thead"
+          # Some browsers require the tbody/tfoot or thead to be named to have a role
           element_is?(@node.parent, "table") && role_is?(@node.parent, "table", "grid", "treegrid") ? "rowgroup" : "generic"
         when "td"
           if element_is?(@node.parent, "tr") && role_is?(@node.parent, "row")
@@ -242,6 +243,8 @@ module CapybaraAccessibleSelectors
       end
 
       def presentational_child?
+        # These should not be exposed as roles, unless focusable
+        # This is however under discussion and inconsistently implemented https://github.com/w3c/aria/issues/2509
         @node.ancestors("*").any? { CHILDREN_PRESENTATIONAL.include?(AccessibleRole.resolve(_1)) }
       end
 
@@ -263,7 +266,7 @@ module CapybaraAccessibleSelectors
         id = @node[:list].to_s
         return false if id == ""
 
-        !@node.document.at_xpath(XPath.descendant(:datalist)[XPath.attribute(:id) == id]).nil?
+        !@node.document.at_xpath(XPath.anywhere(:datalist)[XPath.attribute(:id) == id].to_s).nil?
       end
 
       def role_is?(element, *roles)

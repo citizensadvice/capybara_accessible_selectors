@@ -35,10 +35,18 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
   end
 
+  it "returns no name with no name" do
+    render <<~HTML
+      <div data-test-id="test">Contents</div>
+    HTML
+
+    expect(find(:test_id, "test").accessible_name).to eq ""
+  end
+
   context "with accname specification examples" do
     it "passes example 1" do
       render <<~HTML
-        <element1 id="el1" role="button" aria-labelledby="el2"></element1>>
+        <element1 id="el1" role="button" aria-labelledby="el2"></element1>
         <element2 id="el2" hidden>
           <element3 id="el3" hidden>hello</element3>
         </element2>
@@ -104,7 +112,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     it "calculates from aria-labelledby" do
       render <<~HTML
         <label for="id3">label</label>
-        <input aria-labelledby="id1 id2" aria-label="aria label" id="id3">
+        <input aria-labelledby="id1 id2" aria-label="aria label" id="id3" title="foo">
         <span id="id1">aria</span>
         <span id="id2">labelledby</span>
       HTML
@@ -115,7 +123,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     it "calculates from aria-label" do
       render <<~HTML
         <label for="id3">label</label>
-        <input aria-label="aria label" id="id3">
+        <input aria-label="aria label" id="id3" title="foo">
       HTML
 
       expect(find(:element, "input").accessible_name).to eq "aria label"
@@ -124,7 +132,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     it "calculates from label" do
       render <<~HTML
         <label for="id1">label</label>
-        <input id="id1">
+        <input id="id1" title="foo">
       HTML
 
       expect(find(:element, "input").accessible_name).to eq "label"
@@ -147,31 +155,193 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
       expect(find(:element, "input").accessible_name).to eq "title"
     end
+
+    it "is empty with no name" do
+      render <<~HTML
+        <input>
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq ""
+    end
   end
 
   context "with a <textarea>" do
-    it "calculates from aria-labelledby"
-    it "calculates from aria-label"
-    it "calculates from label"
-    it "calculates from multiple labels"
-    it "calculates from title"
+    it "calculates from aria-labelledby" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <textarea aria-labelledby="id1 id2" aria-label="aria label" id="id3" title="foo"></textarea>
+        <span id="id1">aria</span>
+        <span id="id2">labelledby</span>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq "aria labelledby"
+    end
+
+    it "calculates from aria-label" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <textarea aria-label="aria label" id="id3" title="foo"></textarea>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq "aria label"
+    end
+
+    it "calculates from label" do
+      render <<~HTML
+        <label for="id1">label</label>
+        <textarea id="id1" title="foo"></textarea>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq "label"
+    end
+
+    it "calculates from multiple labels" do
+      render <<~HTML
+        <label for="id1">label1</label>
+        <label for="id1">label2</label>
+        <textarea id="id1"></textarea>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq "label1 label2"
+    end
+
+    it "calculates from title" do
+      render <<~HTML
+        <textarea title="title"></textarea>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq "title"
+    end
+
+    it "is empty with no name" do
+      render <<~HTML
+        <textarea></textarea>
+      HTML
+
+      expect(find(:element, "textarea").accessible_name).to eq ""
+    end
   end
 
   context "with a <select>" do
-    it "calculates from aria-labelledby"
-    it "calculates from aria-label"
-    it "calculates from label"
-    it "calculates from multiple labels"
-    it "calculates from title"
+    it "calculates from aria-labelledby" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <select aria-labelledby="id1 id2" aria-label="aria label" id="id3" title="foo"></select>
+        <span id="id1">aria</span>
+        <span id="id2">labelledby</span>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq "aria labelledby"
+    end
+
+    it "calculates from aria-label" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <select aria-label="aria label" id="id3" title="foo"></select>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq "aria label"
+    end
+
+    it "calculates from label" do
+      render <<~HTML
+        <label for="id1">label</label>
+        <select id="id1" title="foo"></select>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq "label"
+    end
+
+    it "calculates from multiple labels" do
+      render <<~HTML
+        <label for="id1">label1</label>
+        <label for="id1">label2</label>
+        <select id="id1"></select>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq "label1 label2"
+    end
+
+    it "calculates from title" do
+      render <<~HTML
+        <select title="title"></select>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq "title"
+    end
+
+    it "is empty with no name" do
+      render <<~HTML
+        <select></select>
+      HTML
+
+      expect(find(:element, "select").accessible_name).to eq ""
+    end
   end
 
   context "with an <input type=button>" do
-    it "calculates from aria-labelledby"
-    it "calculates from aria-label"
-    it "calculates from label"
-    it "calculates from multiple labels"
-    it "calculates from value"
-    it "calculates from title"
+    it "calculates from aria-labelledby" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <input type="button" aria-labelledby="id1 id2" aria-label="aria label" id="id3" title="foo" value="value">
+        <span id="id1">aria</span>
+        <span id="id2">labelledby</span>
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "aria labelledby"
+    end
+
+    it "calculates from aria-label" do
+      render <<~HTML
+        <label for="id3">label</label>
+        <input type="button" aria-label="aria label" id="id3" title="foo" value="value">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "aria label"
+    end
+
+    it "calculates from label" do
+      render <<~HTML
+        <label for="id1">label</label>
+        <input type="button" id="id1" title="foo" value="value">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "label"
+    end
+
+    it "calculates from multiple labels" do
+      render <<~HTML
+        <label for="id1">label1</label>
+        <label for="id1">label2</label>
+        <input type="button" value="value" id="id1">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "label1 label2"
+    end
+
+    it "calculates from value" do
+      render <<~HTML
+        <input type="button" value="value" title="title">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "value"
+    end
+
+    it "calculates from title" do
+      render <<~HTML
+        <input type="button" title="title">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq "title"
+    end
+
+    it "is empty with no name" do
+      render <<~HTML
+        <input type="button">
+      HTML
+
+      expect(find(:element, "input").accessible_name).to eq ""
+    end
   end
 
   context "with an <input type=submit>" do
@@ -260,5 +430,6 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
   # area alt title
   # iframe title
   # section title
+  # name from content
   # core-aam resolutions
 end

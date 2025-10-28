@@ -1719,7 +1719,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
       render <<~HTML
         <input aria-hidden="true">
       HTML
-      expect(find(:element, "input").role).to eq "textbox"
+      expect(find(:element, "input").role).to be_nil
     end
   end
 
@@ -1742,7 +1742,7 @@ RSpec.describe Capybara::Node::Element, "#role" do
       render <<~HTML
         <div aria-hidden="true"><input></div>
       HTML
-      expect(find(:element, "input").role).to eq "textbox"
+      expect(find(:element, "input").role).to be_nil
     end
   end
 

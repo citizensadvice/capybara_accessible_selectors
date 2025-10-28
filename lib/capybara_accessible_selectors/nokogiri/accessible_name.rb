@@ -9,7 +9,6 @@ module CapybaraAccessibleSelectors
       HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
       NAME_FROM_CONTENT_ROLES = %w[button cell checkbox columnheader gridcell heading link menuitem menuitemcheckbox
                                    menuitemradio option radio row rowheader sectionhead switch tab tooltip treeitem].freeze
-      NAME_FROM_CONTENT_ELEMENTS = %w[button tr td th h1 h2 h3 h4 h5 h6 a option].freeze
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
       def self.resolve(...)
@@ -27,14 +26,15 @@ module CapybaraAccessibleSelectors
 
       def resolve # rubocop:disable Metrics
         # https://www.w3.org/TR/accname-1.2/
-        return nil if hidden? || accessible_hidden? || @visited.include?(@node)
+        return nil if hidden? || accessible_hidden?
 
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
           name_from_aria_label ||
+          (return nil if @visited.include?(@node)) ||
           name_from_host_language ||
           name_from_content ||
-          name_from_tooltip
+          name_from_attribute(:title)
       end
 
       private
@@ -59,10 +59,10 @@ module CapybaraAccessibleSelectors
         parts = @node[:"aria-labelledby"].to_s.split(R_WHITE_SPACE).filter_map do |name|
           next if name == ""
 
-          found = @node.document.at_xpath(XPath.descendant[XPath.attr(:id) == name])
+          found = @node.document.at_xpath(XPath.anywhere[XPath.attr(:id) == name].to_s)
           next unless found
 
-          recurse_name(title, within_label: true, include_hidden: hidden_node?(found))
+          recurse_name(found, within_label: true, include_hidden: hidden_node?(found))
         end
         parts.join(" ").then { normalised_name(_1) }
       end
@@ -82,32 +82,32 @@ module CapybaraAccessibleSelectors
         when "input"
           case input_type
           when nil, "text", "password", "number", "search", "tel", "email", "url"
-            name_from_html_label || name_from_title || name_from_placeholder
+            name_from_html_label || name_from_attribute(:title) || name_from_placeholder
           when "button"
-            name_from_html_label || name_from_value
+            name_from_html_label || name_from_attribute(:value)
           when "submit"
-            name_from_html_label || name_from_value || "Submit Query"
+            name_from_html_label || name_from_attribute(:value) || "Submit Query"
           when "reset"
-            name_from_html_label || name_from_value || "Reset"
+            name_from_html_label || name_from_attribute(:value) || "Reset"
           when "image"
-            name_from_html_label || name_from_alt || name_from_tooltip || "Submit Query"
+            name_from_html_label || name_from_attribute(:alt) || name_from_attribute(:title) || "Submit Query"
           else
             name_from_html_label
           end
         when "button", "output", "select"
           name_from_html_label
         when "textarea"
-          name_from_html_label || name_from_tooltip || name_from_placeholder
+          name_from_html_label || name_from_attribute(:title) || name_from_placeholder
         when "fieldset"
           name_from_legend
         when "img"
-          name_from_alt || name_from_title || name_from_figcaption
+          name_from_attribute(:alt) || name_from_attribute(:title) || name_from_figcaption
         when "table"
           name_from_caption
         when "area"
-          name_from_alt
+          name_from_attribute(:alt)
         when "option", "optgroup"
-          name_from_label
+          name_from_attribute(:label)
         when "svg"
           name_from_title
         when "details"
@@ -122,7 +122,7 @@ module CapybaraAccessibleSelectors
         name = @node.children.filter_map do |node|
           next node.text if node.text?
 
-          next recurse_name(within_content: true)
+          next recurse_name(node)
         end.join
 
         name = " #{name} " if block?
@@ -133,42 +133,34 @@ module CapybaraAccessibleSelectors
         id = @node[:id]
         return nil unless id
 
-        @node.document.xpath(XPath.descendant(:label)[XPath.attr(:for) == name]).filter_map do |node|
-          recurse_name(node, recurse_name: true)
+        @node.document.xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s).filter_map do |node|
+          recurse_name(node)
         end.join(" ")
       end
 
-      def name_from_tooltip
-        normalised_name(@node[:title])
-      end
-
-      def name_from_value
-        normalised_name(@node[:value])
+      def name_from_attribute(attr)
+        normalised_name(@node[attr])
       end
 
       def name_from_placeholder
         normalised_name(@node[:placeholder]) || normalised_name(@node[:"aria-placeholder"])
       end
 
-      def name_from_label
-        normalised_name(@name[:label])
-      end
-
       def name_from_title
-        title = @node.at_xpath(XPath.descendant(:title))
+        title = @node.at_xpath(XPath.descendant(:title).to_s)
         return unless title
 
-        recurse_name(title, within_content: true, include_hidden: true)
+        recurse_name(title, include_hidden: true)
       end
 
       def name_from_legend
         node = @node.children.find { _1.node_name == "legend" }
         return unless node
 
-        recurse_name(title, within_content: true)
+        recurse_name(title)
       end
 
-      def name_from_fig_caption
+      def name_from_figcaption
         # the img is a descendant of a figure element with a child figcaption
         # but no other non-whitespace flow content descendants, then use the text equivalent
         # computation of the figcaption element's subtree.
@@ -178,29 +170,29 @@ module CapybaraAccessibleSelectors
         node = @node.children.find { _1.node_name == "figcaption" }
         return unless node || @node.children.any? { _1 != node && node.text.strip != "" }
 
-        recurse_name(title, within_content: true)
+        recurse_name(node)
       end
 
-      def recurse_name(node, within_label: @within_label, within_content: false)
-        AccessibleName.resolve(node, within_label:, within_content:, visited: [*@visited, @node])
+      def recurse_name(node, within_label: @within_label, include_hidden: @include_hidden)
+        AccessibleName.resolve(node, within_label:, within_content: true, include_hidden:, visited: [*@visited, @node])
       end
 
       def block?
-        BLOCK_ELEMENTS.include?(@node.tag_name)
+        BLOCK_ELEMENTS.include?(@node.node_name)
       end
 
       def role
         @role ||= AccessibleRole.resolve(@node)
       end
 
-      def hidden_node?(_node)
-        [@node, *@node.ancestors("*")].any? do |node|
+      def hidden_node?(node)
+        [node, *node.ancestors("*")].any? do |node|
           node.has_attribute?("hidden") || /display:\s?none/.match?(node[:style] || "")
         end
       end
 
       def input_type
-        type = @input[:type]
+        type = @node[:type]
         if %w[button checkbox color date datatime-local email file hidden image
               month number password radio range reset search submit tel time url week].include?(type)
           return type
