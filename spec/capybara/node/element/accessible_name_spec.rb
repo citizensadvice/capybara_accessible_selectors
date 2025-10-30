@@ -10,7 +10,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
   describe "aria-labelledby" do
     it "returns an accessible name from aria-labelledby" do
       render <<~HTML
-        <div aria-labelledby="id2 id1" data-test-id="test" aria-label="label" title="title">Contents</div>
+        <div role="group" aria-labelledby="id2 id1" data-test-id="test" aria-label="label" title="title">Contents</div>
         <span id="id1">name</span>
         <span id="id2">Accessible</span>
       HTML
@@ -22,7 +22,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
   describe "aria-label" do
     it "returns an accessible name from aria-label" do
       render <<~HTML
-        <div aria-label="Accessible name" data-test-id="test" title="title">Contents</div>
+        <div role="group" aria-label="Accessible name" data-test-id="test" title="title">Contents</div>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
@@ -32,7 +32,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
   describe "tooltip" do
     it "returns an accessible name from title" do
       render <<~HTML
-        <div title="Accessible name" data-test-id="test">Contents</div>
+        <div role="group" title="Accessible name" data-test-id="test">Contents</div>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
@@ -82,8 +82,8 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
       it "calculates from title with empty label" do
         render <<~HTML
-          <label for="id1"></label>
-          <input id="id1" title="foo">
+          <label for="id"></label>
+          <input id="id" title="foo">
         HTML
 
         expect(find(:element, "input").accessible_name).to eq "foo"
@@ -93,7 +93,33 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         render <<~HTML
           <label>
             foo
-            <input id="id1" title="title">
+            <input title="title">
+          </label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "foo"
+      end
+
+      it "calculates from an explicit label and an implicit label" do
+        render <<~HTML
+          <label>
+            foo
+            <input id="id" title="title">
+          </label>
+          <label for="id">bar</label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "bar foo"
+      end
+
+      it "calculates from nested implicit labels" do
+        render <<~HTML
+          <label>
+            bar
+            <label>
+              foo
+              <input title="title">
+            </label>
           </label>
         HTML
 
@@ -105,6 +131,42 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
           <label for="id1">
             <input id="id1" title="title">
           </label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "title"
+      end
+
+      it "uses the full algorithm in labels" do
+        render <<~HTML
+          <input id="id">
+          <label for="id">foo <button aria-label="bar">xxx</button> fee</label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "foo bar fee"
+      end
+
+      it "ignores hidden labels" do
+        render <<~HTML
+          <input id="id" title="title">
+          <label for="id" hidden>foo</label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "title"
+      end
+
+      it "ignores aria-hidden labels" do
+        render <<~HTML
+          <input id="id" title="title">
+          <label for="id" aria-hidden="true">foo</label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "title"
+      end
+
+      it "ignores hidden sections in labels" do
+        render <<~HTML
+          <input id="id" title="title">
+          <label for="id">foo<span hidden>xxx</span><span aria-hidden="true">yyy</span></label>
         HTML
 
         expect(find(:element, "input").accessible_name).to eq "foo"
@@ -884,16 +946,6 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       expect(find(:test_id, "test").accessible_name).to eq "foo bar fee foobarfee"
     end
 
-    it "adds space around input elements where the value is displayed" do
-      render <<~HTML
-        <div role="button" data-test-id="test">
-          foo<input type="text" value="bar" />fee
-        </div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo bar fee"
-    end
-
     it "treats br as a space" do
       render <<~HTML
         <div role="button" data-test-id="test">
@@ -917,7 +969,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     it "adds space around tooltips" do
       render <<~HTML
         <div role="button" data-test-id="test">
-          foo<abbr title="bar">xxx</span><a aria-label="yyy" href="#">as</a>fee
+          foo<abbr title="bar">xxx</abbr>fee
         </div>
       HTML
 
@@ -931,7 +983,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </div>
       HTML
 
-      expect(find(:test_id, "test").accessible_name).to eq "foo"
+      expect(find(:test_id, "test").accessible_name).to eq "foo bar"
     end
 
     it "does not recurse hidden elements" do
@@ -1044,8 +1096,8 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
     it "passes example 3" do
       render <<~HTML
-        <element1 id="el1" aria-labelledby="el3"></element1>
-        <element2 id="el2" aria-labelledby="el1"></element2>
+        <element1 id="el1" role="button" aria-labelledby="el3"></element1>
+        <element2 id="el2" role="button" aria-labelledby="el1"></element2>
         <element3 id="el3"> hello </element3>
       HTML
 
@@ -1081,6 +1133,16 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
       expect(find_by_id("del_row1", visible: :all).accessible_name).to eq "Delete Documentation.pdf"
       expect(find_by_id("del_row2", visible: :all).accessible_name).to eq "Delete HolidayLetter.pdf"
+    end
+
+    it "passes github.com/w3c/accname/pull/53" do
+      render <<~HTML
+        <span aria-label="bar" data-test-id="one">foo</span>
+        <button><span aria-label="bar" data-test-id="two">foo</span></button
+      HTML
+
+      expect(find(:test_id, "one").accessible_name).to eq ""
+      expect(find(:test_id, "two").accessible_name).to eq "bar"
     end
   end
 

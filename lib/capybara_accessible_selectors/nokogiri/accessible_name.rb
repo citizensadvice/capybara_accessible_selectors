@@ -10,16 +10,19 @@ module CapybaraAccessibleSelectors
       HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
       NAME_FROM_CONTENT_ROLES = %w[button cell checkbox columnheader comment gridcell heading link menuitem menuitemcheckbox
                                    menuitemradio option radio row rowheader switch tab tooltip treeitem].freeze
+      NAME_DISALLOWED_ROLES = %w[caption code definition deletion emphasis generic insertion mark
+                                 none paragraph strong subscript suggestion superscript term time presentation].freeze
+
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
       def self.resolve(...)
         new(...).resolve
       end
 
-      def initialize(node, role: nil, within_label: false, within_content: false, include_hidden: false, visited: [])
+      def initialize(node, role: nil, within_label: false, recurse: false, include_hidden: false, visited: [])
         @node = node
         @within_label = within_label
-        @within_content = within_content
+        @recurse = recurse
         @include_hidden = include_hidden
         @visited = visited
         @role = role
@@ -28,6 +31,8 @@ module CapybaraAccessibleSelectors
       def resolve # rubocop:disable Metrics
         # https://www.w3.org/TR/accname-1.2/
         return nil if hidden? || accessible_hidden?
+        # See https://github.com/w3c/accname/pull/53 this is not fully implemented
+        return nil if !@recurse && NAME_DISALLOWED_ROLES.include?(role)
 
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
@@ -118,7 +123,7 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_content
-        return unless @within_content || name_from_content?
+        return unless @recurse || name_from_content?
 
         name = @node.children.filter_map do |node|
           next node.text if node.text?
@@ -134,9 +139,10 @@ module CapybaraAccessibleSelectors
 
       def name_from_html_label
         id = @node[:id]
-        return nil unless id
+        explicit_labels = @node.document.xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s) if id
+        implicit_label = @node.ancestors.find { _1.node_name == "label" }
 
-        normalised_name(@node.document.xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s).filter_map do |node|
+        normalised_name([*explicit_labels, implicit_label].compact.uniq.filter_map do |node|
           recurse_name(node)
         end.join(" "))
       end
@@ -184,7 +190,7 @@ module CapybaraAccessibleSelectors
       end
 
       def recurse_name(node, within_label: @within_label, include_hidden: @include_hidden)
-        normalised_name(AccessibleName.resolve(node, within_label:, within_content: true, include_hidden:, visited: [*@visited, @node]))
+        normalised_name(AccessibleName.resolve(node, within_label:, recurse: true, include_hidden:, visited: [*@visited, @node]))
       end
 
       def block?(node)
