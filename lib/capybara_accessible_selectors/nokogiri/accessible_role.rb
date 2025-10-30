@@ -14,7 +14,7 @@ module CapybaraAccessibleSelectors
                        separator slider spinbutton switch tab tabpanel textbox treeitem combobox grid listbox menu menubar
                        radiogroup tablist tree treegrid application article blockquote caption cell code columnheader
                        comment definition deletion directory document emphasis feed figure generic group heading img image insertion
-                       list listitem mark math meter none note paragraph presentation row rowgroup rowheader
+                       list listitem mark math meter none note paragraph presentation row rowgroup rowheader sectionfooter sectionheader
                        separator strong subscript suggestion superscript table term time toolbar tooltip banner complementary
                        contentinfo form main navigation region search alert log marquee status timer alertdialog dialog].freeze
 

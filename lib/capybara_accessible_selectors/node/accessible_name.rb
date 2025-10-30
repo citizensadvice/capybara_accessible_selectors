@@ -17,7 +17,11 @@ module CapybaraAccessibleSelectors
 
   module SeleniumNodeExtensions
     def accessible_name
-      native.accessible_name&.strip || ""
+      # Safari is not returning a flat string
+      native.accessible_name.to_s.strip.gsub(/\s+/, " ")
+    rescue ::Selenium::WebDriver::Error::UnknownError
+      # Safari can throw this
+      ""
     end
   end
 

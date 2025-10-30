@@ -5,10 +5,11 @@ require "capybara_accessible_selectors/nokogiri/accessible_role"
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleName
-      BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
+      BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table input textarea select
+                          button img td th].freeze
       HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
-      NAME_FROM_CONTENT_ROLES = %w[button cell checkbox columnheader gridcell heading link menuitem menuitemcheckbox
-                                   menuitemradio option radio row rowheader sectionhead switch tab tooltip treeitem].freeze
+      NAME_FROM_CONTENT_ROLES = %w[button cell checkbox columnheader comment gridcell heading link menuitem menuitemcheckbox
+                                   menuitemradio option radio row rowheader switch tab tooltip treeitem].freeze
       R_WHITE_SPACE = /[\t\n\r\f ]+/
 
       def self.resolve(...)
@@ -86,11 +87,12 @@ module CapybaraAccessibleSelectors
           when "button"
             name_from_html_label || name_from_attribute(:value)
           when "submit"
-            name_from_html_label || name_from_attribute(:value) || "Submit Query"
+            name_from_html_label || name_from_attribute(:value) || "Submit"
           when "reset"
             name_from_html_label || name_from_attribute(:value) || "Reset"
           when "image"
-            name_from_html_label || name_from_attribute(:alt) || name_from_attribute(:title) || "Submit Query"
+            # This calculation is inconsistent within browsers
+            name_from_html_label || name_from_attribute(:alt) || name_from_attribute(:title) || "Submit"
           else
             name_from_html_label
           end
@@ -117,15 +119,16 @@ module CapybaraAccessibleSelectors
 
       def name_from_content
         return unless @within_content || name_from_content?
-        return " " if @node.node_name == "br"
 
         name = @node.children.filter_map do |node|
           next node.text if node.text?
+          next " " if node.node_name == "br"
 
-          next recurse_name(node)
+          text = recurse_name(node)
+          text = " #{text} " if block?(node)
+          text
         end.join
 
-        name = " #{name} " if block?
         normalised_name(name)
       end
 
@@ -133,9 +136,9 @@ module CapybaraAccessibleSelectors
         id = @node[:id]
         return nil unless id
 
-        @node.document.xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s).filter_map do |node|
+        normalised_name(@node.document.xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s).filter_map do |node|
           recurse_name(node)
-        end.join(" ")
+        end.join(" "))
       end
 
       def name_from_attribute(attr)
@@ -157,28 +160,35 @@ module CapybaraAccessibleSelectors
         node = @node.children.find { _1.node_name == "legend" }
         return unless node
 
-        recurse_name(title)
+        recurse_name(node)
       end
 
       def name_from_figcaption
         # the img is a descendant of a figure element with a child figcaption
         # but no other non-whitespace flow content descendants, then use the text equivalent
         # computation of the figcaption element's subtree.
-        node = @node.ancestors("figure").first
-        return unless node
+        caption = @node.ancestors("figure").first
+        return unless caption
 
-        node = @node.children.find { _1.node_name == "figcaption" }
-        return unless node || @node.children.any? { _1 != node && node.text.strip != "" }
+        figcaption = caption.children.find { _1.node_name == "figcaption" }
+        return unless figcaption && caption.children.reject { _1 == figcaption || (_1.text? && _1.text.strip == "") } == [@node]
 
-        recurse_name(node)
+        recurse_name(figcaption)
+      end
+
+      def name_from_caption
+        caption = @node.children.find { _1.node_name == "caption" }
+        return unless caption
+
+        recurse_name(caption)
       end
 
       def recurse_name(node, within_label: @within_label, include_hidden: @include_hidden)
-        AccessibleName.resolve(node, within_label:, within_content: true, include_hidden:, visited: [*@visited, @node])
+        normalised_name(AccessibleName.resolve(node, within_label:, within_content: true, include_hidden:, visited: [*@visited, @node]))
       end
 
-      def block?
-        BLOCK_ELEMENTS.include?(@node.node_name)
+      def block?(node)
+        BLOCK_ELEMENTS.include?(node.node_name)
       end
 
       def role
