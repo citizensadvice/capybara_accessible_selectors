@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/nokogiri/accessible_role"
+require "capybara_accessible_selectors/nokogiri/helpers"
+
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleDescription
-      BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table].freeze
-      HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
-      R_WHITE_SPACE = /[\t\n\r\f ]+/
+      include Helpers
 
       def self.resolve(...)
         new(...).resolve

@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Capybara::Node::Element, "#accessible_name" do
-  # TODO: embeded controls
-  # TODO: figcaption
-  # TODO: hidden - double check aria-hidden handling
-  # TODO: no role / generic - can they be named?
-  # TODO: cleanup
-
   describe "aria-labelledby" do
     it "returns an accessible name from aria-labelledby" do
       render <<~HTML
@@ -17,22 +11,208 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
       expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
     end
+
+    it "does not recurse hidden elements when resolving visible aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">foo<span hidden>bar</span></div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "foo"
+    end
+
+    it "does recurse hidden elements when resolving hidden aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id" hidden>foo <span hidden>bar</span></div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "foo bar"
+    end
+
+    it "does not recurse display none elements when resolving visible aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">foo <span style="display:none">bar</span></div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "foo"
+    end
+
+    it "does not recurse aria-hidden elements when resolving visible aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">foo <span aria-hidden="true">bar</span></div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "foo"
+    end
+
+    it "recurses direct aria-hidden elements when resolving visible aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id" aria-hidden="true">foo<span aria-hidden="true">bar</span></div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "foobar"
+    end
+
+    it "does recurse direct inert elements when resolving visible aria-labelledby" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id" inert>foo</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "xxx"
+    end
+  end
+
+  describe "embedded control" do
+    it "uses the value of a textbox inputs" do
+      render <<~HTML
+        <button aria-labelledby="id1" data-test-id="test">xxx</button>
+        <div id="id1">
+          label
+          <input value="foo" aria-label="xxx">
+          <input value="bar" type="email" aria-label="xxx">
+          <input value="42" type="number" aria-label="xxx">
+          <input value="10" type="range" aria-label="xxx">
+          <input value="" aria-label="xxx">
+          <input value="datalist" aria-label="xxx" list="id2">
+          <input value="xxx" type="radio" aria-label="radio">
+          <input value="xxx" type="checkbox" aria-label="checkbox">
+          <input value="xxx" type="button" aria-label="button">
+          <input value="xxx" type="submit" aria-label="submit">
+          <input value="xxx" type="reset" aria-label="reset">
+          <input value="xxx" type="image" aria-label="image">
+        </div>
+        <datalist id="id2"></datalist>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label foo bar 42 10 datalist radio checkbox button submit reset image"
+    end
+
+    it "uses the value of a select" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          label
+          <select aria-label="xxx">
+            <option>xxx</option>
+            <option label="foo" selected>yyy</option>
+          </select>
+          <select aria-label="xxx"></select>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label foo"
+    end
+
+    it "uses the value of a multiple select" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          label
+          <select aria-label="xxx" multiple>
+            <option>xxx</option>
+            <option label="foo" selected>yyy</option>
+            <option selected>bar</option>
+          </select>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label foo bar"
+    end
+
+    it "uses the value of a textarea" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          label
+          <textarea aria-label="xxx">textbox</textarea>
+          <textarea aria-label="xxx"></textarea>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label textbox"
+    end
+
+    it "uses the value of a textbox role" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          label
+          <div contenteditable role="textbox">
+            <b>bold</b>
+          </div>
+          <div contenteditable role="textbox"></div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label bold"
+    end
+
+    it "uses the value of a range role" do
+      render <<~HTML
+        <button aria-labelledby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          label
+          <div role="spinbutton" aria-valuenow="5"></div>
+          <div role="slider" aria-valuetext="large"></div>
+          <div role="slider"></div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label 5 large"
+    end
+
+    it "uses the value of a combobox role" do
+      render <<~HTML
+        <button aria-labelledby="id1" data-test-id="test">xxx</button>
+        <div id="id1">
+          label
+          <div role="combobox">
+            <div role="listbox">
+              <div role="option">xxx</div>
+              <div role="option" aria-selected="true">foo</div>
+            </div>
+          </div>
+          <div role="combobox" aria-controls="id1 id2"></div>
+          <div role="listbox" id="id2">
+            <div role="option">xxx</div>
+            <div role="option" aria-selected="true">bar</div>
+          </div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label foo bar"
+    end
+
+    it "uses the value of a listbox role" do
+      render <<~HTML
+        <button aria-labelledby="id1" data-test-id="test">xxx</button>
+        <div id="id1">
+          label
+          <div role="listbox">
+            <div role="option">xxx</div>
+            <div role="option" aria-selected="true">foo</div>
+          </div>
+          <div role="listbox">
+            <div role="option">xxx</div>
+            <div role="option" aria-selected="true">bar</div>
+            <div role="option" aria-selected="true">fee</div>
+          </div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label foo bar fee"
+    end
   end
 
   describe "aria-label" do
     it "returns an accessible name from aria-label" do
       render <<~HTML
         <div role="group" aria-label="Accessible name" data-test-id="test" title="title">Contents</div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
-    end
-  end
-
-  describe "tooltip" do
-    it "returns an accessible name from title" do
-      render <<~HTML
-        <div role="group" title="Accessible name" data-test-id="test">Contents</div>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
@@ -170,6 +350,15 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         HTML
 
         expect(find(:element, "input").accessible_name).to eq "foo"
+      end
+
+      it "uses full algorithm in labels" do
+        render <<~HTML
+          <input id="id" title="title">
+          <label for="id">foo <span role="navigation" aria-label="bar">xxx</span> fee</label>
+        HTML
+
+        expect(find(:element, "input").accessible_name).to eq "foo bar fee"
       end
 
       it "calculates from title" do
@@ -781,39 +970,96 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     context "with a <tr>" do
       it "calculates from content" do
         render <<~HTML
-          <table title="title">
-            <caption>caption</caption>
-            <tr data-test-id="test"><td>foo</td><td>bar</td></tr>
+          <table>
+            <tr data-test-id="test" title="title"><td>foo</td><td>bar</td></tr>
           </table>
         HTML
 
         expect(find(:test_id, "test").accessible_name).to eq "foo bar"
+      end
+
+      it "calculates from title" do
+        render <<~HTML
+          <table>
+            <tr data-test-id="test" title="title"><td></td><td></td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq "title"
+      end
+
+      it "is empty with no content" do
+        render <<~HTML
+          <table>
+            <tr data-test-id="test"><td></td><td></td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq ""
       end
     end
 
     context "with a <td>" do
       it "calculates from content" do
         render <<~HTML
-          <table title="title">
-            <caption>caption</caption>
-            <tr><td data-test-id="test">foo</td><td>bar</td></tr>
+          <table>
+            <tr><td data-test-id="test" title="title">foo</td><td>bar</td></tr>
           </table>
         HTML
 
         expect(find(:test_id, "test").accessible_name).to eq "foo"
+      end
+
+      it "calculates from title" do
+        render <<~HTML
+          <table>
+            <tr><td data-test-id="test" title="title"></td><td>bar</td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq "title"
+      end
+
+      it "is empty with no name" do
+        render <<~HTML
+          <table>
+            <tr><td data-test-id="test"></td><td>bar</td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq ""
       end
     end
 
     context "with a <th>" do
       it "calculates from content" do
         render <<~HTML
-          <table title="title">
-            <caption>caption</caption>
-            <tr><th data-test-id="test">foo</th><td>bar</td></tr>
+          <table>
+            <tr><th data-test-id="test" title="title" abbr="abbr">foo</th><td>bar</td></tr>
           </table>
         HTML
 
         expect(find(:test_id, "test").accessible_name).to eq "foo"
+      end
+
+      it "calculates from title" do
+        render <<~HTML
+          <table>
+            <tr><th data-test-id="test" title="title"></th><td>bar</td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq "title"
+      end
+
+      it "is empty with no name" do
+        render <<~HTML
+          <table>
+            <tr><th data-test-id="test"></th><td>bar</td></tr>
+          </table>
+        HTML
+
+        expect(find(:test_id, "test").accessible_name).to eq ""
       end
     end
 
@@ -865,16 +1111,6 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
         expect(find(:test_id, "test").accessible_name).to eq "label"
       end
-    end
-  end
-
-  describe "no name" do
-    it "returns no name with no name" do
-      render <<~HTML
-        <div data-test-id="test">Contents</div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq ""
     end
   end
 
@@ -966,10 +1202,30 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       expect(find(:test_id, "test").accessible_name).to eq "foo bar fee"
     end
 
+    it "does not add space around inline" do
+      render <<~HTML
+        <div role="button" data-test-id="test">
+          foo<span>xxx</span>fee
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "fooxxxfee"
+    end
+
+    it "adds space around inline roles" do
+      render <<~HTML
+        <div role="button" data-test-id="test">
+          foo<span role="button" title="bar">xxx</span>fee
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "fooxxxfee"
+    end
+
     it "adds space around tooltips" do
       render <<~HTML
         <div role="button" data-test-id="test">
-          foo<abbr title="bar">xxx</abbr>fee
+          foo<span role="navigation" title="bar"></span>fee
         </div>
       HTML
 
@@ -990,68 +1246,22 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       render <<~HTML
         <div role="button" data-test-id="test">
           <div aria-hidden="true">foo</div>
+          <div hidden>foo</div>
+          <div style="display:none">foo</div>
+          <div style="visibility:hidden">foo</div>
+          <div inert>foo</div>
+          <div style="visibility:hidden">
+            <div style="visibility:visible">
+              bar
+            </div>
+          </div>
+          <template>xxx</template>
+          <script>xxx</script>
+          <style>xxx</style>
         </div>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq ""
-    end
-
-    it "does not recurse hidden elements when resolving visible aria-labelledby" do
-      render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id">foo<span hidden>bar</span></div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo"
-    end
-
-    it "does recurse hidden elements when resolving hidden aria-labelledby" do
-      render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id" hidden>foo <span hidden>bar</span></div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo bar"
-    end
-
-    it "does not recurse display none elements when resolving visible aria-labelledby" do
-      render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id">foo <span style="display:none">bar</span></div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo"
-    end
-
-    it "does not recurse aria-hidden elements when resolving visible aria-labelledby" do
-      render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id">foo <span aria-hidden="true">bar</span></div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo"
-    end
-
-    it "does not recurse direct aria-hidden elements when resolving visible aria-labelledby" do
-      render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id" aria-hidden="true">foo<span aria-hidden="true">bar</span></div>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foobar"
-    end
-
-    it "does not recurse undisplayed elements" do
-      render <<~HTML
-        <div role="button" data-test-id="test">
-          foo
-          <template>xxx</template>
-          <script>xxx</script>
-          <style>xxx</style>
-        </button>
-      HTML
-
-      expect(find(:test_id, "test").accessible_name).to eq "foo"
     end
 
     it "returns a trimmed flat string" do
@@ -1068,6 +1278,186 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq "foo bar fi thumb fee foofox foo frog"
+    end
+  end
+
+  describe "tooltip" do
+    it "returns an accessible name from title" do
+      render <<~HTML
+        <div role="group" title="Accessible name" data-test-id="test">Contents</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
+    end
+  end
+
+  describe "name disallowed" do
+    it "returns no name for an unknown element" do
+      render <<~HTML
+        <foo role="" data-test-id="test">Contents</foo>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq ""
+    end
+
+    describe "for a element with a role allowing a name" do
+      it "returns no name for a hidden element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" hidden>Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with a hidden ancestor" do
+        render <<~HTML
+          <div hidden>
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for an aria-hidden element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" aria-hidden="true">Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with an aria-hidden ancestor" do
+        render <<~HTML
+          <div aria-hidden="true">
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for an inert element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" inert">Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with an inert ancestor" do
+        render <<~HTML
+          <div inert>
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a display none element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" style="display:none">Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with a display none ancestor" do
+        render <<~HTML
+          <div style="display:none">
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a visibility hidden element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" style="visibility:hidden">Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with a visibility hidden ancestor" do
+        render <<~HTML
+          <div style="visibility: hidden">
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a visibility collapse element" do
+        render <<~HTML
+          <div role="button" data-test-id="test" style="visibility:collapse">Contents</button>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns no name for a element with a visibility collapse ancestor" do
+        render <<~HTML
+          <div style="visibility: collapse">
+            <div role="button" data-test-id="test">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+      end
+
+      it "returns a name for a element with visibility visible" do
+        render <<~HTML
+          <div style="visibility: collapse">
+            <div role="button" data-test-id="test" style="visibility:visible">Contents</button>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq "Contents"
+      end
+
+      it "returns a name for a element with visibility visible ancestor" do
+        render <<~HTML
+          <div style="visibility: collapse">
+            <div style="visibility: visible">
+              <div role="button" data-test-id="test">Contents</button>
+            </div>
+          </div>
+        HTML
+
+        expect(find(:test_id, "test", visible: :all).accessible_name).to eq "Contents"
+      end
+    end
+
+    describe "roles with name disallowed" do
+      %w[caption code definition deletion emphasis insertion mark generic none
+         paragraph strong subscript suggestion superscript term time presentation].each do |role|
+        it "returns nothing for the explict role #{role}" do
+          render <<~HTML
+            <div role="#{role}" aria-labelledby="id2 id1" data-test-id="test" aria-label="label" title="title">Contents</div>
+            <span id="id1">name</span>
+            <span id="id2">Accessible</span>
+          HTML
+
+          expect(find(:test_id, "test").accessible_name).to eq ""
+        end
+      end
+    end
+
+    describe "elements with implicit roles with name disallowed" do
+      %w[abbr b bdi bdo br cite code dfn em i kbd mark q rp rt ruby s samp small strong sub sup time u var wbr
+         div span p pre address dl form a audio canvas meta link template slot style script].each do |name|
+        it "returns no name for <#{name}>" do
+          render <<~HTML
+            <#{name} data-test-id="test">Contents</#{name}>
+          HTML
+
+          expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
+        end
+      end
     end
   end
 
@@ -1145,84 +1535,4 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       expect(find(:test_id, "two").accessible_name).to eq "bar"
     end
   end
-
-  #  describe('embedded controls', () => {
-  #    context('when getting a name for a widget', () => {
-  #      it('uses the value of an <input>', () => {
-  #        const node = appendToBody('<div role="button"><input value="foo" /></div>');
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses the value of a <select>', () => {
-  #        const node = appendToBody('<div role="button"><select><option>one</option><option selected>two</option></select></div>');
-  #        expect(accessibleName(node)).toEqual('two');
-  #      });
-
-  #      it('uses the value of a <select multiple>', () => {
-  #        const node = appendToBody(`<div role="button">
-  #          <select multiple>
-  #            <option>one</option>
-  #            <option selected>two</option>
-  #            <option selected>three</option>
-  #          </select>
-  #        </div>`);
-  #        expect(accessibleName(node)).toEqual('two three');
-  #      });
-
-  #      it('uses the value of a <textarea>', () => {
-  #        const node = appendToBody('<div role="button"><textarea aria-label="bar">foo</textarea></div>');
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses the value of a widget of type textbox', () => {
-  #        const node = appendToBody('<div role="button"><span role="textbox" aria-label="bar">foo<span></div>');
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses the value of a widget of type searchbox', () => {
-  #        const node = appendToBody('<div role="button"><span role="searchbox" aria-label="bar">foo<span></div>');
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses the value of a widget of type range using aria-valuenow', () => {
-  #        const node = appendToBody('<button><div role="slider" aria-valuemin="0" aria-valuenow="102" aria-valuemax="255"></div></button>');
-  #        expect(accessibleName(node)).toEqual('102');
-  #      });
-
-  #      it('uses the value of a widget of type range using aria-valuetext', () => {
-  #        const node = appendToBody('<button><div role="slider" aria-valuemin="1" aria-valuenow="5" aria-valuetext="May" aria-valuemax="12"></div></button>');
-  #        expect(accessibleName(node)).toEqual('May');
-  #      });
-
-  #      it('uses the widget value in preference to aria-label', () => {
-  #        const node = appendToBody('<div role="button"><input value="foo" aria-label="bar" /></div>');
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses the widget value in preference to native label', () => {
-  #        const id = uniqueId();
-  #        const node = appendToBody(`
-  #          <div role="button"><input value="foo" id="${id}" /></div>
-  #          <label for="${id}">bar</label>
-  #        `);
-  #        expect(accessibleName(node)).toEqual('foo');
-  #      });
-
-  #      it('uses aria-labelledby in preference to the widget value', () => {
-  #        const id = uniqueId();
-  #        const node = appendToBody(`
-  #          <div role="button"><input value="foo" aria-labelledby="${id}" /></div>
-  #          <span id="${id}">bar</span>
-  #        `);
-  #        expect(accessibleName(node)).toEqual('bar');
-  #      });
-  #    });
-
-  #    context('when getting a name for not a widget', () => {
-  #      it('uses the accessible name of the <input>', () => {
-  #        const node = appendToBody('<div role="heading"><input value="foo" aria-label="bar" /></div>');
-  #        expect(accessibleName(node)).toEqual('bar');
-  #      });
-  #    });
-  #  });
 end

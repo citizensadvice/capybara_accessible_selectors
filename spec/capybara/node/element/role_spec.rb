@@ -1700,6 +1700,52 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
   end
 
+  describe "inert element" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <ul inert><li>item</li></ul>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div role="list" inert><div data-test-id="test" role="listitem">item</div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <input inert>
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+  end
+
+  describe "inert parent" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <div inert><ul><li>item</li></ul></div>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div inert><div role="list"><div data-test-id="test" role="listitem">item</div></div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <div inert><input></div>
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+  end
+
   describe "accessible hidden elements" do
     it "returns nil for implicit roles" do
       render <<~HTML
@@ -1715,11 +1761,11 @@ RSpec.describe Capybara::Node::Element, "#role" do
       expect(find(:test_id, "test").role).to be_nil
     end
 
-    it "returns nil for focusable elements" do
+    it "does not return nil for focusable elements" do
       render <<~HTML
         <input aria-hidden="true">
       HTML
-      expect(find(:element, "input").role).to be_nil
+      expect(find(:element, "input").role).to eq "textbox"
     end
   end
 
@@ -1738,11 +1784,117 @@ RSpec.describe Capybara::Node::Element, "#role" do
       expect(find(:test_id, "test").role).to be_nil
     end
 
-    it "returns nil for focusable elements" do
+    it "does not return nil for focusable elements" do
       render <<~HTML
         <div aria-hidden="true"><input></div>
       HTML
-      expect(find(:element, "input").role).to be_nil
+      expect(find(:element, "input").role).to eq "textbox"
+    end
+  end
+
+  describe "display none element" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <ul style="display: none"><li>item</li></ul>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div role="list" style="display: none"><div data-test-id="test" role="listitem">item</div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <input style="display: none">
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+  end
+
+  describe "display none parent" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <div style="display: none"><ul><li>item</li></ul></div>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div style="display: none"><div role="list"><div data-test-id="test" role="listitem">item</div></div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <div style="display: none"><input></div>
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+  end
+
+  describe "visibility hidden element" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <ul style="visibility: hidden"><li>item</li></ul>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div role="list" style="visibility: hidden"><div data-test-id="test" role="listitem">item</div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <input style="visibility: hidden">
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+  end
+
+  describe "visibility hidden parent" do
+    it "returns nil for implicit roles" do
+      render <<~HTML
+        <div style="visibility: hidden"><ul><li>item</li></ul></div>
+      HTML
+      expect(find(:element, "ul", visible: false).role).to be_nil
+    end
+
+    it "returns nil for explicit roles" do
+      render <<~HTML
+        <div style="visibility: hidden"><div role="list"><div data-test-id="test" role="listitem">item</div></div></div>
+      HTML
+      expect(find(:test_id, "test", visible: false).role).to be_nil
+    end
+
+    it "returns nil for focusable elements" do
+      render <<~HTML
+        <div style="visibility: hidden"><input></div>
+      HTML
+      expect(find(:element, "input", visible: false).role).to be_nil
+    end
+
+    it "returns if visibility is overridden" do
+      render <<~HTML
+        <div style="visibility: hidden"><input style="visibility: visible"></div>
+      HTML
+      expect(find(:element, "input", visible: false).role).to eq "textbox"
+    end
+
+    it "returns if visibility is overridden on a parent" do
+      render <<~HTML
+        <div style="visibility: hidden"><div style="visibility: visible"><input></div></div>
+      HTML
+      expect(find(:element, "input", visible: false).role).to eq "textbox"
     end
   end
 

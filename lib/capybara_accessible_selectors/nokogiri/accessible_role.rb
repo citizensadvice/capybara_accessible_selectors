@@ -1,38 +1,12 @@
 # frozen_string_literal: true
 
 require "capybara_accessible_selectors/nokogiri/helpers"
-require "capybara_accessible_selectors/nokogiri/hidden"
 require "capybara_accessible_selectors/nokogiri/accessible_name"
-require "capybara_accessible_selectors/nokogiri/focusable"
 
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleRole
       include Helpers
-
-      VALID_ROLES = %w[button checkbox gridcell link menuitem menuitemcheckbox menuitemradio option progressbar radio scrollbar searchbox
-                       separator slider spinbutton switch tab tabpanel textbox treeitem combobox grid listbox menu menubar
-                       radiogroup tablist tree treegrid application article blockquote caption cell code columnheader
-                       comment definition deletion directory document emphasis feed figure generic group heading img image insertion
-                       list listitem mark math meter none note paragraph presentation row rowgroup rowheader sectionfooter sectionheader
-                       separator strong subscript suggestion superscript table term time toolbar tooltip banner complementary
-                       contentinfo form main navigation region search alert log marquee status timer alertdialog dialog].freeze
-
-      CHILDREN_PRESENTATIONAL = %w[button checkbox img image menuitemcheckbox menuitemradio meter option
-                                   progressbar radio scrollbar separator slider switch tab].freeze
-
-      SECTIONING_ROLES = %w[main article complementary navigation].freeze
-
-      GLOBAL_ARIA_ATTRIBUTES = %w[atomic braillelabel brailleroledescription busy controls current describedby description details
-                                  dropeffect flowto grabbed hidden keyshortcuts label labelledby live owns relevant roledescription].freeze
-
-      ROLE_MAPPINGS = {
-        "presentation" => "none", # none is preferred since aria 1.1
-        "img" => "image", # browsers prefer "image"
-        "directory" => "list" # deprecated in aria 1.2
-      }.freeze
-      PRESENTATIONAL_ROLES = %w[none presentation].freeze
-      REQUIRES_NAME_FROM_AUTHOR = %w[form region].freeze
 
       def self.resolve(...)
         new(...).resolve
@@ -43,7 +17,7 @@ module CapybaraAccessibleSelectors
       end
 
       def resolve
-        return nil if hidden?
+        return nil if hidden?(@node) || inert?(@node) || (aria_hidden?(@node) && !focusable?)
 
         role = explicit
         role ||= implicit unless presentational_child? && !focusable?
@@ -51,13 +25,6 @@ module CapybaraAccessibleSelectors
       end
 
       private
-
-      def hidden?
-        return true if Hidden.resolve?(@node)
-        return true if [@node, *@node.ancestors("*")].any? { _1["aria-hidden"] == "true" }
-
-        false
-      end
 
       def role_attribute
         @node[:role].to_s.split(R_WHITE_SPACE).find do |role|
@@ -72,12 +39,12 @@ module CapybaraAccessibleSelectors
         # if an element is focusable an explicit none/presentation is ignored
         # if an element has global states or properties none/presentation is ignored
         return nil if PRESENTATIONAL_ROLES.include?(role) && (focusable? || global_aria_attribute?)
-        return nil if REQUIRES_NAME_FROM_AUTHOR.include?(role) && !accessible_name?(role)
+        return nil if REQUIRES_NAME_FROM_AUTHOR_ELEMENTS.include?(role) && !accessible_name?(role)
 
         role
       end
 
-      def implicit # rubocop:disable Metrics
+      def implicit
         case @node.node_name
         when "a", "area"
           @node.has_attribute?("href") ? "link" : "generic"
@@ -232,12 +199,6 @@ module CapybaraAccessibleSelectors
         end
       end
 
-      def focusable?
-        return @focusable if instance_variable_defined?(:@focusable)
-
-        @focusable = Focusable.resolve?(@node)
-      end
-
       def global_aria_attribute?
         GLOBAL_ARIA_ATTRIBUTES.any? { @node.has_attribute?("aria-#{_1}") }
       end
@@ -245,7 +206,7 @@ module CapybaraAccessibleSelectors
       def presentational_child?
         # These should not be exposed as roles, unless focusable
         # This is however under discussion and inconsistently implemented https://github.com/w3c/aria/issues/2509
-        @node.ancestors("*").any? { CHILDREN_PRESENTATIONAL.include?(AccessibleRole.resolve(_1)) }
+        @node.ancestors("*").any? { CHILDREN_PRESENTATIONAL_ROLES.include?(AccessibleRole.resolve(_1)) }
       end
 
       def accessible_name?(role)
@@ -287,6 +248,12 @@ module CapybaraAccessibleSelectors
         table = @node.parent.parent
         table = @node.parent unless table.node_name == "table"
         role_is?(table, "grid", "treegrid")
+      end
+
+      def focusable?
+        return @focusable if defined?(@focusable)
+
+        @focusable = super(@node)
       end
     end
   end
