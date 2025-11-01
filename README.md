@@ -74,13 +74,12 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 Added to all selectors.
 
-Currently only supported for Selenium drivers.
+Filters for an element's [computed accessible name](https://www.w3.org/TR/accname-1.2/).
 
-Filters for an element's computed accessible name. A string will do a partial match, unless the `exact` option is set.
+A string will do a partial match, unless the `exact` option is set.
 
-This uses the Selenium driver `accessible_name` method which uses the accessible name calculated by the browser. Support
-is reasonably good in modern browsers for common use cases, but browsers do not produce the same results for
-all cases and some screen-readers will perform their own calculations.
+The are subtle differences in how each browser calculate names, therefore the results for some of the newer roles
+and some edge cases are not consistent across all drivers. However the results are good for common use cases.
 
 This method must request the accessible name from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.
@@ -213,16 +212,14 @@ find :field, required: true
 
 Added to all selectors
 
-Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles), or with no role if `nil` is supplied.
+Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles),
+taking into account [implicit role mappings](https://www.w3.org/TR/html-aria/), or with no role if `nil` is supplied.
 
 The roles "none", "presentation" and "generic" are returned as `nil` as they are implementation details not
 exposed to users.
 
-This uses the Selenium driver `aria_role` method which uses the role calculated by the browser taking
-into account [implicit role mappings](https://www.w3.org/TR/html-aria/). The results for implicit roles are
-not consistent across all browsers, but are good for more common use cases.
-
-Assertions made against the output of [Caypbara.string][] or by tests driven by Rack Test will currently only use the value of the `role` attribute and does not return implicit role values.
+The are subtle differences in how each browser calculate roles, therefore the results for some of the newer roles
+and some edge cases are not consistent across all drivers. However the results are good for common use cases.
 
 This method must request the role from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.

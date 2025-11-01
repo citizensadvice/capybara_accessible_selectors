@@ -1,5 +1,7 @@
 # Change log
 
+- The rack_test driver now fully supports the accessible name calculations
+- The rack_test driver now fully supports resolving accessible roles
 - Add `:test_id` selector
 - The `aria` filter will now filter for not having the attribute if the hash value is `nil`
 

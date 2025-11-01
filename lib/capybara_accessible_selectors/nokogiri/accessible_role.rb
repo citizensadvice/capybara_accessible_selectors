@@ -3,6 +3,9 @@
 require "capybara_accessible_selectors/nokogiri/helpers"
 require "capybara_accessible_selectors/nokogiri/accessible_name"
 
+# https://www.w3.org/TR/wai-aria-1.3/
+# https://www.w3.org/TR/html-aria/
+
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleRole
@@ -16,6 +19,7 @@ module CapybaraAccessibleSelectors
         @node = node
       end
 
+      # Return the computed role, or nil if no role is found
       def resolve
         return nil if hidden?(@node) || inert?(@node) || (aria_hidden?(@node) && !focusable?)
 

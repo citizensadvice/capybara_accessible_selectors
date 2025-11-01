@@ -3,6 +3,10 @@
 require "capybara_accessible_selectors/nokogiri/accessible_role"
 require "capybara_accessible_selectors/nokogiri/helpers"
 
+# https://www.w3.org/TR/accname-1.2/
+# https://www.w3.org/TR/html-aam-1.0/
+# https://www.w3.org/TR/wai-aria-1.3/
+
 module CapybaraAccessibleSelectors
   module Nokogiri
     class AccessibleName
@@ -21,8 +25,8 @@ module CapybaraAccessibleSelectors
         @role = role
       end
 
+      # Return the computed accessible name, or nil if no name is found
       def resolve
-        # https://www.w3.org/TR/accname-1.2/
         return nil if inert?(@node)
         return nil if !@include_hidden && (hidden?(@node) || aria_hidden?(@node))
         return nil if !@recurse && NAME_DISALLOWED_ROLES.include?(role)
@@ -86,7 +90,6 @@ module CapybaraAccessibleSelectors
       end
 
       def name_from_host_language
-        # https://www.w3.org/TR/html-aam-1.0/#accessible-name-and-description-computation
         case @node.node_name
         when "input"
           case input_type
