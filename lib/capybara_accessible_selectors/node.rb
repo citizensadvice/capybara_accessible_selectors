@@ -13,5 +13,6 @@ module CapybaraAccessibleSelectors
   ::Capybara::Node::Simple.include RackTestNodeExtensions
 end
 
+require "capybara_accessible_selectors/node/accessible_description"
 require "capybara_accessible_selectors/node/accessible_name"
 require "capybara_accessible_selectors/node/role"

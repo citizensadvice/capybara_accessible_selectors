@@ -12,7 +12,7 @@ module CapybaraAccessibleSelectors
         new(...).resolve
       end
 
-      def initialize(node, role: nil, within_label: false, recurse: false, include_hidden: false, visited: [])
+      def initialize(node, role: nil, within_label: false, recurse: false, include_hidden: false, visited: Set.new)
         @node = node
         @within_label = within_label
         @recurse = recurse
@@ -30,17 +30,12 @@ module CapybaraAccessibleSelectors
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
           name_from_aria_label ||
-          (return nil if @visited.include?(@node)) ||
           name_from_host_language ||
           name_from_content ||
           name_from_tooltip
       end
 
       private
-
-      def name_from_content?
-        NAME_FROM_CONTENT_ROLES.include?(role)
-      end
 
       def name_from_aria_labelled_by
         return nil if @within_label
@@ -71,11 +66,11 @@ module CapybaraAccessibleSelectors
           return @node[:value] if @node.node_name == "input"
           return name_from_listbox_value(@node) if @node.node_name == "select"
 
-          "#{@node[:"aria-controls"]} #{@node[:"aria-owns"]}".split(R_WHITE_SPACE).find do |id|
-            listbox = @node.document.at_xpath(XPath.anywhere(:label)[XPath.attr(:for) == id].to_s)
+          "#{@node[:"aria-controls"]} #{@node[:"aria-owns"]}".split(R_WHITE_SPACE).lazy.map do |id|
+            listbox = @node.document.at_xpath(XPath.anywhere[XPath.attr(:role).contains_word("listbox")][XPath.attr(:id) == id].to_s)
 
             name_from_listbox_value(listbox) if listbox && AccessibleRole.resolve(listbox) == "listbox"
-          end
+          end.find(&:itself)
         when "listbox"
           name_from_listbox_value(@node)
         when "spinbutton", "slider"
@@ -134,8 +129,12 @@ module CapybaraAccessibleSelectors
         return unless @recurse || name_from_content?
 
         name = @node.children.filter_map do |node|
-          next node.text if node.text?
-          next " " if node.node_name == "br"
+          next if @visited.include?(node)
+
+          if node.text?
+            @visited << node
+            next node.text
+          end
 
           text = recurse_name(node)
           text = " #{text} " if block?(node)
@@ -149,6 +148,10 @@ module CapybaraAccessibleSelectors
         title = name_from_attribute(:title)
         title = " #{title} " if title && @recurse
         title
+      end
+
+      def name_from_content?
+        NAME_FROM_CONTENT_ROLES.include?(role)
       end
 
       def name_from_html_label
@@ -206,20 +209,23 @@ module CapybaraAccessibleSelectors
       def name_from_listbox_value(listbox)
         if listbox.node_name == "select"
           return @node.xpath(XPath.descendant(:option)[XPath.attr(:selected)].to_s).map do |option|
-            AccessibleName.resolve(option)
+            recurse_name(option)
           end.join(" ")
         end
 
-        listbox.xpath(XPath.descendant[XPath.attr(:role) == "option"].to_s).filter_map do |option|
+        listbox.xpath(XPath.descendant[XPath.attr(:role).contains_word("option")].to_s).filter_map do |option|
           next unless AccessibleRole.resolve(option) == "option"
           next unless option[:"aria-selected"] == "true"
 
-          AccessibleName.resolve(option)
+          recurse_name(option)
         end.join(" ")
       end
 
       def recurse_name(node, within_label: @within_label, include_hidden: @include_hidden)
-        AccessibleName.resolve(node, within_label:, recurse: true, include_hidden:, visited: [*@visited, @node])
+        @visited << @node
+        name = AccessibleName.resolve(node, within_label:, recurse: true, include_hidden:, visited: @visited)
+        @visited << node
+        name
       end
 
       def block?(node)

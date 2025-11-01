@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Capybara::Node::Element, "#role" do
+RSpec.describe Capybara::Node::Element, "#role", driver: :rack_test do
   describe "implicit roles" do
     context "with an <a>" do
       context "with a href" do
@@ -1898,82 +1898,6 @@ RSpec.describe Capybara::Node::Element, "#role" do
     end
   end
 
-  describe "children presentational" do
-    %w[button checkbox img image menuitemcheckbox menuitemradio meter option
-       progressbar radio scrollbar separator slider switch tab].each do |role|
-      it "is nil with an ancestor with the explicit role #{role}" do
-        render <<~HTML
-          <div role="#{role}"><ul><li>item</li></ul></div>
-        HTML
-        expect(find(:element, "ul").role).to be_nil
-      end
-
-      it "is not nil with a focusable element an ancestor with the explicit role #{role}" do
-        render <<~HTML
-          <div role="#{role}"><a href="http://example.com">link</a></div>
-        HTML
-        expect(find(:element, "a").role).to eq "link"
-      end
-    end
-
-    context "with an ancestor <button>" do
-      it "is nil" do
-        render <<~HTML
-          <button><ul><li>item</li></ul></button>
-        HTML
-        expect(find(:element, "ul").role).to be_nil
-      end
-
-      it "is not nil with a focusable element" do
-        render <<~HTML
-          <button><a href="http://example.com">link</a></button>
-        HTML
-        expect(find(:element, "a").role).to eq "link"
-      end
-    end
-
-    context "with an ancestor <progress>" do
-      it "is nil" do
-        render <<~HTML
-          <progress><ul><li>item</li></ul></progress>
-        HTML
-        expect(find(:element, "ul").role).to be_nil
-      end
-
-      it "is not nil with a focusable element" do
-        render <<~HTML
-          <progress><a href="http://example.com">link</a></progress>
-        HTML
-        expect(find(:element, "a").role).to eq "link"
-      end
-    end
-
-    context "with an ancestor <meter>" do
-      it "is nil" do
-        render <<~HTML
-          <meter><ul><li>item</li></ul></meter>
-        HTML
-        expect(find(:element, "ul").role).to be_nil
-      end
-
-      it "is not nil with a focusable element" do
-        render <<~HTML
-          <meter><a href="http://example.com">link</a></meter>
-        HTML
-        expect(find(:element, "a").role).to eq "link"
-      end
-    end
-
-    context "with an ancestor <option>" do
-      it "is nil" do
-        render <<~HTML
-          <select><option><ul><li>item</li></ul></option></select>
-        HTML
-        expect(find(:element, "ul").role).to be_nil
-      end
-    end
-  end
-
   describe "name from author" do
     context "with the region role" do
       it "returns region with an accessible name" do
@@ -1988,6 +1912,20 @@ RSpec.describe Capybara::Node::Element, "#role" do
           <div role="region">Contents</div>
         HTML
         expect(find(:element, "div").role).to be_nil
+      end
+
+      it "fallbacks to another role without an accessible name" do
+        render <<~HTML
+          <div role="region navigation">Contents</div>
+        HTML
+        expect(find(:element, "div").role).to eq "navigation"
+      end
+
+      it "fallbacks to an implicit role without an accessible name" do
+        render <<~HTML
+          <article role="region">Contents</article>
+        HTML
+        expect(find(:element, "article").role).to eq "article"
       end
     end
 
@@ -2004,6 +1942,20 @@ RSpec.describe Capybara::Node::Element, "#role" do
           <div role="form">Contents</div>
         HTML
         expect(find(:element, "div").role).to be_nil
+      end
+
+      it "fallbacks to another role without an accessible name" do
+        render <<~HTML
+          <div role="form navigation">Contents</div>
+        HTML
+        expect(find(:element, "div").role).to eq "navigation"
+      end
+
+      it "fallbacks to an implicit role without an accessible name" do
+        render <<~HTML
+          <article role="form">Contents</article>
+        HTML
+        expect(find(:element, "article").role).to eq "article"
       end
     end
   end

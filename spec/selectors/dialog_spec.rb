@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "dialog selector" do
+describe "dialog selector", skip_driver: :rack_test do
   before do
     visit "/dialog.html"
   end

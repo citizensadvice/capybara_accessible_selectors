@@ -14,8 +14,6 @@ module CapybaraAccessibleSelectors
                        separator strong subscript suggestion superscript table term time toolbar tooltip banner complementary
                        contentinfo form main navigation region search alert log marquee status timer alertdialog dialog].freeze
       PRESENTATIONAL_ROLES = %w[none presentation].freeze
-      CHILDREN_PRESENTATIONAL_ROLES = %w[button checkbox img image menuitemcheckbox menuitemradio meter option
-                                         progressbar radio scrollbar separator slider switch tab].freeze
       SECTIONING_ROLES = %w[main article complementary navigation].freeze
       NAME_FROM_CONTENT_ROLES = %w[button cell checkbox columnheader comment gridcell heading link menuitem menuitemcheckbox
                                    menuitemradio option radio row rowheader switch tab tooltip treeitem].freeze
@@ -33,7 +31,7 @@ module CapybaraAccessibleSelectors
       REQUIRES_NAME_FROM_AUTHOR_ELEMENTS = %w[form region].freeze
       HIDDEN_ELEMENTS = %w[template script head style link meta base param source track].freeze
       BLOCK_ELEMENTS = %w[p h1 h2 h3 h4 h5 h6 ol ul pre address blockquote dl div fieldset form hr noscript table input textarea select
-                          button img td th].freeze
+                          button img td th br].freeze
 
       def hidden?(node)
         visibility = nil

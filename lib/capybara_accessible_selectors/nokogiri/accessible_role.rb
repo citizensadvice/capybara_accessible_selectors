@@ -20,28 +20,25 @@ module CapybaraAccessibleSelectors
         return nil if hidden?(@node) || inert?(@node) || (aria_hidden?(@node) && !focusable?)
 
         role = explicit
-        role ||= implicit unless presentational_child? && !focusable?
+        role ||= implicit
         ROLE_MAPPINGS[role] || role
       end
 
       private
 
-      def role_attribute
+      def explicit
         @node[:role].to_s.split(R_WHITE_SPACE).find do |role|
           next if role == ""
+          next unless VALID_ROLES.include?(role)
+          # if an element is focusable an explicit none/presentation is ignored
+          # if an element has global states or properties none/presentation is ignored
+          next if PRESENTATIONAL_ROLES.include?(role) && (focusable? || global_aria_attribute?)
+          # https://w3c.github.io/aria/#document-handling_author-errors_roles
+          # Form and region with no names has no role
+          next if REQUIRES_NAME_FROM_AUTHOR_ELEMENTS.include?(role) && !accessible_name?(role)
 
-          VALID_ROLES.include?(role)
+          true
         end
-      end
-
-      def explicit
-        role = role_attribute
-        # if an element is focusable an explicit none/presentation is ignored
-        # if an element has global states or properties none/presentation is ignored
-        return nil if PRESENTATIONAL_ROLES.include?(role) && (focusable? || global_aria_attribute?)
-        return nil if REQUIRES_NAME_FROM_AUTHOR_ELEMENTS.include?(role) && !accessible_name?(role)
-
-        role
       end
 
       def implicit
@@ -201,12 +198,6 @@ module CapybaraAccessibleSelectors
 
       def global_aria_attribute?
         GLOBAL_ARIA_ATTRIBUTES.any? { @node.has_attribute?("aria-#{_1}") }
-      end
-
-      def presentational_child?
-        # These should not be exposed as roles, unless focusable
-        # This is however under discussion and inconsistently implemented https://github.com/w3c/aria/issues/2509
-        @node.ancestors("*").any? { CHILDREN_PRESENTATIONAL_ROLES.include?(AccessibleRole.resolve(_1)) }
       end
 
       def accessible_name?(role)

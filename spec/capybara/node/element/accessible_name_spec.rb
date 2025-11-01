@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Capybara::Node::Element, "#accessible_name" do
+RSpec.describe Capybara::Node::Element, "#accessible_name", driver: :rack_test do
   describe "aria-labelledby" do
     it "returns an accessible name from aria-labelledby" do
       render <<~HTML
@@ -57,13 +57,23 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       expect(find(:test_id, "test").accessible_name).to eq "foobar"
     end
 
-    it "does recurse direct inert elements when resolving visible aria-labelledby" do
+    it "does not recurse direct inert elements when resolving visible aria-labelledby" do
       render <<~HTML
-        <button aria-labelledby="id" data-test-id="test">xxx</button>
-        <div id="id" inert>foo</div>
+        <button aria-labelledby="id" data-test-id="test">foo</button>
+        <div id="id" inert>xxx</div>
       HTML
 
-      expect(find(:test_id, "test").accessible_name).to eq "xxx"
+      expect(find(:test_id, "test").accessible_name).to eq "foo"
+    end
+
+    it "does not infinite loop on roles that require names to lookup to find their role" do
+      render <<~HTML
+        <section aria-labelledby="id1" data-test-id="test">
+          <h1 id="id1">Heading</h1>
+        </section>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "Heading"
     end
   end
 
@@ -206,6 +216,53 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq "label foo bar fee"
+    end
+
+    it "does not infinite loop on an embedded control label" do
+      render <<~HTML
+        <div role="listbox" id="id2" aria-labelledby="id1" data-test-id="test">
+          <div role="option">xxx</div>
+          <div role="option" aria-selected="true">bar</div>
+        </div>
+        <div id="id1">
+          label
+          <div role="combobox" aria-controls="id2"></div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label bar"
+    end
+
+    it "does not infinite loop on an embedded control option idref" do
+      render <<~HTML
+        <button aria-labelledby="id1" data-test-id="test" id="id2">button</button>
+        <div id="id1">
+          label
+          <div role="listbox" id="id2">
+            <div role="option">xxx</div>
+            <div role="option" aria-selected="true" aria-labelledby="id2"></option>
+          </div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label"
+    end
+
+    it "does not infinite loop on an embedded control option" do
+      render <<~HTML
+        <button aria-labelledby="id1" data-test-id="test">xxx</button>
+        <div id="id1">
+          label
+          <div role="listbox" id="id2">
+            <div role="option">xxx</div>
+            <div role="option" aria-selected="true">
+              <div role="combobox" aria-controls="id2"></div>
+            </div>
+          </div>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "label"
     end
   end
 
@@ -855,6 +912,14 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
 
         expect(find(:element, "img").accessible_name).to eq ""
       end
+
+      it "does not infinite loop" do
+        render <<~HTML
+          <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" width="10" height="10" aria-labelledby="id" id="id" title="Image">
+        HTML
+
+        expect(find(:element, "img").accessible_name).to eq "Image"
+      end
     end
 
     context "with a <table>" do
@@ -1239,7 +1304,30 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
         </div>
       HTML
 
+      # Chrome: foo foo bar
+      # Safari: foo
+      # Firefox: foo bar
       expect(find(:test_id, "test").accessible_name).to eq "foo bar"
+    end
+
+    it "only uses idrefs once" do
+      render <<~HTML
+        <div role="button" data-test-id="test" id="id3">
+          foo
+          <div aria-labelledby="id1" id="id2">
+            www
+            <div aria-labelledby="id1">xxx</div>
+          </div>
+          <div id="id1">bar</div>
+          <div aria-labelledby="id2">yyy</div>
+          <div aria-labelledby="id3">zzz</div>
+        </div>
+      HTML
+
+      # Chrome: foo bar www xxx foo www xxx bar yyy zzz
+      # Safari: foo bar bar www bar
+      # Firefox: foo bar yyy zzz
+      expect(find(:test_id, "test").accessible_name).to eq "foo bar www xxx zzz"
     end
 
     it "does not recurse hidden elements" do
@@ -1528,7 +1616,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_name" do
     it "passes github.com/w3c/accname/pull/53" do
       render <<~HTML
         <span aria-label="bar" data-test-id="one">foo</span>
-        <button><span aria-label="bar" data-test-id="two">foo</span></button
+        <button data-test-id="two"><span aria-label="bar">foo</span></button
       HTML
 
       expect(find(:test_id, "one").accessible_name).to eq ""
