@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Capybara::Selector::FilterSet.add(:capybara_accessible_selectors)
+require "capybara_accessible_selectors/filters/accessible_description"
 require "capybara_accessible_selectors/filters/accessible_name"
 require "capybara_accessible_selectors/filters/aria"
 require "capybara_accessible_selectors/filters/current"

@@ -12,6 +12,8 @@ module CapybaraAccessibleSelectors
     class AccessibleName
       include Helpers
 
+      attr_reader :from_tooltip
+
       def self.resolve(...)
         new(...).resolve
       end
@@ -149,6 +151,8 @@ module CapybaraAccessibleSelectors
 
       def name_from_tooltip
         title = name_from_attribute(:title)
+        # Needed for the accessible name calculation
+        @from_tooltip = true if title
         title = " #{title} " if title && @recurse
         title
       end
