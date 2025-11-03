@@ -271,7 +271,7 @@ describe "combo_box selector" do
 
         describe "currently_with" do
           it "fills in a combo box with an existing value" do
-            select_combo_box_option "Banana", from: label
+            select_combo_box_option "Banana", search: "Ban", from: label
             select_combo_box_option "Apple", from: label, currently_with: "Banana"
             expect do
               select_combo_box_option "Banana", from: label, currently_with: "Foo", wait: false
