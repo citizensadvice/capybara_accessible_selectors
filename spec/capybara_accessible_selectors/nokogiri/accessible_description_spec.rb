@@ -129,8 +129,8 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
           <div aria-label="bar">
             xxx
           </div>
-          <div title="fee">
-            yyy
+          <div title="yyy">
+            fee
           </div>
           <label for="id1">foe</label>
           <input id="id1">
@@ -138,6 +138,15 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
       HTML
 
       expect(find(:test_id, "test").accessible_description).to eq "foo bar fee foe"
+    end
+
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" aria-labelledby="id" aria-describedby="id" data-test-id="test">Contents</div>
+        <span id="id">xxx</span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
     end
   end
 
@@ -157,6 +166,14 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
 
       expect(find(:test_id, "test").accessible_description).to eq ""
     end
+
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" title="title" aria-description="title" data-test-id="test">Contents</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
   end
 
   describe "native" do
@@ -171,14 +188,52 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
           expect(find(:element, "input").accessible_description).to eq "value"
         end
 
-        it "does not use if matching the accessible name"
+        it "does not use if matching the accessible name" do
+          render <<~HTML
+            <input type="#{type}" value="value" title="title">
+          HTML
+
+          expect(find(:element, "input").accessible_description).to eq "title"
+        end
       end
     end
 
     context "with an <table>" do
-      it "uses the caption"
-      it "does not use the caption if empty"
-      it "does not use the caption if the accessible name"
+      it "uses the caption" do
+        render <<~HTML
+          <table title="title" aria-label="xxx">
+            <caption>caption</caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "caption"
+      end
+
+      it "does not use the caption if empty" do
+        render <<~HTML
+          <table title="title" aria-label="xxx">
+            <caption></caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "title"
+      end
+
+      it "does not use the caption if the accessible name" do
+        render <<~HTML
+          <table title="title">
+            <caption>caption</caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "title"
+      end
     end
   end
 
@@ -200,11 +255,17 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
 
       expect(find(:test_id, "test").accessible_description).to eq ""
     end
+
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" title="title" data-test-id="test">Contents</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
   end
 
   describe "no description" do
-    it "does not return a description identical to the accessible name"
-
     it "returns no description for an unknown element" do
       render <<~HTML
         <foo data-test-id="test" aria-desription="xxx">Contents</foo>

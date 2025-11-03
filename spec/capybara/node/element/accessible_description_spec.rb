@@ -12,8 +12,52 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq "Accessible description"
     end
 
-    it "finds all hidden text on hidden elements"
-    it "finds all visible text on visible elements"
+    it "excludes hidden text if description block is not hidden" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          foo
+          <span hidden>a</span>
+          <span style="display:none">c</span>
+          <span style="visibility:hidden">d</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo"
+    end
+
+    it "includes hidden text if description block is hidden" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id" hidden>
+          foo
+          <span hidden>a</span>
+          <span aria-hidden="true">b</span>
+          <span style="display:none">c</span>
+          <span style="visibility:hidden">d</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo a b c d"
+    end
+
+    it "handles missing ids" do
+      render <<~HTML
+        <div role="group" aria-describedby="id2 id1" data-test-id="test">Contents</div>
+        <span id="id2">Accessible</span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "Accessible"
+    end
+
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" aria-labelledby="id" aria-describedby="id" data-test-id="test">Contents</div>
+        <span id="id">xxx</span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
   end
 
   describe "aria-description" do
@@ -25,9 +69,17 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq "Accessible description"
     end
 
-    it "does not return an accessible description from an aria-description if an empty aria-describedby is supplied" do
+    it "does not return an accessible description from aria-description if an empty aria-describedby is supplied" do
       render <<~HTML
         <div role="group" aria-describedby="" aria-description="Accessible description" data-test-id="test">Contents</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
+
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" title="title" aria-description="title" data-test-id="test">Contents</div>
       HTML
 
       expect(find(:test_id, "test").accessible_description).to eq ""
@@ -35,11 +87,6 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
   end
 
   describe "native" do
-    context "with a <table> type" do
-      it "calculates from caption"
-      it "it does not use if matching the accessible name"
-    end
-
     %w[button submit reset].each do |type|
       context "with an <input> type #{type}" do
         it "calculates from value" do
@@ -51,7 +98,51 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
           expect(find(:element, "input").accessible_description).to eq "value"
         end
 
-        it "does not use if matching the accessible name"
+        it "does not use if matching the accessible name" do
+          render <<~HTML
+            <input type="#{type}" value="value" title="title">
+          HTML
+
+          expect(find(:element, "input").accessible_description).to eq "title"
+        end
+      end
+    end
+
+    context "with an <table>" do
+      it "uses the caption" do
+        render <<~HTML
+          <table title="title" aria-label="xxx">
+            <caption>caption</caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "caption"
+      end
+
+      it "does not use the caption if empty" do
+        render <<~HTML
+          <table title="title" aria-label="xxx">
+            <caption></caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "title"
+      end
+
+      it "does not use the caption if the accessible name" do
+        render <<~HTML
+          <table title="title">
+            <caption>caption</caption>
+            <tr><td>cell</td><td>cell</td></tr>
+            <tr><td>cell</td><td>cell</td></tr>
+          </table>
+        HTML
+
+        expect(find(:element, "table").accessible_description).to eq "title"
       end
     end
   end
@@ -75,6 +166,12 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq ""
     end
 
-    it "does not return an accessible description from tooltip if it matches the accessible name"
+    it "does not use if matching the accessible name" do
+      render <<~HTML
+        <div role="group" title="title" data-test-id="test">Contents</div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
   end
 end

@@ -6,7 +6,7 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
 
     next false unless node[:"aria-describedby"]
 
-    description = CapybaraAccessibleSelectors::Helpers.element_describedby(node)
+    description = node.accessible_description
     next true if value.is_a?(String) && description.include?(value)
     next true if value.is_a?(Regexp) && value.match?(description)
 

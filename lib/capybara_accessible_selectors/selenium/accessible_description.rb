@@ -16,6 +16,9 @@ module CapybaraAccessibleSelectors
       end
 
       def resolve
+        # A rough implementation that does not take account of
+        # aria-hidden, inert, name prohibited,
+        # or the full naming algorithm
         @accessible_name = @node.accessible_name
 
         resolved = description_from_aria_described_by ||
@@ -46,9 +49,9 @@ module CapybaraAccessibleSelectors
       end
 
       def description_from_caption
-        text = normalised(@node.find_xpath(XPath.child(:caption))&.visible_text)
+        text = normalised(@node.find_xpath(XPath.child(:caption)).first&.visible_text)
         return if text == ""
-        return if text == @accessible_nam
+        return if text == @accessible_name
 
         text
       end

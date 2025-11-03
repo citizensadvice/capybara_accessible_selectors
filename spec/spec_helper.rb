@@ -97,11 +97,9 @@ RSpec.configure do |config|
     next if ENV["IGNORE_DRIVER_SKIPS"]
 
     current_driver = Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym
-
     skip_driver = Array(example.metadata[:skip_driver])
-    driver = Array(example.metadata[:driver])
 
-    next unless skip_driver.include?(current_driver) || (!driver.empty? && !driver.include?(current_driver))
+    next unless skip_driver.include?(current_driver)
 
     skip "not compatible with current driver"
   end

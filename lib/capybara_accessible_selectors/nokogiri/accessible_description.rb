@@ -30,7 +30,7 @@ module CapybaraAccessibleSelectors
         description = description_from_aria_described_by ||
                       description_from_aria_description ||
                       description_from_host_language ||
-                      description_from_attribute(:title)
+                      description_from_tooltip
 
         @accessible_name == description ? nil : description
       end
@@ -66,16 +66,16 @@ module CapybaraAccessibleSelectors
         when "table"
           description_from_caption
         when "input"
-          description_from_attribute(:value) if %w[button submit reset].include?(@node[:type])
+          description_from_value if %w[button submit reset].include?(@node[:type])
         end
       end
 
-      def description_from_attribute(name)
-        normalised_description(@node[name])
+      def description_from_tooltip
+        normalised_description(@node[:title])
       end
 
-      def description_from_value(name)
-        value = normalised_description(@node[name])
+      def description_from_value
+        value = normalised_description(@node[:value])
 
         return if ["", @accessible_name].include?(value)
 
