@@ -16,38 +16,29 @@ module CapybaraAccessibleSelectors
         new(...).resolve
       end
 
-      def initialize(node, role: nil, within_label: false, recurse: false, include_hidden: false, visited: Set.new)
+      def initialize(node)
         @node = node
-        @within_label = within_label
-        @recurse = recurse
-        @include_hidden = include_hidden
-        @visited = visited
-        @role = role
       end
 
       def resolve
         return nil if inert?(@node)
         return nil if !@include_hidden && (hidden?(@node) || aria_hidden?(@node))
+        return nil if NAME_DISALLOWED_ROLES.include?(role)
 
-        unless @recurse
-          name_visited = Set.new
-          accessible_name = AccessibleName.new(@node, visited: name_visited)
-          accessible_name.resolve
-          @visited += name_visited
-          @name_from_tooltip = accessible_name.from_tooltip
-        end
+        @accessible_name = AccessibleName.new(@node).resolve
 
-        description_from_aria_described_by ||
-          description_from_aria_description ||
-          description_from_host_language ||
-          description_from_content ||
-          description_from_tooltip
+        description = description_from_aria_described_by ||
+                      description_from_aria_description ||
+                      description_from_host_language ||
+                      description_from_attribute(:title)
+
+        @accessible_name == description ? nil : description
       end
 
       private
 
       def description_from_aria_described_by
-        return if @within_label
+        return if @recurse
         return unless @node.has_attribute?("aria-describedby")
 
         parts = @node[:"aria-describedby"].to_s.split(R_WHITE_SPACE).filter_map do |id|
@@ -56,18 +47,21 @@ module CapybaraAccessibleSelectors
           found = @node.document.at_xpath(XPath.anywhere[XPath.attr(:id) == id].to_s)
           next unless found
 
-          recurse_description(found, within_label: true, include_hidden: hidden?(found) || aria_hidden?(found))
+          recurse_name(found, within_label: true, include_hidden: hidden?(found) || aria_hidden?(found))
         end
         parts.join(" ").then { normalised_description(_1) }
       end
 
       def description_from_aria_description
+        return if @recurse
         return unless @node.has_attribute?("aria-description")
 
         normalised_description(@node[:"aria-description"])
       end
 
       def description_from_host_language
+        return if @recurse
+
         case @node.node_name
         when "table"
           description_from_caption
@@ -76,54 +70,34 @@ module CapybaraAccessibleSelectors
         end
       end
 
-      def description_from_content
-        return unless @recurse
-
-        name = @node.children.filter_map do |node|
-          next if @visited.include?(node)
-
-          if node.text?
-            @visited << node
-            next node.text
-          end
-
-          text = recurse_name(node)
-          text = " #{text} " if block?(node)
-          text
-        end.join
-
-        normalised_description(name)
-      end
-
-      def description_from_tooltip
-        return if @name_from_tooltip
-        return unless @node.has_attribute?("title")
-
-        title = description_from_attribute(:title)
-        title = " #{title} " if title && @recurse
-        title
-      end
-
       def description_from_attribute(name)
         normalised_description(@node[name])
+      end
+
+      def description_from_value(name)
+        value = normalised_description(@node[name])
+
+        return if ["", @accessible_name].include?(value)
+
+        value
       end
 
       def description_from_caption
         node = @node.children.find { _1.node_name == "caption" }
         return unless node
 
-        recurse_description(title, within_content: true)
+        caption = recurse_name(node)
+        return if ["", @accessible_name].include?(caption)
+
+        caption
       end
 
-      def recurse_description(node, within_label: @within_label, include_hidden: @include_hidden)
-        @visited << @node
-        description = AccessibleDescription.resolve(node, within_label:, recurse: true, include_hidden:, visited: @visited)
-        @visited << node
-        description
+      def recurse_name(node, within_label: false, include_hidden: @include_hidden)
+        AccessibleName.resolve(node, recurse: true, within_label:, include_hidden:, visited: Set[@node])
       end
 
-      def block?
-        BLOCK_ELEMENTS.include?(@node.tag_name)
+      def block?(node)
+        BLOCK_ELEMENTS.include?(node.node_name)
       end
 
       def accessible_name
@@ -132,6 +106,10 @@ module CapybaraAccessibleSelectors
 
       def normalised_description(value)
         value.to_s.strip.gsub(/\s+/, " ")
+      end
+
+      def role
+        AccessibleRole.resolve(@node)
       end
     end
   end

@@ -1410,7 +1410,7 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
   describe "name disallowed" do
     it "returns no name for an unknown element" do
       render <<~HTML
-        <foo role="" data-test-id="test">Contents</foo>
+        <foo data-test-id="test">Contents</foo>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq ""
