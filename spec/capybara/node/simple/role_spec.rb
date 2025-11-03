@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Capybara::Node::Simple, "#role" do
+RSpec.describe Capybara::Node::Simple, "#role", driver: :rack_test do
   it "returns the value of an explicit role attribute" do
     render <<~HTML
       <div role="listbox">
@@ -10,6 +10,15 @@ RSpec.describe Capybara::Node::Simple, "#role" do
       </div>
     HTML
     expect(find(:element, "a").role).to eq "option"
+  end
+
+  it "returns the value of an implicit role attribute" do
+    render <<~HTML
+      <a href="http://example.com">
+        contents
+      </a>
+    HTML
+    expect(find(:element, "a").role).to eq "link"
   end
 
   it "returns no role as nil" do

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/nokogiri/accessible_role"
+
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions
     def role
@@ -35,7 +37,7 @@ module CapybaraAccessibleSelectors
 
   module RackTestNodeExtensions
     def role
-      native[:role]
+      Nokogiri::AccessibleRole.resolve(native)
     end
   end
 end

@@ -35,3 +35,5 @@ jobs:
         run: bundle exec rspec
       - name: Run Firefox tests
         run: DRIVER=selenium_headless bundle exec rspec
+      - name: Run rack_test tests
+        run: DRIVER=rack_test bundle exec rspec

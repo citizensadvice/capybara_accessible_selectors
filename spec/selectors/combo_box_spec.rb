@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "combo_box selector" do
+describe "combo_box selector", skip_driver: :rack_test do
   before do
     visit "/combo_box.html"
   end

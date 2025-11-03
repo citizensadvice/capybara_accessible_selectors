@@ -199,7 +199,7 @@ module CapybaraAccessibleSelectors
     # @yield [Boolean] Should the element be included
     #
     # @return [Capybara::Node::Element] The combo box
-    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &) # rubocop:disable Metrics
+    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &)
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)

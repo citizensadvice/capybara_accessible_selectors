@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Disclosure" do
+describe "Disclosure", skip_driver: :rack_test do
   before { visit "/disclosure.html" }
 
   context "with Details/Summary" do

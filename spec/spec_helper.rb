@@ -69,16 +69,14 @@ Capybara.register_driver(:chrome_canary) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.register_driver(:chrome_canary_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
-    args: ["--headless"]
+    args: ["--headless=new"]
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
@@ -98,8 +96,12 @@ RSpec.configure do |config|
   config.before do |example|
     next if ENV["IGNORE_DRIVER_SKIPS"]
 
+    current_driver = Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym
+
     skip_driver = Array(example.metadata[:skip_driver])
-    next unless skip_driver.include?(:all) || skip_driver.include?(Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym)
+    driver = Array(example.metadata[:driver])
+
+    next unless skip_driver.include?(current_driver) || (!driver.empty? && !driver.include?(current_driver))
 
     skip "not compatible with current driver"
   end

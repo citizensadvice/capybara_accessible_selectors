@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "have_no_validation_errors" do
+describe "have_no_validation_errors", skip_driver: :rack_test do
   before { visit "/have_validation_errors.html" }
 
   it "validates there are no validation errors" do

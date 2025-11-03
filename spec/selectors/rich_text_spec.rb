@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "rich text" do
+describe "rich text", skip_driver: :rack_test do
   before { visit "/rich_text.html" }
 
   context "when inline" do

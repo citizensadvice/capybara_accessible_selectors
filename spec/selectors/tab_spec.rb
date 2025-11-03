@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "tab selector" do
+describe "tab selector", skip_driver: :rack_test do
   before do
     visit "/tab.html"
   end

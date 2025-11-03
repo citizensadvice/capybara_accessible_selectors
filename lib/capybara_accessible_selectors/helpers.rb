@@ -8,7 +8,7 @@ module CapybaraAccessibleSelectors
       [accessible_name(node), element_describedby(node)].compact.join(" ").strip
     end
 
-    def accessible_name(node) # rubocop:disable Metrics
+    def accessible_name(node)
       # TODO: This is a limited implementation valid for form elements that does not take aria-hidden into account
       name = element_labelledby(node)
       name = node[:"aria-label"] || "" if name == ""
