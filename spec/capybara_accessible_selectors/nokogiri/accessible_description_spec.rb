@@ -25,10 +25,73 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
       expect(find(:test_id, "test").accessible_description).to eq "description zzz yyy"
     end
 
-    it "excludes hidden text if description block is not hidden"
-    it "includes hidden text if description block is hidden"
-    it "excludes inert text"
-    it "excludes inert text in the description block"
+    it "excludes hidden text if description block is not hidden" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          foo
+          <span hidden>a</span>
+          <span aria-hidden="true">b</span>
+          <span style="display:none">c</span>
+          <span style="visibility:hidden">d</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo"
+    end
+
+    it "includes hidden text if description block is hidden" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id" hidden>
+          foo
+          <span hidden>a</span>
+          <span aria-hidden="true">b</span>
+          <span style="display:none">c</span>
+          <span style="visibility:hidden">d</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo a b c d"
+    end
+
+    it "includes hidden text if description block is aria-hidden" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id" aria-hidden="true">
+          foo
+          <span hidden>a</span>
+          <span aria-hidden="true">b</span>
+          <span style="display:none">c</span>
+          <span style="visibility:hidden">d</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo a b c d"
+    end
+
+    it "excludes inert text" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test" aria-descripton="yyy">xxx</button>
+        <div id="id" inert">
+          foo
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq ""
+    end
+
+    it "excludes inert text in the description block" do
+      render <<~HTML
+        <button aria-describedby="id" data-test-id="test">xxx</button>
+        <div id="id">
+          foo
+          <span inert>xxx</span>
+        </div>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo"
+    end
 
     it "handles missing ids" do
       render <<~HTML
@@ -48,10 +111,33 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
             bar
           </div>
           <div id="id1">fee</div>
+          <div aria-labelledby="id2">
+            foe
+          </div>
+        </div>
+        <span id="id3">xxx</span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_description).to eq "foo bar fee foe"
+    end
+
+    it "uses the accessible name algorithm in the description block" do
+      render <<~HTML
+        <div role="button" data-test-id="test" aria-describedby="id">Press me</div>
+        <div id="id">
+          foo
+          <div aria-label="bar">
+            xxx
+          </div>
+          <div title="fee">
+            yyy
+          </div>
+          <label for="id1">foe</label>
+          <input id="id1">
         </div>
       HTML
 
-      expect(find(:test_id, "test").accessible_description).to eq "foo bar fee"
+      expect(find(:test_id, "test").accessible_description).to eq "foo bar fee foe"
     end
   end
 
@@ -116,7 +202,9 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
     end
   end
 
-  describe "name disallowed" do
+  describe "no description" do
+    it "does not return a description identical to the accessible name"
+
     it "returns no description for an unknown element" do
       render <<~HTML
         <foo data-test-id="test" aria-desription="xxx">Contents</foo>
@@ -274,7 +362,7 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleDescription, dri
 
     describe "elements with implicit roles with name disallowed" do
       %w[abbr b bdi bdo br cite code dfn em i kbd mark q rp rt ruby s samp small strong sub sup time u var wbr
-         div span p pre address dl form a audio canvas meta link template slot style script].each do |name|
+         div span p pre dl form section a audio canvas meta link template slot style script].each do |name|
         it "returns no name for <#{name}>" do
           render <<~HTML
             <#{name} data-test-id="test" aria-description="description">Contents</#{name}>

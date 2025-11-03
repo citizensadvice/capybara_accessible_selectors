@@ -1565,10 +1565,10 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
 
     describe "elements with implicit roles with name disallowed" do
       %w[abbr b bdi bdo br cite code dfn em i kbd mark q rp rt ruby s samp small strong sub sup time u var wbr
-         div span p pre address dl form a audio canvas meta link template slot style script].each do |name|
+         div span p pre dl a audio canvas meta link template slot style script].each do |name|
         it "returns no name for <#{name}>" do
           render <<~HTML
-            <#{name} data-test-id="test">Contents</#{name}>
+            <#{name} data-test-id="test" title="xxx">Contents</#{name}>
           HTML
 
           expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""

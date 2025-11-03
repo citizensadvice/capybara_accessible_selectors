@@ -23,7 +23,7 @@ module CapybaraAccessibleSelectors
       def resolve
         return nil if inert?(@node)
         return nil if !@include_hidden && (hidden?(@node) || aria_hidden?(@node))
-        return nil if NAME_DISALLOWED_ROLES.include?(role)
+        return nil if !role || NAME_DISALLOWED_ROLES.include?(role)
 
         @accessible_name = AccessibleName.new(@node).resolve
 
