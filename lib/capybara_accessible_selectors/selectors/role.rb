@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "capybara_accessible_selectors/aria/implicit_role_selectors"
+require "capybara_accessible_selectors/aria"
 
 Capybara.add_selector :role do
   xpath do |locator, custom_elements: nil, **|
@@ -14,10 +14,6 @@ Capybara.add_selector :role do
 
   locator_filter do |node, locator, **|
     expand_roles(locator).include?(node.role)
-  rescue NotImplementedError
-    # If not implemented just go with the simple resolution
-    # using the first role in the list
-    !node[:role] || expand_roles(locator).include?(node[:role].to_s.strip.split(/\s/).first)
   end
 
   def expand_roles(locator)

@@ -31,7 +31,7 @@ module CapybaraAccessibleSelectors
       erb <<~HTML
         <!doctype html>
         <html>
-          <head><meta charset="UTF-8" /></head>
+          <head><meta charset="UTF-8" /><%= params[:head] %></head>
           <body><%= params[:body] %></body>
         </html>
       HTML
@@ -69,20 +69,19 @@ Capybara.register_driver(:chrome_canary) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary"
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.register_driver(:chrome_canary_headless) do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     binary: "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
-    args: ["--headless"]
+    args: ["--headless=new"]
   )
-  service = Selenium::WebDriver::Service.chrome(path: "/usr/local/bin/chromedriver-canary/chromedriver")
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options:, service:)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication
 Capybara.server = :puma, { Silent: true }
+Capybara.test_id = "data-test-id"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -97,8 +96,10 @@ RSpec.configure do |config|
   config.before do |example|
     next if ENV["IGNORE_DRIVER_SKIPS"]
 
+    current_driver = Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym
     skip_driver = Array(example.metadata[:skip_driver])
-    next unless skip_driver.include?(:all) || skip_driver.include?(Capybara.current_driver.to_s.gsub(/_headless$/, "").to_sym)
+
+    next unless skip_driver.include?(current_driver)
 
     skip "not compatible with current driver"
   end
@@ -107,27 +108,23 @@ RSpec.configure do |config|
     def render(html)
       visit("/pages/new?body=#{CGI.escape(html.strip)}")
     end
+
+    def render_in_head(html)
+      visit("/pages/new?head=#{CGI.escape(html.strip)}")
+    end
   end)
 end
 
-module Capybara
-  module Node
-    module WarnOnTimeouts
-      def synchronize(seconds = nil, *, **)
-        start_time = Time.now
-        super
-      rescue Capybara::ElementNotFound => e
-        seconds ||= Capybara.default_max_wait_time
-        unless seconds.zero? || Time.now - start_time <= seconds
-          stack = caller.select { _1.start_with?(Dir.pwd) }.map { _1.slice(Dir.pwd.length..) }.drop(1)
-          warn("selector has timed out #{stack}")
-        end
-        raise e
-      end
+Capybara::Node::Base.prepend(Module.new do
+  def synchronize(seconds = nil, *, **)
+    start_time = Time.now
+    super
+  rescue Capybara::ElementNotFound => e
+    seconds ||= Capybara.default_max_wait_time
+    unless seconds.zero? || Time.now - start_time <= seconds
+      stack = caller.select { _1.start_with?(Dir.pwd) }.map { _1.slice(Dir.pwd.length..) }.drop(1)
+      warn("selector has timed out #{stack}")
     end
-
-    class Base
-      prepend WarnOnTimeouts
-    end
+    raise e
   end
-end
+end)

@@ -2,12 +2,10 @@
 
 Capybara.add_selector :main, locator_type: [String, Symbol] do
   xpath do |*|
-    main = XPath.descendant[[
+    XPath.descendant_or_self[[
       XPath.local_name == "main",
       XPath.attr(:role) == "main"
     ].reduce(:|)]
-
-    main[XPath.parent(:body)]
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|

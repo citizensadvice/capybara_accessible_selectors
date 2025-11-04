@@ -70,17 +70,42 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `accessible_description` [String, Regexp]
+
+Added to all selectors.
+
+Filters for an element's [computed accessible description](https://www.w3.org/TR/accname-1.2/).
+
+The rack test driver will use a fairly accurate calculation.
+
+The selenium drivers do not provide a way to request this value from the browser. The calculation
+used does not take account of `aria-hidden` or `aria-label`.
+
+For example:
+
+```html
+<label>
+  My field
+  <input aria-describedby="id1 id2" />
+</label>
+<span id="id1">My</span>
+<span id="id2">description</span>
+```
+
+```ruby
+expect(page).to have_field "My field", accessible_description: "My description"
+```
+
 #### `accessible_name` [String, Regexp]
 
 Added to all selectors.
 
-Currently only supported for Selenium drivers.
+Filters for an element's [computed accessible name](https://www.w3.org/TR/accname-1.2/).
 
-Filters for an element's computed accessible name. A string will do a partial match, unless the `exact` option is set.
+A string will do a partial match, unless the `exact` option is set.
 
-This uses the Selenium driver `accessible_name` method which uses the accessible name calculated by the browser. Support
-is reasonably good in modern browsers for common use cases, but browsers do not produce the same results for
-all cases and some screen-readers will perform their own calculations.
+The are subtle differences in how each browser calculate names, therefore the results for some of the newer roles
+and some edge cases are not consistent across all drivers. However the results are good for common use cases.
 
 This method must request the accessible name from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.
@@ -106,6 +131,9 @@ Filters for an element that declares [ARIA attributes](https://www.w3.org/TR/wai
 
 ```ruby
 expect(page).to have_selector :button, "A pressed button", aria: { controls: "some-state", pressed: true }
+
+# If the value is nil it will select elements with the attribute
+expect(page).to have_selector :button, "A pressed button", aria: { selected: nil }
 ```
 
 #### `current` [String, Symbol]
@@ -136,27 +164,6 @@ expect(page).to have_link "About us", current: "page"
 values. A `current: true` will match against `[aria-current="true"]`, and a
 `current: false` will match against `[aria-current="false"]`. To match an
 element **without any** `[aria-current]` attribute, pass `current: nil`.
-
-#### `described_by` [String, Regexp]
-
-Added to all selectors.
-
-Is the field described by some text using [`aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute).
-
-For example:
-
-```html
-<label>
-  My field
-  <input aria-describedby="id1 id2" />
-</label>
-<span id="id1">My</span>
-<span id="id2">description</span>
-```
-
-```ruby
-expect(page).to have_field "My field", described_by: "My description"
-```
 
 #### `fieldset` [String, Symbol, Array]
 
@@ -208,19 +215,16 @@ find :field, required: true
 
 #### `role` [String, Symbol, nil]
 
-> [!WARNING]
-> Not supported by the `:rack_test` driver
-
 Added to all selectors
 
-Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles), or with no role if `nil` is supplied.
+Filters for an element with a matching calculated [role](https://www.w3.org/TR/wai-aria/#introroles),
+taking into account [implicit role mappings](https://www.w3.org/TR/html-aria/), or with no role if `nil` is supplied.
 
 The roles "none", "presentation" and "generic" are returned as `nil` as they are implementation details not
 exposed to users.
 
-This uses the Selenium driver `aria_role` method which uses the role calculated by the browser taking
-into account [implicit role mappings](https://www.w3.org/TR/html-aria/). The results for implicit roles are
-not consistent across all browsers, but are good for more common use cases.
+The are subtle differences in how each browser calculate roles, therefore the results for some of the newer roles
+and some edge cases are not consistent across all drivers. However the results are good for common use cases.
 
 This method must request the role from the driver for each node found by the selector individually.
 Therefore, using this with a selector that returns a large number of elements will be inefficient.
@@ -233,6 +237,8 @@ Therefore, using this with a selector that returns a large number of elements wi
 ```ruby
 expect(page).to have_field "A switch input", role: "switch"
 ```
+
+[Capybara.string]: https://rubydoc.info/github/teamcapybara/capybara/master/Capybara#string-class_method
 
 #### `validation_error` [String, Regexp, true, false]
 
@@ -465,10 +471,6 @@ Finds a [grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) element that decl
 
 - `locator` [String, Symbol] Either the grid's `[aria-label]` value, or the
   text contents of the elements referenced by its `[aria-labelledby]` attribute
-- filters:
-  - `described_by` [String, Symbol] The text contents of the elements referenced by
-    its `[aria-describedby]` attribute, or the text contents of a `<table>` element's
-    `<caption>` element
 
 Also see:
 
@@ -768,8 +770,6 @@ these elements in the search. Use the `custom_elements` filter for this.
 expect(page).to have_selector :role, :textbox, custom_elements: "custom-textbox"
 ```
 
-The `:rack_test` driver is only partly supported and is not spec compliant.
-
 #### `section`
 
 Finds a section of the site based on the first heading in the section.
@@ -830,6 +830,31 @@ Also see:
 - [↓ `select_tab` action](#select_tabname-block)
 - [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `test_id
+
+Finds an element by the attribute set in `Capybara.test_id`.
+
+- `locator` [String, Symbol] The id to find
+
+This is equivalent to `find :xpath, '//*[@data-test-id="my_id"]'`
+
+It's only benefit is a clearer intent.
+
+```html
+<div data-test-id="foo"></div>
+```
+
+```ruby
+# Global setup
+Capybara.test_id = "data-test-id"
+
+find(:test_id, "foo")
+# or using the shortcut
+find_by_test_id("foo")
+```
+
+Also see [↓ `find_by_test_id` action](#find_by_test_id-id-options)
+
 ### Actions
 
 #### `fill_in_rich_text(locator, **options)`
@@ -846,6 +871,12 @@ fill_in_rich_text "Diary entry", with: "Today I published a gem"
 ```
 
 Also see [↑ `rich_text` selector](#rich_text)
+
+#### `find_by_test_id(id, **options)`
+
+Shortcut for `find(:test_id, "id")`
+
+Also see [↑ `test_id` selector](#test_id)
 
 #### `select_tab(name, &block)`
 
@@ -1058,6 +1089,26 @@ For example the following two are equivalent:
 expect(page).to have_selector :combo_box, "Foo"
 expect(page).to have_combo_box, "Foo"
 ```
+
+### Node methods
+
+#### `accessible_description`
+
+The computed accessible description
+
+See [↑ `accessible_description` filter](#accessible_description-string-regexp)
+
+#### `accessible_name`
+
+The computed accessible name
+
+See [↑ `accessible_name` filter](#accessible_name-string-regexp)
+
+#### `role`
+
+The computed accessible role
+
+See [↑ `role` filter](#role-string-symbol-nil)
 
 ## Local development
 

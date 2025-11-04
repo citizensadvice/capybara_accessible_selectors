@@ -92,7 +92,7 @@ Capybara.add_selector(:combo_box, locator_type: [String, Symbol]) do
 
   describe_expression_filters do |expanded: nil, **|
     desc = ""
-    desc += " that is#{expanded ? '' : ' not'} expanded" unless expanded.nil?
+    desc += " that is#{' not' unless expanded} expanded" unless expanded.nil?
     desc
   end
 
@@ -181,7 +181,7 @@ Capybara.add_selector(:list_box_option, locator_type: String) do
   describe_expression_filters do |disabled: nil, **|
     next if disabled.nil?
 
-    " that is #{disabled ? '' : 'not '}disabled"
+    " that is #{'not ' unless disabled}disabled"
   end
 end
 
@@ -199,12 +199,11 @@ module CapybaraAccessibleSelectors
     # @yield [Boolean] Should the element be included
     #
     # @return [Capybara::Node::Element] The combo box
-    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &) # rubocop:disable Metrics
+    def select_combo_box_option(with = nil, from: nil, currently_with: nil, search: with, fill_options: {}, **find_options, &)
       find_options[:with] = currently_with if currently_with
       find_options[:allow_self] = true if from.nil?
       find_option_options = extract_find_option_options(find_options)
       input = find(:combo_box, from, **find_options)
-      wait_options = { wait: find_options[:wait] }.compact
       if search
         input.set(search, **fill_options)
       else
@@ -216,12 +215,13 @@ module CapybaraAccessibleSelectors
         # Pressing escape will close an open listbox
         input.send_keys(:escape) if has_selector?(:combo_box_list_box, input, wait: 0)
       else
-        listbox = find(:combo_box_list_box, input, **wait_options)
-        option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &)
-        # Some drivers complain about clicking on a tr
-        option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
-        # Work around occasional Chrome errors
-        option.synchronize(errors: [Selenium::WebDriver::Error::ElementNotInteractableError]) { option.click }
+        input.synchronize(find_options[:wait] == false ? 0 : find_options[:wait]) do
+          listbox = find(:combo_box_list_box, input)
+          option = listbox.find(:list_box_option, with, disabled: false, **find_option_options, &)
+          # Some drivers complain about clicking on a tr
+          option = option.find(:css, "td", match: :first) if option.tag_name == "tr"
+          option.click
+        end
       end
       input
     end

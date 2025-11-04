@@ -2,9 +2,9 @@
 
 module CapybaraAccessibleSelectors
   # Based on https://www.w3.org/TR/html-aria/
-  module Aria # rubocop:disable Metrics
+  module Aria
     ROLE_SYNONYMS = [
-      %w[img image]
+      %w[img image graphics-document]
     ].freeze
 
     IMPLICIT_ROLE_SELECTORS = {
@@ -36,11 +36,14 @@ module CapybaraAccessibleSelectors
       deletion: [
         XPath.descendant(:del, :s)
       ],
+      definition: [
+        XPath.descendant(:dd)
+      ],
       listbox: [
         XPath.descendant(:select)[XPath.attr(:multiple) | (XPath.attr(:size) > 1)]
       ],
       term: [
-        XPath.descendant(:dfn)
+        XPath.descendant(:dfn, :dt)
       ],
       dialog: [
         XPath.descendant(:dialog)
@@ -55,7 +58,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:footer)[![
           *%i[article aside main nav section].map { XPath.ancestor(_1) },
           *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
-        ].inject(:union)]
+        ].inject(:|)]
       ],
       form: [
         XPath.descendant(:form)
@@ -67,19 +70,22 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:header)[![
           *%i[article aside main nav section].map { XPath.ancestor(_1) },
           *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
-        ].inject(:union)]
+        ].inject(:|)]
       ],
       separator: [
         XPath.descendant(:hr)
       ],
       image: [
-        XPath.descendant(:img)
+        XPath.descendant(:img),
+        XPath.descendant(:svg),
+        # svg is on a different namespace in browsers
+        XPath.descendant[XPath.function(:"local-name") == "svg"][XPath.function(:"namespace-uri") == "http://www.w3.org/2000/svg"]
       ],
       textbox: [
         XPath.descendant(:input)[
           !XPath.attr(:type) |
           [*%w[button checkbox color date datetime-local file hidden image month
-               number password radio range reset search submit time week].map { XPath.attr(:type) != _1 }].inject(:|)
+               number radio range reset search submit time week].map { XPath.attr(:type) != _1 }].inject(:|)
         ][!XPath.attr(:list)],
         XPath.descendant(:textarea)
       ],
@@ -145,7 +151,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:search)
       ],
       region: [
-        XPath.descendant(:section)[XPath.attr(:"aria-label") | XPath.attr(:"aria-labelledby")]
+        XPath.descendant(:section)
       ],
       strong: [
         XPath.descendant(:strong)
@@ -155,11 +161,6 @@ module CapybaraAccessibleSelectors
       ],
       superscript: [
         XPath.descendant(:sup)
-      ],
-      "graphics-document": [
-        XPath.descendant[:svg],
-        # svg is on a different namespace in browsers
-        XPath.descendant[XPath.function(:"local-name") == "svg"][XPath.function(:"namespace-uri") == "http://www.w3.org/2000/svg"]
       ],
       table: [
         XPath.descendant(:table)

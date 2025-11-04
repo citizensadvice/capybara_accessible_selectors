@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "validation error filter" do
+describe "validation error filter", skip_driver: :rack_test do
   context "with :field" do
     it "selects an invalid field" do
       render <<~HTML

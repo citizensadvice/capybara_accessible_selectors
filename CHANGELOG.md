@@ -1,11 +1,26 @@
 # Change log
 
-## Unreleased
+- The rack_test driver now fully supports the accessible name calculations
+- The rack_test driver now fully supports resolving accessible roles
+- Added an `accessible_description` `Node` method and filter
+- Deprecated the `described_by` filter in favour of `accessible_name`
+- The accessible description calculation now supports `aria-description` and has been handling of hidden text
+- Add `:role` selector to find elements by their implicit or explicit aria role
+- Add `:test_id` selector
+- The `aria` filter will now filter for not having the attribute if the hash value is `nil`
+
+## v0.14.0
+
+- Extend `Capybara::Node::Simple` with the `role` attribute to support the `:role` filter [Sean Doyle]
+- `:main`, `:banner` and `:contentinfo` selectors no longer requires the element to be a direct child of `<body>`
+- `:banner` and `:contentinfo` selectors use rules from [ARIA in HTML](https://w3c.github.io/html-aria/) for implicit matching
+- `:main`, `:banner`, `:contentinfo`, and `:navigation` are now implemented as `descendant_or_self`
+
+## v0.13.0
 
 - Remove ruby 3.1 support. Minimum supported Ruby version is now 3.2
-- Added role selector to find elements by their implicit or explicit aria role
-- BREAKING CHANGE: the `role` filter and `node.role` computed value will new raise
-  `NotImplementedError` in the `:rack_test` driver.
+- Fix xpath query timeout errors when using the disclosure selector with pages with a large number of id attributes
+- Improve how the `select_combo_box_option` waits for the option to show
 
 ## v0.12.0
 

@@ -92,13 +92,13 @@ describe "role selector" do
       expect(page.find(:role, :textbox)).to eq target
     end
 
-    it "finds implicit role on custom element" do
+    it "finds implicit role on custom element", skip_driver: :rack_test do
       visit "/element_internals.html"
 
       expect(page.find(:role, :textbox, custom_elements: "custom-role")).to eq page.find(:css, "custom-role[data-role=textbox]")
     end
 
-    it "finds implicit role on custom element with an array" do
+    it "finds implicit role on custom element with an array", skip_driver: :rack_test do
       visit "/element_internals.html"
 
       expect(
@@ -287,7 +287,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :contentinfo
     end
 
-    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element", skip_driver: :all do
+    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element" do
       render <<~HTML
         <div role="article">
           <footer>role article</footer>
@@ -395,7 +395,7 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :banner
     end
 
-    it "does not find implicit banner on a header that is a child of a aria sectioning element", skip_driver: :all do
+    it "does not find implicit banner on a header that is a child of a aria sectioning element" do
       render <<~HTML
         <div role="article">
           <header>role article</header>
@@ -974,12 +974,28 @@ describe "role selector" do
       expect(page.find(:role, :superscript)).to eq target
     end
 
-    it "finds implicit graphics-document on a svg", skip_driver: :all do
+    it "finds implicit image on a svg" do
       render <<~HTML
         <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
       HTML
 
-      expect(page.find(:role, "graphics-document")).to eq target
+      expect(page.find(:role, :image)).to eq target
+    end
+
+    it "finds implicit img on a svg" do
+      render <<~HTML
+        <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
+      HTML
+
+      expect(page.find(:role, :img)).to eq target
+    end
+
+    it "finds implicit graphics-document on a svg" do
+      render <<~HTML
+        <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
+      HTML
+
+      expect(page.find(:role, :"graphics-document")).to eq target
     end
 
     it "finds implicit table on a table" do

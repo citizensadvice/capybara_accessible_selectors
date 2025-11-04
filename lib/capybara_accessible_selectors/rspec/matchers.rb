@@ -3,7 +3,7 @@
 require "capybara_accessible_selectors/rspec/matchers/have_validation_errors"
 require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 
-# rubocop:disable Naming/PredicateName
+# rubocop:disable Naming/PredicatePrefix
 module Capybara
   module RSpecMatchers
     %i[alert article banner columnheader combo_box contentinfo dialog grid gridcell heading img main
@@ -27,4 +27,4 @@ module Capybara
     end
   end
 end
-# rubocop:enable Naming/PredicateName
+# rubocop:enable Naming/PredicatePrefix

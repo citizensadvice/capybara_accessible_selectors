@@ -9,12 +9,42 @@ describe "aria" do
     expect(page).to have_xpath XPath.descendant(:button), aria: { selected: true, pressed: true }
   end
 
+  it "selects an element without aria- attributes by xpath selector" do
+    render <<~HTML
+      <button aria-selected="true" aria-pressed="true">A button</button>
+      <button aria-selected="true" data-test-id="test">B button</button>
+    HTML
+
+    element = find_by_test_id("test")
+
+    expect(element).to eq find(:button, aria: { selected: true, pressed: nil })
+  end
+
   it "selects an element with matching aria- attributes by css selector" do
     render <<~HTML
       <button aria-selected="true" aria-pressed="true">A button</button>
     HTML
 
     expect(page).to have_css "button", aria: { selected: true, pressed: true } # rubocop:disable Capybara/SpecificMatcher
+  end
+
+  it "selects an element with without aria- attributes by css selector" do
+    render <<~HTML
+      <button aria-selected="true" aria-pressed="true">A button</button>
+      <button aria-selected="true" data-test-id="test">B button</button>
+    HTML
+
+    element = find_by_test_id("test")
+
+    expect(element).to eq find(:css, "button", aria: { selected: true, pressed: nil })
+  end
+
+  it "selects an element with aria- attributes by css selector with escaping" do
+    render <<~HTML
+      <button aria-label="]escape me">A button</button>
+    HTML
+
+    expect(page).to have_css "button", aria: { label: "]escape me" } # rubocop:disable Capybara/SpecificMatcher
   end
 
   it "selects a button with matching aria- attributes" do

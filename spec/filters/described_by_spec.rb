@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe "described by filter" do
-  before { visit "/described_by.html" }
+  before do
+    visit "/described_by.html"
+
+    allow(Capybara::Helpers).to receive(:warn)
+  end
 
   it "filters a field" do
     expect(page).to have_selector :field, "Text", described_by: "Text description"
