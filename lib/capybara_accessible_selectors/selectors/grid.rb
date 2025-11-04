@@ -1,32 +1,21 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:grid, locator_type: [String, Symbol]) do
+Capybara.add_selector(:grid, locator_type: [String, Regexp]) do
   xpath do |*|
     XPath.descendant[XPath.attr(:role) == "grid"]
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 
-  node_filter(:described_by, valid_values: [String]) do |node, value|
-    if node.tag_name == "table" && node.has_css?("caption") && (caption = node.find("caption")) && caption.text.include?(value)
-      true
-    else
-      next false unless node[:"aria-describedby"]
-
-      description = CapybaraAccessibleSelectors::Helpers.element_describedby(node)
-      next true if description.include? value
-
-      add_error " expected to be described by \"#{value}\" but it was described by \"#{description}\"."
-      false
-    end
-  end
+  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
 Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do

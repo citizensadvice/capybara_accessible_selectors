@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector :main, locator_type: [String, Symbol] do
+Capybara.add_selector :main, locator_type: [String, Regexp] do
   xpath do |*|
     XPath.descendant_or_self[[
       XPath.local_name == "main",
@@ -9,11 +9,12 @@ Capybara.add_selector :main, locator_type: [String, Symbol] do
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 

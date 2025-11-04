@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:menu, locator_type: [String, Symbol]) do
+Capybara.add_selector(:menu, locator_type: [String, Regexp]) do
   def aria_or_real_button
     XPath.self(:button) | (XPath.attr(:role) == "button")
   end
@@ -10,11 +10,12 @@ Capybara.add_selector(:menu, locator_type: [String, Symbol]) do
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 
@@ -32,23 +33,19 @@ Capybara.add_selector(:menu, locator_type: [String, Symbol]) do
   filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
-Capybara.add_selector(:menuitem, locator_type: [String, Symbol]) do
+Capybara.add_selector(:menuitem, locator_type: [String, Regexp]) do
   xpath do |*|
     XPath.descendant[XPath.attr(:role) == "menuitem"]
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
-    method = exact ? :eql? : :include?
-    label =
-      if node[:"aria-labelledby"]
-        CapybaraAccessibleSelectors::Helpers.element_labelledby(node)
-      elsif node[:"aria-label"]
-        node[:"aria-label"]
-      else
-        node.text
-      end
-
-    label.public_send(method, locator.to_s)
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
+    end
   end
 
   node_filter(:disabled, :boolean, default: false) do |node, value|

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:img, locator_type: [String, Symbol]) do
+Capybara.add_selector(:img, locator_type: [String, Regexp]) do
   expression_filter(:src, valid_values: [String, Regexp]) do |xpath, src|
     builder(xpath).add_attribute_conditions(src:)
   end
@@ -18,17 +18,14 @@ Capybara.add_selector(:img, locator_type: [String, Symbol]) do
     ]
   end
 
-  locator_filter do |node, locator, exact:, **|
-    next true if locator.nil?
-
-    method = exact ? :eql? : :include?
-    if node.tag_name == "img" && node[:alt] && !node[:alt].empty?
-      node[:alt]
-    elsif node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node)
-    elsif node[:"aria-label"]
-      node[:"aria-label"]
-    end&.public_send method, locator.to_s
+  locator_filter skip_if: nil do |node, locator, exact:, **|
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
+    end
   end
 
   filter_set(:capybara_accessible_selectors, %i[aria described_by])

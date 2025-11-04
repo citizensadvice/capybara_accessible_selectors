@@ -327,8 +327,7 @@ Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
 Finds an [article structural role](https://www.w3.org/WAI/ARIA/apg/practices/structural-roles/#all-structural-roles). The selector will match either an [`<article>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article) or an element with [role="article"](https://www.w3.org/TR/wai-aria/#article).
 
-- `locator` [String, Symbol] The article's `[aria-label]` attribute or contents
-  of the element referenced by its `[aria-labelledby]` attribute
+- `locator` [String, Regexp] Match the accessible name of the article
 
 Also see:
 
@@ -338,8 +337,7 @@ Also see:
 
 Finds a [banner landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-1-banner).
 
-- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
-  of the element referenced by its `[aria-labelledby]` attribute
+- `locator` [String, Regexp] Match the accessible name of the article
 
 Also see:
 
@@ -424,7 +422,7 @@ This checks for either
 - an element with the role `dialog` or `alertdialog`
 - or, an open `<dialog>` element
 
-- `locator` [String, Symbol] The title of the modal
+- `locator` [String, Regexp] The accessible name of the modal
 - Filters:
   - `modal` [Boolean] Is dialog a modal. Modals are either opened with `showModal()`, or have the `aria-modal="true"` attribute
 

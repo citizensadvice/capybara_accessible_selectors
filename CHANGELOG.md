@@ -10,6 +10,9 @@
 - The rack_test driver now fully supports the accessible name calculations
 - The rack_test driver now fully supports resolving accessible roles
 - The `aria` filter will now filter for not having the attribute if the hash value is `nil`
+- The article selector now uses the full accessible name and no longer accepts a symbol locator
+- the banner selector now uses the full accessible name and no longer accepts a symbol locator
+- the dialog selector now uses the full accessible name and no longer accepts a symbol locator
 
 ## v0.14.0
 
