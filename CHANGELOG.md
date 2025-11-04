@@ -7,6 +7,9 @@
 - The accessible description calculation now supports `aria-description` and has been handling of hidden text
 - Add `:test_id` selector
 - The `aria` filter will now filter for not having the attribute if the hash value is `nil`
+- The article selector now uses the full accessible name and no longer accepts a symbol locator
+- the banner selector now uses the full accessible name and no longer accepts a symbol locator
+- the dialog selector now uses the full accessible name and no longer accepts a symbol locator
 
 ## v0.14.0
 

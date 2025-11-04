@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector :region, locator_type: [String, Symbol] do
+Capybara.add_selector :region, locator_type: [String, Regexp] do
   xpath do |*|
     XPath.descendant[[
       XPath.self(:section) & (XPath.attr(:"aria-label") | XPath.attr(:"aria-labelledby")),
@@ -8,18 +8,13 @@ Capybara.add_selector :region, locator_type: [String, Symbol] do
     ].reduce(:|)]
   end
 
-  locator_filter do |node, locator, exact:, **|
-    next true if !locator && node.tag_name != "section"
-
-    name = if node[:"aria-labelledby"]
-             CapybaraAccessibleSelectors::Helpers.element_labelledby(node)
-           else
-             node[:"aria-label"]
-           end
-    if locator
-      name&.public_send(exact ? :eql? : :include?, locator)
-    else
-      name && !name.strip.empty?
+  locator_filter skip_if: nil do |node, locator, exact:, **|
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 

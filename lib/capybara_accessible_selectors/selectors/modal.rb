@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
+Capybara.add_selector(:modal, locator_type: [String, Regexp]) do
   xpath do |*|
     XPath.descendant[
       [
@@ -18,11 +18,12 @@ Capybara.add_selector(:modal, locator_type: [String, Symbol]) do
     next false if node.tag_name == "dialog" && node.not_matches_css?(":modal", wait: 0)
     next true if locator.nil?
 
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 

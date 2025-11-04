@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-Capybara.add_selector :heading, locator_type: [String, Symbol] do
-  xpath do |locator, **|
-    xpath = XPath.descendant[[
+Capybara.add_selector :heading, locator_type: [String, Regexp] do
+  xpath do |*|
+    XPath.descendant[[
       XPath.attr(:role) == "heading",
       *(1..6).map { XPath.self(:"h#{_1}") }
     ].reduce(:|)]
-    xpath = xpath[XPath.string.n.is(locator) | XPath.attr(:"aria-label") | XPath.attr(:"aria-labelledby")] unless locator.nil?
-    xpath
   end
 
   expression_filter(:level, valid_values: 1..6) do |xpath, level|
@@ -27,13 +25,12 @@ Capybara.add_selector :heading, locator_type: [String, Symbol] do
   end
 
   locator_filter skip_if: nil do |node, locator, exact:, **|
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
-    else
-      true
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 
