@@ -70,6 +70,32 @@ See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of b
 
 ### Filters
 
+#### `accessible_description` [String, Regexp]
+
+Added to all selectors.
+
+Filters for an element's [computed accessible description](https://www.w3.org/TR/accname-1.2/).
+
+The rack test driver will use a fairly accurate calculation.
+
+The selenium drivers do not provide a way to request this value from the browser. The calculation
+used does not take account of `aria-hidden` or `aria-label`.
+
+For example:
+
+```html
+<label>
+  My field
+  <input aria-describedby="id1 id2" />
+</label>
+<span id="id1">My</span>
+<span id="id2">description</span>
+```
+
+```ruby
+expect(page).to have_field "My field", accessible_description: "My description"
+```
+
 #### `accessible_name` [String, Regexp]
 
 Added to all selectors.
@@ -138,27 +164,6 @@ expect(page).to have_link "About us", current: "page"
 values. A `current: true` will match against `[aria-current="true"]`, and a
 `current: false` will match against `[aria-current="false"]`. To match an
 element **without any** `[aria-current]` attribute, pass `current: nil`.
-
-#### `described_by` [String, Regexp]
-
-Added to all selectors.
-
-Is the field described by some text using [`aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute).
-
-For example:
-
-```html
-<label>
-  My field
-  <input aria-describedby="id1 id2" />
-</label>
-<span id="id1">My</span>
-<span id="id2">description</span>
-```
-
-```ruby
-expect(page).to have_field "My field", described_by: "My description"
-```
 
 #### `fieldset` [String, Symbol, Array]
 
@@ -466,10 +471,6 @@ Finds a [grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) element that decl
 
 - `locator` [String, Symbol] Either the grid's `[aria-label]` value, or the
   text contents of the elements referenced by its `[aria-labelledby]` attribute
-- filters:
-  - `described_by` [String, Symbol] The text contents of the elements referenced by
-    its `[aria-describedby]` attribute, or the text contents of a `<table>` element's
-    `<caption>` element
 
 Also see:
 
@@ -1052,6 +1053,26 @@ For example the following two are equivalent:
 expect(page).to have_selector :combo_box, "Foo"
 expect(page).to have_combo_box, "Foo"
 ```
+
+### Node methods
+
+#### `accessible_description`
+
+The computed accessible description
+
+See [↑ `accessible_description` filter](#accessible_description-string-regexp)
+
+#### `accessible_name`
+
+The computed accessible name
+
+See [↑ `accessible_name` filter](#accessible_name-string-regexp)
+
+#### `role`
+
+The computed accessible role
+
+See [↑ `role` filter](#role-string-symbol-nil)
 
 ## Local development
 

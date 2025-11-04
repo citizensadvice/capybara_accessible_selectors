@@ -12,6 +12,8 @@ module CapybaraAccessibleSelectors
     class AccessibleName
       include Helpers
 
+      attr_reader :from_tooltip
+
       def self.resolve(...)
         new(...).resolve
       end
@@ -29,7 +31,7 @@ module CapybaraAccessibleSelectors
       def resolve
         return nil if inert?(@node)
         return nil if !@include_hidden && (hidden?(@node) || aria_hidden?(@node))
-        return nil if !@recurse && NAME_DISALLOWED_ROLES.include?(role)
+        return nil if !@recurse && (!role || NAME_DISALLOWED_ROLES.include?(role))
 
         name_from_aria_labelled_by ||
           name_from_embedded_control ||
@@ -149,6 +151,8 @@ module CapybaraAccessibleSelectors
 
       def name_from_tooltip
         title = name_from_attribute(:title)
+        # Needed for the accessible name calculation
+        @from_tooltip = true if title
         title = " #{title} " if title && @recurse
         title
       end

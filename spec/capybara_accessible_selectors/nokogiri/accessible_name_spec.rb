@@ -75,6 +75,15 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
 
       expect(find(:test_id, "test").accessible_name).to eq "Heading"
     end
+
+    it "handles invalid ids" do
+      render <<~HTML
+        <div role="group" aria-labelledby="xxx id1" data-test-id="test">Contents</div>
+        <span id="id1">name</span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "name"
+    end
   end
 
   describe "embedded control" do
@@ -268,6 +277,15 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
 
   describe "aria-label" do
     it "returns an accessible name from aria-label" do
+      render <<~HTML
+        <div role="group" aria-labelledby="xxx id" aria-label="Accessible name" data-test-id="test" title="title">Contents</div>
+        <span id="id"></span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
+    end
+
+    it "returns an accessible name from aria-label if aria-labelledby does not resolve" do
       render <<~HTML
         <div role="group" aria-label="Accessible name" data-test-id="test" title="title">Contents</div>
       HTML
@@ -1377,12 +1395,22 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
 
       expect(find(:test_id, "test").accessible_name).to eq "Accessible name"
     end
+
+    it "returns tooltip name other naming methods resolve to nothing" do
+      render <<~HTML
+        <label for="id1"></label>
+        <div role="button" aria-label="" data-test-id="test" aria-labelledby="id2" id="id1" title="title"></div>
+        <span id="id2"></span>
+      HTML
+
+      expect(find(:test_id, "test").accessible_name).to eq "title"
+    end
   end
 
   describe "name disallowed" do
     it "returns no name for an unknown element" do
       render <<~HTML
-        <foo role="" data-test-id="test">Contents</foo>
+        <foo data-test-id="test">Contents</foo>
       HTML
 
       expect(find(:test_id, "test").accessible_name).to eq ""
@@ -1537,10 +1565,10 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
 
     describe "elements with implicit roles with name disallowed" do
       %w[abbr b bdi bdo br cite code dfn em i kbd mark q rp rt ruby s samp small strong sub sup time u var wbr
-         div span p pre address dl form a audio canvas meta link template slot style script].each do |name|
+         div span p pre dl a audio canvas meta link template slot style script].each do |name|
         it "returns no name for <#{name}>" do
           render <<~HTML
-            <#{name} data-test-id="test">Contents</#{name}>
+            <#{name} data-test-id="test" title="xxx">Contents</#{name}>
           HTML
 
           expect(find(:test_id, "test", visible: :all).accessible_name).to eq ""
