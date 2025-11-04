@@ -8,8 +8,11 @@ Capybara.add_selector :region, locator_type: [String, Regexp] do
     ].reduce(:|)]
   end
 
-  locator_filter skip_if: nil do |node, locator, exact:, **|
+  locator_filter do |node, locator, exact:, **|
     accessible_name = node.accessible_name
+    next false if node.tag_name == "section" && accessible_name == ""
+    next true if locator.nil?
+
     case locator
     when String
       exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
