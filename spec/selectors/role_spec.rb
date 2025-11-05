@@ -195,6 +195,26 @@ describe "role selector" do
       expect(page.find(:role, :code)).to eq target
     end
 
+    it "finds implicit definition on a dd" do
+      render <<~HTML
+        <dl>
+          <dd data-testid="target">Foo</dd>
+        </dl>
+      HTML
+
+      expect(page.find(:role, :definition)).to eq target
+    end
+
+    it "finds implicit term on a dt" do
+      render <<~HTML
+        <dl>
+          <dt data-testid="target">Foo</dt>
+        </dl>
+      HTML
+
+      expect(page.find(:role, :term)).to eq target
+    end
+
     it "finds implicit deletion on a del" do
       render <<~HTML
         <del data-testid="target">Foo</del>
