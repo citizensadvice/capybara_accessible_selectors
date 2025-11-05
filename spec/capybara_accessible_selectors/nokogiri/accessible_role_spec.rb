@@ -136,7 +136,7 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
 
       it "returns nil for a button in a select" do
         render "<select><button>contents</button><select>"
-        expect(find(:element, "button").role).to eq nil
+        expect(find(:element, "button").role).to be_nil
       end
     end
 
@@ -682,7 +682,7 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
       it "returns combobox for type search with a list" do
         render <<~HTML
           <input type="search" list="id">
-          <datalist id="list"></datalist>
+          <datalist id="id"></datalist>
         HTML
         expect(find(:element, "input").role).to eq "combobox"
       end
@@ -930,6 +930,13 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
         expect(find(:element, "optgroup").role).to eq "group"
       end
 
+      it "returns group with an ancestor select and extra html" do
+        render <<~HTML
+          <select><div><optgroup label="Group"><option>Name</option></optgroup></div></select>
+        HTML
+        expect(find(:element, "optgroup").role).to eq "group"
+      end
+
       it "returns nil without a parent select" do
         render <<~HTML
           <optgroup label="Group"><option>Name</option></optgroup>
@@ -965,6 +972,13 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
           <datalist id="list"><option>name</option></datalist>
         HTML
         expect(find(:element, "option", visible: false).role).to eq "option"
+      end
+
+      it "returns option with an ancestor select and additional html" do
+        render <<~HTML
+          <select><div><option></div></select>
+        HTML
+        expect(find(:element, "option").role).to eq "option"
       end
 
       it "returns nil without a parent select or datalist" do
@@ -1220,11 +1234,35 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
         expect(first(:element, "td").role).to eq "cell"
       end
 
+      it "returns cell with a tbody" do
+        render <<~HTML
+          <table>
+            <caption>Name</caption>
+            <tbody>
+              <tr><td>Cell</td></tr>
+            </tbody>
+          </table>
+        HTML
+        expect(first(:element, "td").role).to eq "cell"
+      end
+
       it "returns gridcell a child a table with role grid" do
         render <<~HTML
           <table role="grid">
             <caption>name</caption>
             <tr><td>cell</td></tr>
+          </table>
+        HTML
+        expect(find(:element, "td").role).to eq "gridcell"
+      end
+
+      it "returns gridcell a child a table with role grid and a tbody" do
+        render <<~HTML
+          <table role="grid">
+            <caption>name</caption>
+            <tbody>
+              <tr><td>cell</td></tr>
+            </tbody>
           </table>
         HTML
         expect(find(:element, "td").role).to eq "gridcell"
@@ -1251,11 +1289,33 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
       end
 
       %w[none presentation list].each do |role|
-        it "returns nil a child a row with role #{role}" do
+        it "returns nil if a child of a row with role #{role}" do
           render <<~HTML
             <table>
               <caption>name</caption>
               <tr role="#{role}"><td>cell</td></tr>
+            </table>
+          HTML
+          expect(find(:element, "td").role).to be_nil
+        end
+
+        it "returns nil if a child a table with role #{role}" do
+          render <<~HTML
+            <table role="#{role}">
+              <caption>name</caption>
+              <tr><td>cell</td></tr>
+            </table>
+          HTML
+          expect(find(:element, "td").role).to be_nil
+        end
+
+        it "returns nil if a child a table with role #{role} with a tbody" do
+          render <<~HTML
+            <table role="#{role}">
+              <caption>name</caption>
+              <tbody>
+                <tr><td>cell</td></tr>
+              </tbody>
             </table>
           HTML
           expect(find(:element, "td").role).to be_nil
@@ -1344,6 +1404,18 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleRole, driver: :r
           <table>
             <caption>Name</caption>
             <tr><td>Cell</td></tr>
+          </table>
+        HTML
+        expect(find(:element, "tr").role).to eq "row"
+      end
+
+      it "returns row if child of table with a tbody" do
+        render <<~HTML
+          <table>
+            <caption>Name</caption>
+            <tbody>
+              <tr><td>Cell</td></tr>
+            </tbody>
           </table>
         HTML
         expect(find(:element, "tr").role).to eq "row"

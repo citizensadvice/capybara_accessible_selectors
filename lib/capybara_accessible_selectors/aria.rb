@@ -55,10 +55,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:figure)
       ],
       contentinfo: [
-        XPath.descendant(:footer)[![
-          *%i[article aside main nav section].map { XPath.ancestor(_1) },
-          *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
-        ].inject(:|)]
+        XPath.descendant(:footer)
       ],
       form: [
         XPath.descendant(:form)
@@ -67,10 +64,7 @@ module CapybaraAccessibleSelectors
         XPath.descendant(:h1, :h2, :h3, :h4, :h5, :h6)
       ],
       banner: [
-        XPath.descendant(:header)[![
-          *%i[article aside main nav section].map { XPath.ancestor(_1) },
-          *%w[article complimentary main navigation region].map { XPath.attr(:role) == _1 }
-        ].inject(:|)]
+        XPath.descendant(:header)
       ],
       separator: [
         XPath.descendant(:hr)
@@ -146,6 +140,12 @@ module CapybaraAccessibleSelectors
       ],
       progressbar: [
         XPath.descendant(:progress)
+      ],
+      sectionfooter: [
+        XPath.descendant(:footer)
+      ],
+      sectionheader: [
+        XPath.descendant(:header)
       ],
       search: [
         XPath.descendant(:search)

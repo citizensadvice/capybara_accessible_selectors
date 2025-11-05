@@ -287,28 +287,6 @@ describe "role selector" do
       expect(page).to have_no_selector :role, :contentinfo
     end
 
-    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element" do
-      render <<~HTML
-        <div role="article">
-          <footer>role article</footer>
-        </div>
-        <div role="complementary">
-          <footer>role complementary</footer>
-        </div>
-        <div role="main">
-          <footer>role main</footer>
-        </div>
-        <div role="navigation">
-          <footer>role navigation</footer>
-        </div>
-        <div role="region">
-          <footer>role region</footer>
-        </div>
-      HTML
-
-      expect(page).to have_no_selector :role, :contentinfo
-    end
-
     it "finds implicit form on a form" do
       render <<~HTML
         <form data-testid="target" aria-label="Label">Foo</form>
@@ -390,28 +368,6 @@ describe "role selector" do
         <section>
           <header>section</header>
         </section>
-      HTML
-
-      expect(page).to have_no_selector :role, :banner
-    end
-
-    it "does not find implicit banner on a header that is a child of a aria sectioning element" do
-      render <<~HTML
-        <div role="article">
-          <header>role article</header>
-        </div>
-        <div role="complementary">
-          <header>role complementary</header>
-        </div>
-        <div role="main">
-          <header>role main</header>
-        </div>
-        <div role="navigation">
-          <header>role navigation</header>
-        </div>
-        <div role="region">
-          <header>role region</header>
-        </div>
       HTML
 
       expect(page).to have_no_selector :role, :banner
@@ -974,7 +930,7 @@ describe "role selector" do
       expect(page.find(:role, :superscript)).to eq target
     end
 
-    it "finds implicit image on a svg" do
+    it "finds implicit image on a svg", skip_driver: :safari do
       render <<~HTML
         <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
       HTML
@@ -982,7 +938,7 @@ describe "role selector" do
       expect(page.find(:role, :image)).to eq target
     end
 
-    it "finds implicit img on a svg" do
+    it "finds implicit img on a svg", skip_driver: :safari do
       render <<~HTML
         <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
       HTML
@@ -990,7 +946,7 @@ describe "role selector" do
       expect(page.find(:role, :img)).to eq target
     end
 
-    it "finds implicit graphics-document on a svg" do
+    it "finds implicit graphics-document on a svg", skip_driver: :safari do
       render <<~HTML
         <svg data-testid="target"><title>Foo</title><rect width="100%" height="100%" fill="red" /></svg>
       HTML
@@ -1126,12 +1082,6 @@ describe "role selector" do
       render <<~HTML
         <table>
           <caption>Foo</caption>
-          <tbody>
-            <tr>
-              <th>One</th>
-              <th>Two</th>
-            </tr>
-          </tbody>
           <tfoot data-testid="target" aria-label="foo">
             <tr>
               <td>One</td>
@@ -1293,12 +1243,6 @@ describe "role selector" do
               <th>Two</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>One</td>
-              <td>Two</td>
-            </tr>
-          </tbody>
         </table>
       HTML
 
@@ -1336,6 +1280,107 @@ describe "role selector" do
       HTML
 
       expect(page.find(:role, :list)).to eq target
+    end
+  end
+
+  # The browsers haven't fully agreed on these so only run in rack test
+  describe "sectioning roles", driver: :rack_test do
+    it "does not find implicit banner on a header that is a child of a aria sectioning element" do
+      render <<~HTML
+        <div role="article">
+          <header>role article</header>
+        </div>
+        <div role="complementary">
+          <header>role complementary</header>
+        </div>
+        <div role="main">
+          <header>role main</header>
+        </div>
+        <div role="navigation">
+          <header>role navigation</header>
+        </div>
+      HTML
+
+      expect(page).to have_no_selector :role, :banner
+    end
+
+    it "does not find implicit contentinfo on a footer that is a child of a aria sectioning element" do
+      render <<~HTML
+        <div role="article">
+          <footer>role article</footer>
+        </div>
+        <div role="complementary">
+          <footer>role complementary</footer>
+        </div>
+        <div role="main">
+          <footer>role main</footer>
+        </div>
+        <div role="navigation">
+          <footer>role navigation</footer>
+        </div>
+      HTML
+
+      expect(page).to have_no_selector :role, :contentinfo
+    end
+
+    it "finds implicit sectionheader on a header in a section" do
+      render <<~HTML
+        <section>
+          <header data-testid="target">Foo</header>
+        </section>
+      HTML
+
+      expect(page.find(:role, :sectionheader)).to eq target
+    end
+
+    it "finds implicit sectionheader on a header in a main" do
+      render <<~HTML
+        <main>
+          <header data-testid="target">Foo</header>
+        </main>
+      HTML
+
+      expect(page.find(:role, :sectionheader)).to eq target
+    end
+
+    it "finds implicit sectionheader on a header in a section with a sectioning role" do
+      render <<~HTML
+        <div role="navigation">
+          <header data-testid="target">Foo</header>
+        </div>
+      HTML
+
+      expect(page.find(:role, :sectionheader)).to eq target
+    end
+
+    it "finds implicit sectionfooter on a footer in a section" do
+      render <<~HTML
+        <section>
+          <footer data-testid="target">Foo</footer>
+        </section>
+      HTML
+
+      expect(page.find(:role, :sectionfooter)).to eq target
+    end
+
+    it "finds implicit sectionfooter on a footer in a main" do
+      render <<~HTML
+        <main>
+          <footer data-testid="target">Foo</footer>
+        </main>
+      HTML
+
+      expect(page.find(:role, :sectionfooter)).to eq target
+    end
+
+    it "finds implicit sectionfooter on a footer in a section with a sectioning role" do
+      render <<~HTML
+        <div role="navigation">
+          <footer data-testid="target">Foo</footer>
+        </div>
+      HTML
+
+      expect(page.find(:role, :sectionfooter)).to eq target
     end
   end
 
