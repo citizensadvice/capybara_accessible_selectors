@@ -1,12 +1,14 @@
 # Change log
 
-- The rack_test driver now fully supports the accessible name calculations
-- The rack_test driver now fully supports resolving accessible roles
-- Added an `accessible_description` `Node` method and filter
-- Deprecated the `described_by` filter in favour of `accessible_name`
-- The accessible description calculation now supports `aria-description` and has been handling of hidden text
+## v0.15.0
+
 - Add `:role` selector to find elements by their implicit or explicit aria role
 - Add `:test_id` selector
+- Added an `accessible_description` `Node` method and a selector filter
+- The accessible description calculation now supports `aria-description` and will more correctly handle hidden text
+- Deprecated the `described_by` filter in favour of `accessible_name`. This is now a synonym of `accessible_description` and will create warning.
+- The rack_test driver now fully supports the accessible name calculations
+- The rack_test driver now fully supports resolving accessible roles
 - The `aria` filter will now filter for not having the attribute if the hash value is `nil`
 
 ## v0.14.0
