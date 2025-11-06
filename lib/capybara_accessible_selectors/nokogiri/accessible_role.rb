@@ -62,6 +62,9 @@ module CapybaraAccessibleSelectors
         when "blockquote"
           "blockquote"
         when "button"
+          # Customisable select proposal
+          return nil if ancestor?("select")
+
           "button"
         when "caption"
           element_is?(@node.parent, "table") && role_is?(@node.parent, "table", "grid", "treegrid") ? "caption" : "generic"
@@ -112,7 +115,7 @@ module CapybaraAccessibleSelectors
           when "range"
             "slider"
           when "search"
-            "searchbox"
+            valid_datalist? ? "combobox" : "searchbox"
           when "password"
             # Safari and Chromium are now mapping to textbox (2025-10-27) and this is generally more useful
             "textbox"
@@ -127,6 +130,8 @@ module CapybaraAccessibleSelectors
           "main"
         when "mark"
           "mark"
+        when "math"
+          "math"
         when "menu", "ol", "ul"
           "list"
         when "meter"
@@ -134,9 +139,9 @@ module CapybaraAccessibleSelectors
         when "nav"
           "navigation"
         when "optgroup"
-          element_is?(@node.parent, "select") ? "group" : "generic"
+          ancestor?("select") ? "group" : nil
         when "option"
-          parent_listbox? ? "option" : nil
+          ancestor?("select", "datalist") ? "option" : nil
         when "output"
           "status"
         when "p"
@@ -146,7 +151,7 @@ module CapybaraAccessibleSelectors
         when "search"
           "search"
         when "section"
-          accessible_name?("section") ? "region" : nil
+          accessible_name?("section") ? "region" : "generic"
         when "select"
           !@node.has_attribute?("multiple") && @node[:size].to_i <= 1 ? "combobox" : "listbox"
         when "strong"
@@ -212,9 +217,9 @@ module CapybaraAccessibleSelectors
         @node.ancestors("*").any? do |ancestor|
           role = AccessibleRole.resolve(ancestor)
           next true if SECTIONING_ROLES.include?(role)
-          next false unless ancestor.node_name == "section"
+          next true if ancestor.node_name == "section" && role == "generic"
 
-          role.nil? || role == "region"
+          false
         end
       end
 
@@ -233,15 +238,13 @@ module CapybaraAccessibleSelectors
         names.include?(element.node_name)
       end
 
-      def parent_listbox?
-        listbox = @node.parent
-        listbox = listbox.parent if listbox.node_name == "optgroup"
-        element_is?(listbox, "datalist", "select")
+      def ancestor?(*args)
+        @node.ancestors.any? { args.include?(_1.node_name) }
       end
 
       def parent_grid?
         table = @node.parent.parent
-        table = @node.parent unless table.node_name == "table"
+        table = table.parent unless table.node_name == "table"
         role_is?(table, "grid", "treegrid")
       end
 

@@ -26,6 +26,7 @@ module CapybaraAccessibleSelectors
       resolved = native.aria_role
       # Chrome returns non-standard internal identifiers for elements without mapped roles
       # These are always in PascalCase so ignore roles with capital letters
+      return "math" if resolved == "MathMLMath"
       return nil if resolved&.match?(/[A-Z]/)
 
       resolved == "" ? nil : resolved

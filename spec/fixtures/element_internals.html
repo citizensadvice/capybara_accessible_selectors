@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <script>
+    class CustomRole extends HTMLElement {
+      #internals;
+
+      constructor() {
+        super();
+        this.#internals = this.attachInternals();
+      }
+
+      connectedCallback() {
+        this.#internals.role = this.dataset.role;
+      }
+    }
+    customElements.define("custom-role", CustomRole);
+  </script>
+
+  <custom-role data-role="textbox">Foo</custom-role>
+  <custom-role data-role="button">Bar</custom-role>
+</html>

@@ -5,6 +5,7 @@
 - Added an `accessible_description` `Node` method and filter
 - Deprecated the `described_by` filter in favour of `accessible_name`
 - The accessible description calculation now supports `aria-description` and has been handling of hidden text
+- Add `:role` selector to find elements by their implicit or explicit aria role
 - Add `:test_id` selector
 - The `aria` filter will now filter for not having the attribute if the hash value is `nil`
 

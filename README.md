@@ -734,6 +734,42 @@ Also see:
 [`contenteditable` attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable
 [`textbox` role]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/textbox_role
 
+#### `role`
+
+Finds element by their aria role.
+
+This will find elements by both their implicit and explict roles.
+
+- `locator` [String, Symbol, String[], Symbol[]] a role or array of roles
+- filters:
+  - `custom_elements` [String, String[]] custom elements to include in the search
+
+```html
+<button>Press me</button>
+```
+
+```ruby
+expect(page).to have_selector :role, :button
+```
+
+The selector will try to match the [ARIA in HTML spec](https://www.w3.org/TR/html-aria/)
+however different drivers can return slightly different roles. For example Safari
+currently returns "button" instead of "combobox" for a `<select>`.
+
+You can work around this by providing a list of acceptable roles.
+
+```ruby
+expect(page).to have_selector :role, %i[combobox button]
+```
+
+If you use [`ElementInternals`](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals)
+on custom elements to set the aria role, you will need to tell the the selector to include
+these elements in the search. Use the `custom_elements` filter for this.
+
+```ruby
+expect(page).to have_selector :role, :textbox, custom_elements: "custom-textbox"
+```
+
 #### `section`
 
 Finds a section of the site based on the first heading in the section.

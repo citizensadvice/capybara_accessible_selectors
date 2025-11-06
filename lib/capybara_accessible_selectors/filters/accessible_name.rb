@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CapybaraAccessibleSelectors
-  # This is hacked into SelectorQuery to the "exact" option can be supported
+  # This is hacked into SelectorQuery so the "exact" option can be supported
 
   module AccessibleNameFilter
     def description(*)
