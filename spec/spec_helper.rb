@@ -8,6 +8,7 @@ Warning[:performance] = true if RUBY_VERSION >= "3.3.0"
 require "debug"
 require "capybara/rspec"
 require "selenium-webdriver"
+require "capybara/cuprite"
 require "capybara_accessible_selectors"
 require "sinatra"
 
@@ -77,6 +78,9 @@ Capybara.register_driver(:chrome_canary_headless) do |app|
     args: ["--headless=new"]
   )
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
+end
+Capybara.register_driver(:cuprite_chrome_headless) do |app|
+  Capybara::Cuprite::Driver.new(app, browser_name: :chrome)
 end
 Capybara.default_driver = driver
 Capybara.app = CapybaraAccessibleSelectors::TestApplication

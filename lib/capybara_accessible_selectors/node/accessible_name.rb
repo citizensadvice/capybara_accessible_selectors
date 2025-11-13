@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 require "capybara_accessible_selectors/nokogiri/accessible_name"
 
 module CapybaraAccessibleSelectors
@@ -12,6 +13,12 @@ module CapybaraAccessibleSelectors
   module NodeElementExtensions
     def accessible_name
       synchronize { base.accessible_name }
+    end
+  end
+
+  module CupriteNodeExtensions
+    def accessible_name
+      Cuprite::AccessibilityComputedValue.resolve(native, "name") || ""
     end
   end
 
