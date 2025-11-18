@@ -1,5 +1,14 @@
 # Change log
 
+## Unreleased
+
+- Refactored most role based selectors to use more accurate role and name resolution
+  - Most role based selectors now take a string or Regex as the locator, matching on the accessible name
+- `:main`, `:banner`, `:contentinfo`, and `:navigation` are no longer implemented as `descendant_or_self` to match all other selectors
+- fixed off-by-one column errors in the `:gridcell` selector
+- The `:img` selector is renamed to `:image`. Using `:img` will produce a deprecation warning
+- The `:image` selector can now select `<svg>` images
+
 ## v0.15.0
 
 - Add `:role` selector to find elements by their implicit or explicit aria role

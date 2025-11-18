@@ -570,12 +570,17 @@ expect(page).to have_selector :item_type, "application:person"
 
 Also see [↓ Expectation shortcuts](#expectation-shortcuts)
 
+#### `image`
+
+Finds an image. This will find both `<img>`, `<div role="image">` and `<svg>`.
+
+- `locator` [String, RegExp] The accessible name of the image
+
 #### `main`
 
 Finds a [main landmark](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/#x4-3-5-main).
 
-- `locator` [String, Symbol] The landmark's `[aria-label]` attribute or contents
-  of the element referenced by its `[aria-labelledby]` attribute
+- `locator` [String, Regexp] The accessible name of the main
 
 Also see:
 

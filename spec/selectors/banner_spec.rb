@@ -39,16 +39,6 @@ describe "banner selector" do
         expect(page.find(:banner, /Header o/)).to eq page.find(:test_id, "test")
       end
 
-      it "finds from self" do
-        render <<~HTML
-          <header>Content</header>
-        HTML
-
-        within :css, "header" do
-          expect(page).to have_selector :banner, count: 1
-        end
-      end
-
       it "does find if a child of a div" do
         render <<~HTML
           <div>

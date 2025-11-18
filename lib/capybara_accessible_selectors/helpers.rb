@@ -51,5 +51,13 @@ module CapybaraAccessibleSelectors
         end
       end
     end
+
+    def expand_roles(locator)
+      roles = Array(locator).map(&:to_s)
+      CapybaraAccessibleSelectors::Aria::ROLE_SYNONYMS.each do |s|
+        roles.push(*s) if s.intersect?(roles)
+      end
+      roles.uniq
+    end
   end
 end

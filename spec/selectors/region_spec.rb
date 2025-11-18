@@ -58,21 +58,12 @@ describe "region selector" do
 
         expect(page).to have_no_selector :region
       end
-
-      it "does not find with empty aria-labelledby" do
-        render <<~HTML
-          <section aria-labelledby="id">Content</section>
-          <div id="id"></div>
-        HTML
-
-        expect(page).to have_no_selector :region
-      end
     end
 
     context "when [role=region]" do
       it "finds the first element" do
         render <<~HTML
-          <div role="region">Content</div>
+          <div role="region" aria-label="foo">Content</div>
         HTML
 
         expect(page).to have_selector :region, count: 1

@@ -6,7 +6,7 @@ require "capybara_accessible_selectors/rspec/matchers/have_no_validation_errors"
 # rubocop:disable Naming/PredicatePrefix
 module Capybara
   module RSpecMatchers
-    %i[alert article banner columnheader combo_box contentinfo dialog grid gridcell heading img main
+    %i[alert article banner columnheader combo_box contentinfo dialog grid gridcell heading img image main
        menu menuitem modal navigation region role row tab_panel tab_button disclosure
        disclosure_button section item].each do |selector|
       define_method :"have_#{selector}" do |locator = nil, **options, &optional_filter_block|

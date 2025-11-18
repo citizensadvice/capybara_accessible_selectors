@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector :heading, locator_type: [String, Regexp] do
-  xpath do |*|
-    XPath.descendant[[
-      XPath.attr(:role) == "heading",
-      *(1..6).map { XPath.self(:"h#{_1}") }
-    ].reduce(:|)]
-  end
-
+CapybaraAccessibleSelectors.add_role_selector(:heading) do
   expression_filter(:level, valid_values: 1..6) do |xpath, level|
     filter = [
       XPath.self(:"h#{level}") & !XPath.attr(:"aria-level"),
@@ -23,16 +16,4 @@ Capybara.add_selector :heading, locator_type: [String, Regexp] do
 
     " level #{level}"
   end
-
-  locator_filter skip_if: nil do |node, locator, exact:, **|
-    accessible_name = node.accessible_name
-    case locator
-    when String
-      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
-    when Regexp
-      locator.match?(accessible_name)
-    end
-  end
-
-  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end

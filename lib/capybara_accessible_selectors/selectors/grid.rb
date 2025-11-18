@@ -1,56 +1,18 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:grid, locator_type: [String, Regexp]) do
-  xpath do |*|
-    XPath.descendant[XPath.attr(:role) == "grid"]
-  end
+CapybaraAccessibleSelectors.add_role_selector(:grid, within: true)
 
-  locator_filter skip_if: nil do |node, locator, exact:, **|
-    accessible_name = node.accessible_name
-    case locator
-    when String
-      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
-    when Regexp
-      locator.match?(accessible_name)
-    end
-  end
-
-  filter_set(:capybara_accessible_selectors, %i[aria described_by])
-end
-
-Capybara.add_selector(:columnheader, locator_type: [String, Symbol]) do
-  xpath do |locator|
-    columnheader = XPath.descendant[(XPath.local_name == "th") | (XPath.attr(:role) == "columnheader")]
-
-    if locator
-      columnheader[XPath.string.n.is(locator.to_s)]
-    else
-      columnheader
-    end
-  end
-
-  expression_filter(:colindex, valid_values: [Integer, String], skip_if: nil) do |xpath, value|
+CapybaraAccessibleSelectors.add_role_selector(:columnheader, within: true, content_fallback: true) do
+  expression_filter(:colindex, valid_values: Integer, skip_if: nil) do |xpath, value|
     colindex = XPath.attr(:"aria-colindex") == value.to_s
-    position = (!XPath.attr(:"aria-colindex")) & (XPath.local_name == "th") & (XPath.position == value.to_i - 1)
+    position = (!XPath.attr(:"aria-colindex")) & (XPath.local_name == "th") & (XPath.position == value.to_i)
 
     xpath[colindex | position]
   end
-
-  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
 
-Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
-  xpath do |locator|
-    gridcell = XPath.descendant[(XPath.local_name == "td") | (XPath.attr(:role) == "gridcell")]
-
-    if locator
-      gridcell[XPath.string.n.is(locator.to_s)]
-    else
-      gridcell
-    end
-  end
-
-  expression_filter(:colindex, valid_values: [Integer, String], skip_if: nil) do |xpath, value|
+CapybaraAccessibleSelectors.add_role_selector(:gridcell, within: true, content_fallback: true) do
+  expression_filter(:colindex, valid_values: Integer, skip_if: nil) do |xpath, value|
     row_ancestor = XPath.ancestor[(XPath.attr(:role) == "row") | (XPath.local_name == "tr")]
     colindex = row_ancestor & (XPath.attr(:"aria-colindex") == value.to_s)
     position = row_ancestor & !XPath.attr(:"aria-colindex") & (XPath.position == value.to_i)
@@ -58,12 +20,12 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
     xpath[colindex | position]
   end
 
-  node_filter(:rowindex, valid_values: [Integer, String], skip_if: nil) do |gridcell, value|
+  node_filter(:rowindex, valid_values: Integer, skip_if: nil) do |gridcell, value|
     if gridcell.has_ancestor?(:row)
       row = gridcell.ancestor(:row)
 
-      if row.has_selector?(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
-        grid = row.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
+      if row.has_selector?(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"], wait: false)
+        grid = row.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"], wait: false)
 
         grid.find(:row, rowindex: value) == row
       else
@@ -75,35 +37,22 @@ Capybara.add_selector(:gridcell, locator_type: [String, Symbol]) do
   end
 
   node_filter(:columnheader, valid_values: [String, Symbol], skip_if: nil) do |node, value|
-    colindex = node[:"aria-colindex"] || node.ancestor(:row).all(:gridcell).index(node)
-    grid = node.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
+    colindex = node[:"aria-colindex"] || (node.ancestor(:row).all(:gridcell, wait: false).index(node) + 1)
+    grid = node.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"], wait: false)
 
-    grid.has_selector?(:columnheader, value, colindex:)
+    grid.has_selector?(:columnheader, value, colindex: colindex.to_i, wait: false)
   end
-
-  filter_set(:capybara_accessible_selectors, %i[aria described_by])
 end
-# rubocop:enable Metrics/BlockLength
 
-Capybara.add_selector(:row, locator_type: [String, Symbol]) do
-  xpath do |locator|
-    row = XPath.descendant[(XPath.local_name == "tr") | (XPath.attr(:role) == "row")]
-
-    if locator
-      row[XPath.string.n.is(locator.to_s)]
-    else
-      row
-    end
-  end
-
-  node_filter(:rowindex, valid_values: [Integer, String], skip_if: nil) do |row, value|
+CapybaraAccessibleSelectors.add_role_selector(:row, within: true, content_fallback: true) do
+  node_filter(:rowindex, valid_values: Integer, skip_if: nil) do |row, value|
     case row[:"aria-rowindex"]
     when value.to_s then true
     when NilClass
-      if row.has_selector?(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
-        grid = row.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"])
+      if row.has_selector?(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"], wait: false)
+        grid = row.find(:xpath, XPath.ancestor[XPath.attr(:role) == "grid"], wait: false)
 
-        grid.all(:row).index(row) == value.to_i - 1
+        grid.all(:row).index(row) == value.to_i
       else
         false
       end
@@ -111,40 +60,4 @@ Capybara.add_selector(:row, locator_type: [String, Symbol]) do
   end
 
   filter_set(:capybara_accessible_selectors, %i[aria described_by])
-end
-
-module CapybaraAccessibleSelectors
-  module Session
-    # Limit supplied block to within a columnheader
-    #
-    # @param [String] Name Columnheader label
-    # @param [Hash] options Finder options
-    def within_columnheader(...)
-      within(:columnheader, ...)
-    end
-
-    # Limit supplied block to within a grid
-    #
-    # @param [String] Name Grid label
-    # @param [Hash] options Finder options
-    def within_grid(...)
-      within(:grid, ...)
-    end
-
-    # Limit supplied block to within a gridcell
-    #
-    # @param [String] Name Gridcell label
-    # @param [Hash] options Finder options
-    def within_gridcell(...)
-      within(:gridcell, ...)
-    end
-
-    # Limit supplied block to within a row
-    #
-    # @param [String] Name Row label
-    # @param [Hash] options Finder options
-    def within_row(...)
-      within(:row, ...)
-    end
-  end
 end

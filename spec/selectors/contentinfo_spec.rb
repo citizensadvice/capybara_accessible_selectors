@@ -39,16 +39,6 @@ describe "contentinfo selector" do
         expect(page.find(:contentinfo, /Footer o/)).to eq page.find(:test_id, "test")
       end
 
-      it "finds from self" do
-        render <<~HTML
-          <footer>Content</footer>
-        HTML
-
-        within :css, "footer" do
-          expect(page).to have_selector :contentinfo, count: 1
-        end
-      end
-
       it "does find if a child of a div" do
         render <<~HTML
           <div>
@@ -178,16 +168,6 @@ describe "contentinfo selector" do
         HTML
 
         expect(page.find(:contentinfo)).to eq page.find(:test_id, "test")
-      end
-
-      it "finds from self" do
-        render <<~HTML
-          <div role="contentinfo">Content</div>
-        HTML
-
-        within :css, "[role=contentinfo]" do
-          expect(page).to have_selector :contentinfo, count: 1
-        end
       end
 
       it "does find if a child of an article" do

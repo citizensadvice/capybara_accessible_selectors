@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "main selector" do
   describe "locator" do
     context "when <main> element" do
@@ -46,16 +44,6 @@ describe "main selector" do
 
         expect(page).to have_no_selector :main, "Not the right locator"
       end
-
-      it "finds from self" do
-        render <<~HTML
-          <main>Content</main>
-        HTML
-
-        within :css, "main" do
-          expect(page).to have_selector :main
-        end
-      end
     end
 
     context "when [role=main]" do
@@ -101,16 +89,6 @@ describe "main selector" do
         HTML
 
         expect(page).to have_no_selector :main, "Not the right locator"
-      end
-
-      it "finds from self" do
-        render <<~HTML
-          <div role="main">Content</div>
-        HTML
-
-        within :css, "[role=main]" do
-          expect(page).to have_selector :main
-        end
       end
     end
   end
