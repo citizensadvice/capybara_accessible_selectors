@@ -18,7 +18,7 @@ Capybara::Selector::FilterSet[:capybara_accessible_selectors].instance_eval do
     error_messages << " expected aria-invalid not to be false if the element is invalid" if native_invalid && aria_invalid == "false"
 
     if value && value != true
-      description = CapybaraAccessibleSelectors::Helpers.element_description(node)
+      description = [node.accessible_name, node.accessible_description].compact.join(" ").strip
       valid = (value.is_a?(Regexp) && value.match?(description)) || (value.is_a?(String) && description.include?(value))
       error_messages << " expected to be described by #{value.inspect} but it was described by \"#{description}\"." unless valid
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
+Capybara.add_selector(:rich_text, locator_type: [String, Regexp, Array]) do
   xpath do |locator, *|
     XPath.descendant[[
       XPath.attribute(:role) == "textbox",
@@ -14,13 +14,12 @@ Capybara.add_selector(:rich_text, locator_type: [String, Symbol, Array]) do
     next true if locator.nil?
 
     *, locator = locator if locator.is_a? Array
-    method = exact ? :eql? : :include?
-    if node[:"aria-labelledby"]
-      CapybaraAccessibleSelectors::Helpers.element_labelledby(node).public_send(method, locator)
-    elsif node[:"aria-label"]
-      node[:"aria-label"].public_send(method, locator.to_s)
-    else
-      node.tag_name == "iframe"
+    accessible_name = node.accessible_name
+    case locator
+    when String
+      exact ? accessible_name == locator : accessible_name.include?(locator.to_s)
+    when Regexp
+      locator.match?(accessible_name)
     end
   end
 end
