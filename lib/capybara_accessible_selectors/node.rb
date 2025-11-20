@@ -3,11 +3,13 @@
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions; end
   module NodeElementExtensions; end
+  module CupriteNodeExtensions; end
   module SeleniumNodeExtensions; end
   module RackTestNodeExtensions; end
 
   ::Capybara::Driver::Node.include DriverNodeExtensions
   ::Capybara::Node::Element.include NodeElementExtensions
+  ::Capybara::Cuprite::Node.include CupriteNodeExtensions
   ::Capybara::Selenium::Node.include SeleniumNodeExtensions
   ::Capybara::RackTest::Node.include RackTestNodeExtensions
   ::Capybara::Node::Simple.include RackTestNodeExtensions

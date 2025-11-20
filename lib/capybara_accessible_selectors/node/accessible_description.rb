@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 require "capybara_accessible_selectors/nokogiri/accessible_description"
 require "capybara_accessible_selectors/selenium/accessible_description"
 
@@ -13,6 +14,12 @@ module CapybaraAccessibleSelectors
   module NodeElementExtensions
     def accessible_description
       synchronize { base.accessible_description }
+    end
+  end
+
+  module CupriteNodeExtensions
+    def accessible_description
+      Cuprite::AccessibilityComputedValue.resolve(native, "description") || ""
     end
   end
 
