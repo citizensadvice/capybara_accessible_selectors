@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "main selector" do
   describe "locator" do
     context "when <main> element" do
