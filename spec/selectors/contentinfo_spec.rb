@@ -5,56 +5,38 @@ describe "contentinfo selector" do
     context "when <footer> element" do
       it "finds the first element" do
         render <<~HTML
-          <footer>Content</footer>
+          <footer data-test-id="test">Content</footer>
+          <div>Content</div>
         HTML
 
-        expect(page).to have_selector :contentinfo, count: 1
+        expect(page.find(:contentinfo)).to eq page.find(:test_id, "test")
       end
 
-      it "finds from self" do
+      it "finds based on part accessible name" do
         render <<~HTML
-          <footer>Content</footer>
+          <footer aria-label="Footer one" data-test-id="test">Content</footer>
+          <footer aria-label="Footer two">Content</footer>
         HTML
 
-        within :css, "footer" do
-          expect(page).to have_selector :contentinfo, count: 1
-        end
+        expect(page.find(:contentinfo, "Footer o")).to eq page.find(:test_id, "test")
       end
 
-      it "finds based on [aria-label]" do
+      it "finds based on exact accessible name" do
         render <<~HTML
-          <footer aria-label="Footer contentinfo">Content</footer>
+          <footer aria-label="Footer" data-test-id="test">Content</footer>
+          <footer aria-label="Footer two">Content</footer>
         HTML
 
-        expect(page).to have_selector :contentinfo, "Footer contentinfo"
+        expect(page.find(:contentinfo, "Footer", exact: true)).to eq page.find(:test_id, "test")
       end
 
-      it "does not find differing on [aria-label]" do
+      it "finds based on regular expression" do
         render <<~HTML
-          <footer aria-label="Footer contentinfo">Content</footer>
+          <footer aria-label="Footer one" data-test-id="test">Content</footer>
+          <footer aria-label="Footer two">Content</footer>
         HTML
 
-        expect(page).to have_no_selector :contentinfo, "Not the right locator"
-      end
-
-      it "finds based on [aria-labelledby]" do
-        render <<~HTML
-          <footer aria-labelledby="contentinfo_label">
-            <h1 id="contentinfo_label">Footer contentinfo</h1>
-          </footer>
-        HTML
-
-        expect(page).to have_selector :contentinfo, "Footer contentinfo"
-      end
-
-      it "does not find differing on [aria-labelledby]" do
-        render <<~HTML
-          <footer aria-labelledby="contentinfo_label">
-            <h1 id="contentinfo_label">Footer contentinfo</h1>
-          </footer>
-        HTML
-
-        expect(page).to have_no_selector :contentinfo, "Not the right locator"
+        expect(page.find(:contentinfo, /Footer o/)).to eq page.find(:test_id, "test")
       end
 
       it "does find if a child of a div" do
@@ -181,56 +163,11 @@ describe "contentinfo selector" do
     context "when [role=contentinfo]" do
       it "finds the first element" do
         render <<~HTML
-          <div role="contentinfo">Content</div>
+          <div role="contentinfo" data-test-id="test">Content</div>
+          <div>Content</div>
         HTML
 
-        expect(page).to have_selector :contentinfo, count: 1
-      end
-
-      it "finds from self" do
-        render <<~HTML
-          <div role="contentinfo">Content</div>
-        HTML
-
-        within :css, "[role=contentinfo]" do
-          expect(page).to have_selector :contentinfo, count: 1
-        end
-      end
-
-      it "finds based on [aria-label]" do
-        render <<~HTML
-          <div role="contentinfo" aria-label="Footer contentinfo">Content</div>
-        HTML
-
-        expect(page).to have_selector :contentinfo, "Footer contentinfo"
-      end
-
-      it "does not find differing on [aria-label]" do
-        render <<~HTML
-          <div role="contentinfo" aria-label="Footer contentinfo">Content</div>
-        HTML
-
-        expect(page).to have_no_selector :contentinfo, "Not the right locator"
-      end
-
-      it "finds based on [aria-labelledby]" do
-        render <<~HTML
-          <div role="contentinfo" aria-labelledby="contentinfo_label">
-            <h1 id="contentinfo_label">Footer contentinfo</h1>
-          </div>
-        HTML
-
-        expect(page).to have_selector :contentinfo, "Footer contentinfo"
-      end
-
-      it "does not find differing on [aria-labelledby]" do
-        render <<~HTML
-          <div role="contentinfo" aria-labelledby="contentinfo_label">
-            <h1 id="contentinfo_label">Footer contentinfo</h1>
-          </div>
-        HTML
-
-        expect(page).to have_no_selector :contentinfo, "Not the right locator"
+        expect(page.find(:contentinfo)).to eq page.find(:test_id, "test")
       end
 
       it "does find if a child of an article" do

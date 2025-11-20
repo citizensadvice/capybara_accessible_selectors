@@ -1018,8 +1018,6 @@ RSpec.describe CapybaraAccessibleSelectors::Nokogiri::AccessibleName, driver: :r
             <title>content</title>
             <polygon points="250,60 100,400 400,400">
           </svg>
-          <span id="id1">aria</span>
-          <span id="id2">labelledby</span>
         HTML
 
         expect(find(:element, "svg").accessible_name).to eq "content"

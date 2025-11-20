@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
-# Deprecated
-CapybaraAccessibleSelectors.add_role_selector(:img) do
+CapybaraAccessibleSelectors.add_role_selector(:image) do
   expression_filter(:src, valid_values: [String, Regexp]) do |xpath, src|
     builder(xpath).add_attribute_conditions(src:)
   end
 
   describe(:expression_filters) do |src: nil, **|
     " expected to match src \"#{src}\"" unless src.nil?
-  end
-
-  expression = @expressions[:xpath]
-  xpath do |*args, **kwargs|
-    Capybara::Helpers.warn("img is deprecated in favour of image")
-    expression.call(*args, **kwargs)
   end
 end

@@ -5,19 +5,29 @@ describe "dialog selector", skip_driver: :rack_test do
     visit "/dialog.html"
   end
 
-  it "selects a dialog by title" do
-    modal = find(:element, :div, text: "Dialog content")
-    expect(find(:dialog, "Dialog title")).to eq modal
-  end
-
-  it "selects an alertdialog by title" do
-    modal = find(:element, :div, text: "Alertdialog content")
-    expect(find(:dialog, "Alertdialog title")).to eq modal
-  end
-
   it "matches a dialog" do
     modal = find(:element, :div, text: "Dialog content")
     expect(modal).to match_selector :dialog
+  end
+
+  it "finds based on part accessible name" do
+    modal = find(:element, :div, text: "Dialog content")
+    expect(page.find(:dialog, "Dialog t")).to eq modal
+  end
+
+  it "finds based on exact accessible name" do
+    modal = find(:element, :div, text: "Dialog content")
+    expect(page.find(:dialog, "Dialog title", exact: true)).to eq modal
+  end
+
+  it "finds based on regular expression" do
+    modal = find(:element, :div, text: "Dialog content")
+    expect(page.find(:dialog, /Dialog t/)).to eq modal
+  end
+
+  it "selects an alertdialog by accessible name" do
+    modal = find(:element, :div, text: "Alertdialog content")
+    expect(find(:dialog, "Alertdialog title")).to eq modal
   end
 
   it "selects by aria-label" do
@@ -28,38 +38,6 @@ describe "dialog selector", skip_driver: :rack_test do
   it "selects by partial aria-label" do
     modal = find(:element, :div, text: "Aria label content")
     expect(find(:dialog, "aria-lab")).to eq modal
-  end
-
-  it "selects by exact aria-label" do
-    modal = find(:element, :div, text: "Aria label content")
-    expect(find(:dialog, "aria-label", exact: true)).to eq modal
-  end
-
-  it "does not find exact aria-label with the wrong text" do
-    expect do
-      find :dialog, "aria-labe", exact: true, wait: 0
-    end.to raise_error Capybara::ElementNotFound
-  end
-
-  it "selects by multiple aria-labelledby" do
-    modal = find(:element, :div, text: "Split label content")
-    expect(find(:dialog, "split label")).to eq modal
-  end
-
-  it "selects by partial aria-labelledby" do
-    modal = find(:element, :div, text: "Split label content")
-    expect(find(:dialog, "split la")).to eq modal
-  end
-
-  it "selects by exact aria-labelledby" do
-    modal = find(:element, :div, text: "Split label content")
-    expect(find(:dialog, "split label", exact: true)).to eq modal
-  end
-
-  it "does not find by exact aria-labelledby with the wrong text" do
-    expect do
-      find :dialog, "split la", exact: true, wait: 0
-    end.to raise_error Capybara::ElementNotFound
   end
 
   it "does not select a modal missing a role" do

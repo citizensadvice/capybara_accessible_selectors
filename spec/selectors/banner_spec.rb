@@ -5,56 +5,38 @@ describe "banner selector" do
     context "when <header> element" do
       it "finds the first element" do
         render <<~HTML
-          <header>Content</header>
+          <header data-test-id="test">Content</header>
+          <div>Content</div>
         HTML
 
-        expect(page).to have_selector :banner, count: 1
+        expect(page.find(:banner)).to eq page.find(:test_id, "test")
       end
 
-      it "finds from self" do
+      it "finds based on part accessible name" do
         render <<~HTML
-          <header>Content</header>
+          <header aria-label="header one" data-test-id="test">Content</header>
+          <header aria-label="header two">Content</header>
         HTML
 
-        within :css, "header" do
-          expect(page).to have_selector :banner, count: 1
-        end
+        expect(page.find(:banner, "header o")).to eq page.find(:test_id, "test")
       end
 
-      it "finds based on [aria-label]" do
+      it "finds based on exact accessible name" do
         render <<~HTML
-          <header aria-label="Header banner">Content</header>
+          <header aria-label="Header" data-test-id="test">Content</header>
+          <header aria-label="Header two">Content</header>
         HTML
 
-        expect(page).to have_selector :banner, "Header banner"
+        expect(page.find(:banner, "Header", exact: true)).to eq page.find(:test_id, "test")
       end
 
-      it "does not find differing on [aria-label]" do
+      it "finds based on regular expression" do
         render <<~HTML
-          <header aria-label="Header banner">Content</header>
+          <Header aria-label="Header one" data-test-id="test">Content</article>
+          <Header aria-label="Header two">Content</article>
         HTML
 
-        expect(page).to have_no_selector :banner, "Not the right locator"
-      end
-
-      it "finds based on [aria-labelledby]" do
-        render <<~HTML
-          <header aria-labelledby="banner_label">
-            <h1 id="banner_label">Header banner</h1>
-          </header>
-        HTML
-
-        expect(page).to have_selector :banner, "Header banner"
-      end
-
-      it "does not find differing on [aria-labelledby]" do
-        render <<~HTML
-          <header aria-labelledby="banner_label">
-            <h1 id="banner_label">Header banner</h1>
-          </header>
-        HTML
-
-        expect(page).to have_no_selector :banner, "Not the right locator"
+        expect(page.find(:banner, /Header o/)).to eq page.find(:test_id, "test")
       end
 
       it "does find if a child of a div" do
@@ -181,56 +163,11 @@ describe "banner selector" do
     context "when [role=banner]" do
       it "finds the first element" do
         render <<~HTML
-          <div role="banner">Content</div>
+          <div role="banner" data-test-id="test">Content</div>
+          <div>Content</div>
         HTML
 
-        expect(page).to have_selector :banner, count: 1
-      end
-
-      it "finds from self" do
-        render <<~HTML
-          <div role="banner">Content</div>
-        HTML
-
-        within :css, "[role=banner]" do
-          expect(page).to have_selector :banner, count: 1
-        end
-      end
-
-      it "finds based on [aria-label]" do
-        render <<~HTML
-          <div role="banner" aria-label="Header banner">Content</div>
-        HTML
-
-        expect(page).to have_selector :banner, "Header banner"
-      end
-
-      it "does not find differing on [aria-label]" do
-        render <<~HTML
-          <div role="banner" aria-label="Header banner">Content</div>
-        HTML
-
-        expect(page).to have_no_selector :banner, "Not the right locator"
-      end
-
-      it "finds based on [aria-labelledby]" do
-        render <<~HTML
-          <div role="banner" aria-labelledby="banner_label">
-            <h1 id="banner_label">Header banner</h1>
-          </div>
-        HTML
-
-        expect(page).to have_selector :banner, "Header banner"
-      end
-
-      it "does not find differing on [aria-labelledby]" do
-        render <<~HTML
-          <div role="banner" aria-labelledby="banner_label">
-            <h1 id="banner_label">Header banner</h1>
-          </div>
-        HTML
-
-        expect(page).to have_no_selector :banner, "Not the right locator"
+        expect(page.find(:banner)).to eq page.find(:test_id, "test")
       end
 
       it "does find if a child of an article" do

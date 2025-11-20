@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 describe "alert selector" do
-  before do
-    visit "/alert.html"
-  end
-
   it "finds alerts" do
-    alert = page.find(:css, "[role=alert]")
-    expect(page.find(:alert, text: "Alert message")).to eq alert
-  end
+    render <<~HTML
+      <div role="alert" data-test-id="test">
+        Alert message
+      <div>
 
-  it "matches selector" do
-    alert = page.find(:css, "[role=alert]")
-    expect(alert).to match_selector :alert
+      <div>
+        Just a message
+      </div>
+    HTML
+
+    expect(page.find(:alert)).to eq page.find(:test_id, "test")
   end
 end

@@ -35,12 +35,18 @@ describe "gridcell" do
     it "finds <td> gridcells based on their index in their <tr>" do
       within id: "grid-table" do
         expect(page).to have_selector :gridcell, colindex: 2, count: 2
+
+        gridcell_texts = page.all(:gridcell, colindex: 2).map(&:text)
+        expect(gridcell_texts).to eq(%w[B2 B5])
       end
     end
 
     it "finds gridcells based on ther [aria-colindex]" do
       within id: "grid-div" do
         expect(page).to have_selector :gridcell, colindex: 2, count: 2
+
+        gridcell_texts = page.all(:gridcell, colindex: 2).map(&:text)
+        expect(gridcell_texts).to eq(%w[E8 E11])
       end
     end
   end
@@ -49,12 +55,18 @@ describe "gridcell" do
     it "finds <td> gridcells based on the index of their <tr> in the <table>" do
       within id: "grid-table" do
         expect(page).to have_selector :gridcell, rowindex: 2, count: 3
+
+        gridcell_texts = page.all(:gridcell, rowindex: 2).map(&:text)
+        expect(gridcell_texts).to eq(%w[A4 B5 C6])
       end
     end
 
     it "finds gridcells based on the [aria-rowindex] of their [role=row]" do
       within id: "grid-div" do
         expect(page).to have_selector :gridcell, rowindex: 2, count: 3
+
+        gridcell_texts = page.all(:gridcell, rowindex: 2).map(&:text)
+        expect(gridcell_texts).to eq(%w[D7 E8 F9])
       end
     end
   end
@@ -63,12 +75,18 @@ describe "gridcell" do
     it "finds gridcells based on the text of their th" do
       within id: "grid-table" do
         expect(page).to have_selector :gridcell, columnheader: "A", count: 2
+
+        gridcell_texts = page.all(:gridcell, columnheader: "A").map(&:text)
+        expect(gridcell_texts).to eq(%w[A1 A4])
       end
     end
 
     it "finds gridcells based on the text of their [role=columnheader]" do
       within id: "grid-div" do
         expect(page).to have_selector :gridcell, columnheader: "D", count: 2
+
+        gridcell_texts = page.all(:gridcell, columnheader: "D").map(&:text)
+        expect(gridcell_texts).to eq(%w[D7 D10])
       end
     end
   end

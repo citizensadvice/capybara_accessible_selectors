@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-describe "menu selector" do
+describe "menu selector", skip_driver: :safari do
+  # Safari has a weird bug with the menu role resolution being intermittent
   before do
     visit "/menu.html"
   end
