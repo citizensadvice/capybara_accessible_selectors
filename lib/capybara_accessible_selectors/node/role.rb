@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 require "capybara_accessible_selectors/nokogiri/accessible_role"
 
 module CapybaraAccessibleSelectors
@@ -18,6 +19,12 @@ module CapybaraAccessibleSelectors
 
         role
       end
+    end
+  end
+
+  module CupriteNodeExtensions
+    def role
+      Cuprite::AccessibilityComputedValue.resolve(native, "role")
     end
   end
 
