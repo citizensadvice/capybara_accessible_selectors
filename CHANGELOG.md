@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## v0.16.0
 
 - Refactored most role based selectors to use more accurate role and name resolution
   - Most role based selectors now take a string or Regex as the locator, matching on the accessible name
