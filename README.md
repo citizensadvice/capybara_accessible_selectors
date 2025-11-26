@@ -714,7 +714,7 @@ Finds a rich text editor.
 
 This should be compatible with most browser based rich text editors. It searches for an element with the [`contenteditable` attribute][] marked up with the [`textbox` role][]. It is also compatible with `<iframe>` based editors such as CKEditor 4 and TinyMCE.
 
-- `locator` [String, Symbol] The label for the editor. This can be an `aria-label` or `aria-labelledby`. For iframe editors this is the `title` attribute.
+- `locator` [String, Regex] The accessible label for the rich text area
 
 For testing the content of an iframe based editor you need to use `within_frame`, or you can use `within_rich_text`.
 

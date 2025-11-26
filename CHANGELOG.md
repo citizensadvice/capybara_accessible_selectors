@@ -8,6 +8,10 @@
 - fixed off-by-one column errors in the `:gridcell` selector
 - The `:img` selector is renamed to `:image`. Using `:img` will produce a deprecation warning
 - The `:image` selector can now select `<svg>` images
+- `validation_error`
+  - now uses the proper accessible name and description algorithms
+  - now accepts a regular expression or string as a locator
+  - no longer accepts a symbol as a locator
 
 ## v0.15.0
 
