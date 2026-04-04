@@ -27,4 +27,13 @@ module CapybaraAccessibleSelectors
       Nokogiri::AccessibleDescription.resolve(native) || ""
     end
   end
+
+  module CupriteNodeExtensions
+    def accessible_description
+      # The accname-1.2 description algorithm is driver-agnostic (it only uses
+      # the generic Capybara node API), so reuse it instead of Chrome's raw
+      # computed description, keeping results consistent with Selenium
+      Selenium::AccessibleDescription.resolve(self) || ""
+    end
+  end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "capybara_accessible_selectors/nokogiri/accessible_role"
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions
@@ -39,6 +40,18 @@ module CapybaraAccessibleSelectors
   module RackTestNodeExtensions
     def role
       Nokogiri::AccessibleRole.resolve(native)
+    end
+  end
+
+  module CupriteNodeExtensions
+    def role
+      resolved = Cuprite::AccessibilityComputedValue.resolve(native, "role")
+      # Chrome returns non-standard internal identifiers for elements without mapped roles
+      # These are always in PascalCase so ignore roles with capital letters
+      return "math" if resolved == "MathMLMath"
+      return nil if resolved&.match?(/[A-Z]/)
+
+      resolved == "" ? nil : resolved
     end
   end
 end
