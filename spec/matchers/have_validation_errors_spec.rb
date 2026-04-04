@@ -33,6 +33,18 @@ describe "has_validation_errors", skip_driver: :rack_test do
     MESSAGE
   end
 
+  it "uses evaluated outerHTML in failure messages" do
+    matcher = Capybara::RSpecMatchers::Matchers::HaveValidationErrors.new
+    node = instance_double(Capybara::Node::Element)
+
+    allow(node).to receive(:evaluate_script).with("this.outerHTML").and_return('<input required="" type="text">')
+    allow(matcher).to receive(:all_invalid_elements).and_return([node])
+
+    matcher.matches?(page) {}
+
+    expect(matcher.failure_message).to eq 'expected <input required="" type="text"> to have no error'
+  end
+
   it "rejects for an extra error" do
     expect do
       within(:section, "Form with one error") do

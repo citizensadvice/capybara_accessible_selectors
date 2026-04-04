@@ -5,12 +5,14 @@ module CapybaraAccessibleSelectors
   module NodeElementExtensions; end
   module SeleniumNodeExtensions; end
   module RackTestNodeExtensions; end
+  module CupriteNodeExtensions; end
 
   ::Capybara::Driver::Node.include DriverNodeExtensions
   ::Capybara::Node::Element.include NodeElementExtensions
   ::Capybara::Selenium::Node.include SeleniumNodeExtensions
   ::Capybara::RackTest::Node.include RackTestNodeExtensions
   ::Capybara::Node::Simple.include RackTestNodeExtensions
+  ::Capybara::Cuprite::Node.include(CupriteNodeExtensions) if defined?(::Capybara::Cuprite::Node)
 end
 
 require "capybara_accessible_selectors/node/accessible_description"

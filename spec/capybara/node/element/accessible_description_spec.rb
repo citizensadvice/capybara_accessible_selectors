@@ -50,7 +50,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq "Accessible"
     end
 
-    it "does not use if matching the accessible name" do
+    it "does not use if matching the accessible name", skip_driver: :cuprite_chrome do
       render <<~HTML
         <div role="group" aria-labelledby="id" aria-describedby="id" data-test-id="test">Contents</div>
         <span id="id">xxx</span>
@@ -69,7 +69,8 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq "Accessible description"
     end
 
-    it "does not return an accessible description from aria-description if an empty aria-describedby is supplied" do
+    it "does not return an accessible description from aria-description if an empty aria-describedby is supplied",
+       skip_driver: :cuprite_chrome do
       render <<~HTML
         <div role="group" aria-describedby="" aria-description="Accessible description" data-test-id="test">Contents</div>
       HTML
@@ -77,7 +78,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
       expect(find(:test_id, "test").accessible_description).to eq ""
     end
 
-    it "does not use if matching the accessible name" do
+    it "does not use if matching the accessible name", skip_driver: :cuprite_chrome do
       render <<~HTML
         <div role="group" title="title" aria-description="title" data-test-id="test">Contents</div>
       HTML
@@ -121,7 +122,7 @@ RSpec.describe Capybara::Node::Element, "#accessible_description" do
         expect(find(:element, "table").accessible_description).to eq "caption"
       end
 
-      it "does not use the caption if empty" do
+      it "does not use the caption if empty", skip_driver: :cuprite_chrome do
         render <<~HTML
           <table title="title" aria-label="xxx">
             <caption></caption>

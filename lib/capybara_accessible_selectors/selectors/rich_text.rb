@@ -42,7 +42,7 @@ module CapybaraAccessibleSelectors
         # The cursor may or may not be at the start of the content
         # So we can't just use backspace
         input.send_keys [command_modifier, "a"], :backspace if input.text != "" && clear
-        input.send_keys with
+        input.send_keys with if with
       end
     end
 
@@ -74,7 +74,7 @@ module CapybaraAccessibleSelectors
 
         editable.click
         editable.send_keys [command_modifier, "a"], :backspace if editable.text != "" && clear
-        editable.send_keys text
+        editable.send_keys text if text
       end
     end
 
@@ -87,7 +87,7 @@ module CapybaraAccessibleSelectors
     end
 
     def command_modifier
-      ::Selenium::WebDriver::Platform.mac? ? :meta : :control
+      RUBY_PLATFORM.include?("darwin") ? :meta : :control
     end
   end
 end
