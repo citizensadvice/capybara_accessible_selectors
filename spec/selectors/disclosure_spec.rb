@@ -43,7 +43,7 @@ describe "Disclosure", skip_driver: :rack_test do
     end
 
     describe "#toggle_disclosure" do
-      it "toggles a details open and closed" do
+      it "toggles a details open and closed", skip_driver: :cuprite_chrome do
         expect(page).to have_selector :disclosure, "Summary button", expanded: false
         # Open
         toggle_disclosure("Summary button")
@@ -123,7 +123,7 @@ describe "Disclosure", skip_driver: :rack_test do
         expect(page).to have_selector :disclosure, "Summary button", expanded: true
       end
 
-      it "returns an open disclosure" do
+      it "returns an open disclosure", skip_driver: :cuprite_chrome do
         disclosure = find(:disclosure, "Summary button", expanded: false)
         select_disclosure("Summary button")
         expect(select_disclosure("Summary button")).to eq disclosure

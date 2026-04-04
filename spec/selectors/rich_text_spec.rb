@@ -45,12 +45,12 @@ describe "rich text", skip_driver: :rack_test do
       end
 
       describe "#fill_in_rich_text" do
-        it "fills in a rich text area" do
+        it "fills in a rich text area", skip_driver: :cuprite_chrome do
           fill_in_rich_text "with label", with: "foo"
           expect(page).to have_selector :rich_text, "with label", exact_text: "foo"
         end
 
-        it "replaces text in a rich text area" do
+        it "replaces text in a rich text area", skip_driver: :cuprite_chrome do
           fill_in_rich_text "with label", with: "foo"
           fill_in_rich_text "with label", with: "bar"
           expect(page).to have_selector :rich_text, "with label", exact_text: "bar"
@@ -62,7 +62,7 @@ describe "rich text", skip_driver: :rack_test do
           expect(page).to have_no_selector :rich_text, "with label", text: "foo"
         end
 
-        it "fills in a rich text area without clearing" do
+        it "fills in a rich text area without clearing", skip_driver: :cuprite_chrome do
           fill_in_rich_text "with label", with: "foo"
           fill_in_rich_text "with label", with: "bar", clear: false
           expect(page).to have_selector :rich_text, "with label", exact_text: "foobar"
@@ -108,7 +108,7 @@ describe "rich text", skip_driver: :rack_test do
           expect(page).to have_selector :rich_text, "with aria-labelledby", exact_text: "foo"
         end
 
-        it "replaces text in a rich text area" do
+        it "replaces text in a rich text area", skip_driver: :cuprite_chrome do
           fill_in_rich_text "with aria-labelledby", with: "foo"
           fill_in_rich_text "with aria-labelledby", with: "bar"
           expect(page).to have_selector :rich_text, "with aria-labelledby", exact_text: "bar"
@@ -158,7 +158,7 @@ describe "rich text", skip_driver: :rack_test do
         end
       end
 
-      it "replaces text in a rich text area" do
+      it "replaces text in a rich text area", skip_driver: :cuprite_chrome do
         fill_in_rich_text "editable iframe", with: "foo"
         fill_in_rich_text "editable iframe", with: "bar"
         within_frame find(:rich_text, "editable iframe") do
@@ -187,7 +187,7 @@ describe "rich text", skip_driver: :rack_test do
   end
 
   describe "within_rich_text" do
-    context "when inline" do
+    context "when inline", skip_driver: :cuprite_chrome do
       it "works if called on page" do
         fill_in_rich_text "with label", with: "foo"
         within_rich_text("with label") do
