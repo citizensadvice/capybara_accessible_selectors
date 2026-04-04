@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "capybara_accessible_selectors/nokogiri/accessible_name"
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions
@@ -28,6 +29,12 @@ module CapybaraAccessibleSelectors
   module RackTestNodeExtensions
     def accessible_name
       Nokogiri::AccessibleName.resolve(native) || ""
+    end
+  end
+
+  module CupriteNodeExtensions
+    def accessible_name
+      Cuprite::AccessibilityComputedValue.resolve(native, "name") || ""
     end
   end
 end

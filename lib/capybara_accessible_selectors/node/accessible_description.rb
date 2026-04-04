@@ -2,6 +2,7 @@
 
 require "capybara_accessible_selectors/nokogiri/accessible_description"
 require "capybara_accessible_selectors/selenium/accessible_description"
+require "capybara_accessible_selectors/cuprite/accessibility_computed_value"
 
 module CapybaraAccessibleSelectors
   module DriverNodeExtensions
@@ -25,6 +26,12 @@ module CapybaraAccessibleSelectors
   module RackTestNodeExtensions
     def accessible_description
       Nokogiri::AccessibleDescription.resolve(native) || ""
+    end
+  end
+
+  module CupriteNodeExtensions
+    def accessible_description
+      Cuprite::AccessibilityComputedValue.resolve(native, "description") || ""
     end
   end
 end
