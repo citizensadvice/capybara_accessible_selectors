@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Remove ruby 3.2 support. Minimum supported Ruby version is now 3.3
+
 ## v0.16.0
 
 - Refactored most role based selectors to use more accurate role and name resolution
