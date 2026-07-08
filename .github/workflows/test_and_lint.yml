@@ -19,8 +19,15 @@ jobs:
         ruby-version: ['4.0', '3.4', '3.3']
 
     steps:
-      - uses: actions/checkout@v5
-      - uses: browser-actions/setup-geckodriver@latest
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@d45b1a4e94b71acab930e56e79c6aa188764e7f9 # v1.316.0
+        with:
+          bundler-cache: true
+          ruby-version: ${{ matrix.ruby }}
+      - uses: browser-actions/setup-geckodriver@fac5b0424c584257f32cf12c5eb4ba86014c34f8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: geckodriver --version
