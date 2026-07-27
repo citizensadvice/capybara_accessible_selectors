@@ -39,10 +39,8 @@ module CapybaraAccessibleSelectors
       else
         input.click
         input.assert_matches_selector :rich_text, focused: true
-        # The cursor may or may not be at the start of the content
-        # So we can't just use backspace
-        input.send_keys [command_modifier, "a"], :backspace if input.text != "" && clear
-        input.send_keys with
+        clear_rich_text(input) if input.text != "" && clear
+        input.send_keys with if with
       end
     end
 
@@ -73,8 +71,8 @@ module CapybaraAccessibleSelectors
         return if text == editable.text
 
         editable.click
-        editable.send_keys [command_modifier, "a"], :backspace if editable.text != "" && clear
-        editable.send_keys text
+        clear_rich_text(editable) if editable.text != "" && clear
+        editable.send_keys text if text
       end
     end
 
@@ -86,8 +84,24 @@ module CapybaraAccessibleSelectors
       end
     end
 
+    # The cursor may or may not be at the start of the content, so we can't just
+    # backspace. Selenium selects all with a mod+a chord, but Cuprite/Ferrum
+    # cannot reliably trigger that chord inside a contenteditable, so move the
+    # caret to the end and backspace through the content instead.
+    def clear_rich_text(node)
+      if node.base.class.name.start_with?("Capybara::Cuprite")
+        steps = node.text.length
+        node.send_keys(*Array.new(steps, :right), *Array.new(steps, :backspace))
+      else
+        node.send_keys [command_modifier, "a"], :backspace
+      end
+    end
+
     def command_modifier
-      ::Selenium::WebDriver::Platform.mac? ? :meta : :control
+      # Detect the host OS (same as the previous Selenium::WebDriver::Platform.mac?
+      # behaviour) without requiring selenium-webdriver, which a Cuprite-only
+      # setup may not load
+      RUBY_PLATFORM.include?("darwin") ? :meta : :control
     end
   end
 end

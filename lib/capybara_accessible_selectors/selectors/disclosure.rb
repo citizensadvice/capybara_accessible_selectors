@@ -163,7 +163,11 @@ module CapybaraAccessibleSelectors
       if expand.nil?
         button.click
       elsif button.tag_name == "summary"
-        button.click if button.find(:xpath, "..")[:open] != expand.to_s
+        # `details[:open]` is a boolean attribute, but drivers disagree on the
+        # raw value (Selenium: "true"/nil, Cuprite: true/false), so normalise
+        # before comparing with the desired state
+        currently_open = button.find(:xpath, "..")[:open].to_s == "true"
+        button.click if currently_open != expand
       elsif button[:"aria-expanded"] != (expand ? "true" : "false") # rubocop:disable Lint/DuplicateBranch
         button.click
       end

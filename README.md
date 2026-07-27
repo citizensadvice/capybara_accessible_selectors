@@ -64,6 +64,25 @@ group :test do
 end
 ```
 
+### Driver support
+
+The selectors work with any Capybara driver. The accessibility methods
+(`accessible_name`, `accessible_description`, `role`) and the `:role` selector
+additionally support the [Cuprite](https://github.com/rubycdp/cuprite) driver.
+
+Cuprite is optional and is not a dependency of this gem — its support is enabled
+only when Cuprite is already loaded. Because of this, **you must require Cuprite
+before `capybara_accessible_selectors`**, otherwise the Cuprite extensions are
+not applied:
+
+```ruby
+require "capybara/cuprite"
+require "capybara_accessible_selectors"
+```
+
+If you require `capybara_accessible_selectors` first, the Cuprite-specific
+behaviour will silently not be installed.
+
 ## Documentation
 
 See the [Capybara cheatsheet](https://devhints.io/capybara) for an overview of built-in Capybara selectors and actions.

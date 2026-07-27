@@ -11,7 +11,7 @@ module Capybara
           @errors = []
 
           all_invalid_elements.reject { |el| @elements.include? el }.each do |el|
-            @errors << "expected #{el.native.attribute('outerHTML')} to have no error"
+            @errors << "expected #{outer_html(el)} to have no error"
           end.empty?
         end
 
@@ -19,7 +19,7 @@ module Capybara
           @page = element
           @errors = []
           all_invalid_elements.each do |node|
-            @errors << "expected #{node.native.attribute('outerHTML')} not to be invalid"
+            @errors << "expected #{outer_html(node)} not to be invalid"
           end.empty?
         end
 
@@ -31,6 +31,10 @@ module Capybara
           @page.find_all(:css, "input,select,textarea,[aria-invalid=true]", wait: false) do |node|
             node[:"aria-invalid"] == "true" || node.evaluate_script("this.willValidate === true && !this.validity.valid")
           end
+        end
+
+        def outer_html(node)
+          node.evaluate_script("this.outerHTML")
         end
 
         %i[checkbox datalist_input field file_field fillable_field radio_button select combo_box rich_text].each do |selector|
